@@ -51,6 +51,7 @@ function MissionExperiencePage() {
   return (
     <main className="fixed inset-0 z-[100] h-screen w-screen overflow-hidden bg-black">
       <MissionExperience
+        artifactId={artifact.id}
         initialChapterIndex={chapter ?? 0}
         initialCameraMode={camera ?? "chase"}
         onClose={handleClose}
@@ -58,3 +59,4 @@ function MissionExperiencePage() {
     </main>
   );
 }
+

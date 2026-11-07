@@ -31,12 +31,10 @@ export function ArtifactList({ items }: { items: Artifact[] }) {
                 >
                   {a.agency ?? "NASA"}
                 </span>
-                {a.id === "mangalyaan" && (
-                  <span className="rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-white shadow-glow animate-pulse">
-                    🚀 Experience
-                  </span>
-                )}
-                {a.hasStory && a.id !== "mangalyaan" && (
+                <span className="rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-red-500/20 border border-amber-500/40 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-amber-300">
+                  🚀 1st Person
+                </span>
+                {a.hasStory && (
                   <span className="rounded-full bg-primary/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-primary-glow">
                     Story
                   </span>

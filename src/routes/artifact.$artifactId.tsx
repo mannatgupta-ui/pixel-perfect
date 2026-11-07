@@ -262,15 +262,13 @@ function ArtifactDetailPage() {
                 </h1>
                 <div className="mt-2.5 flex flex-wrap items-center gap-2">
                   <StatusBadge status={artifact.status} label={artifact.statusLabel} />
-                  {artifact.id === "mangalyaan" && (
-                    <button
-                      type="button"
-                      onClick={() => setExperienceOpen(true)}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 px-3.5 py-1 text-xs font-bold text-white shadow-glow transition-all hover:scale-105 active:scale-95"
-                    >
-                      <Eye className="size-3.5 fill-current" /> Become the Spacecraft
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setExperienceOpen(true)}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 px-3.5 py-1 text-xs font-bold text-white shadow-glow transition-all hover:scale-105 active:scale-95"
+                  >
+                    <Eye className="size-3.5 fill-current" /> Become the Spacecraft
+                  </button>
                   {artifact.hasStory && (
                     <button
                       type="button"
@@ -503,19 +501,17 @@ function ArtifactDetailPage() {
             <Layers className="size-4" /> Component Inspection
           </button>
 
-          {artifact.id === "mangalyaan" && (
-            <button
-              type="button"
-              onClick={() => setExperienceOpen(true)}
-              className="pb-3.5 font-display text-sm font-bold transition-all border-b-2 -mb-px flex items-center gap-2 whitespace-nowrap text-amber-400 border-amber-500/80 shadow-glow"
-            >
-              <Eye className="size-4 animate-pulse text-amber-400" />
-              <span>Become the Spacecraft (Experience)</span>
-              <span className="rounded-full bg-gradient-to-r from-amber-500 to-red-500 px-2 py-0.5 font-mono text-[9px] font-bold text-white uppercase tracking-wider">
-                8 Chapters
-              </span>
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => setExperienceOpen(true)}
+            className="pb-3.5 font-display text-sm font-bold transition-all border-b-2 -mb-px flex items-center gap-2 whitespace-nowrap text-amber-400 border-amber-500/80 shadow-glow"
+          >
+            <Eye className="size-4 animate-pulse text-amber-400" />
+            <span>Become the Spacecraft (Experience)</span>
+            <span className="rounded-full bg-gradient-to-r from-amber-500 to-red-500 px-2 py-0.5 font-mono text-[9px] font-bold text-white uppercase tracking-wider">
+              Simulation
+            </span>
+          </button>
 
           {artifact.hasStory && (
             <button
@@ -635,54 +631,54 @@ function ArtifactDetailPage() {
         {/* Tab 1: Component Inspection */}
         {activeTab === "inspect" && (
           <div className="mt-8">
-            {artifact.id === "mangalyaan" && (
-              <div className="mb-8 rounded-3xl border border-amber-500/50 bg-gradient-to-r from-amber-950/40 via-red-950/30 to-black p-6 sm:p-8 backdrop-blur-xl shadow-panel">
-                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                  <div className="max-w-2xl">
-                    <div className="flex items-center gap-2">
-                      <span className="size-2 rounded-full bg-amber-400 animate-ping" />
-                      <span className="font-mono text-xs font-bold uppercase tracking-widest text-amber-400">
-                        FLAGSHIP FIRST-PERSON MISSION EXPERIENCE
-                      </span>
-                      <span className="rounded-full bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] text-amber-300 font-semibold border border-amber-500/30">
-                        8 Chapters
-                      </span>
-                    </div>
-                    <h2 className="mt-2 font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                      Become the Spacecraft: Mangalyaan's Journey to Mars
-                    </h2>
-                    <p className="mt-2 text-sm text-foreground/80 leading-relaxed">
-                      Experience India's maiden interplanetary leap from a first-person perspective. Step inside the ISITE Bengaluru cleanroom, endure the roar of the PSLV-C25 launch, slingshot past Earth across 666 million kilometres, and execute the critical 24-minute autonomous braking burn behind the dark side of Mars.
-                    </p>
-                    <div className="mt-4 flex flex-wrap items-center gap-3 font-mono text-xs text-white/70">
-                      <span className="flex items-center gap-1.5"><Eye className="size-3.5 text-amber-400" /> 1st Person Optical POV</span>
-                      <span>·</span>
-                      <span className="flex items-center gap-1.5"><Radio className="size-3.5 text-teal" /> Realistic Audio & DSN Tones</span>
-                      <span>·</span>
-                      <span className="flex items-center gap-1.5"><Bot className="size-3.5 text-sky-400" /> Live ASTRO Copilot</span>
-                    </div>
+            <div className="mb-8 rounded-3xl border border-amber-500/50 bg-gradient-to-r from-amber-950/40 via-red-950/30 to-black p-6 sm:p-8 backdrop-blur-xl shadow-panel">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div className="max-w-2xl">
+                  <div className="flex items-center gap-2">
+                    <span className="size-2 rounded-full bg-amber-400 animate-ping" />
+                    <span className="font-mono text-xs font-bold uppercase tracking-widest text-amber-400">
+                      FIRST-PERSON MISSION EXPERIENCE
+                    </span>
+                    <span className="rounded-full bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] text-amber-300 font-semibold border border-amber-500/30">
+                      {artifact.agency ?? "NASA"} · {artifact.mission}
+                    </span>
                   </div>
-                  <div className="flex flex-col sm:flex-row lg:flex-col gap-2.5 shrink-0 w-full sm:w-auto">
-                    <button
-                      type="button"
-                      onClick={() => setExperienceOpen(true)}
-                      className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 px-6 py-3.5 font-display text-sm font-bold text-white shadow-glow transition-all hover:scale-105 active:scale-95"
-                    >
-                      <Play className="size-4 fill-current" />
-                      Launch First-Person Experience
-                    </button>
-                    <Link
-                      to="/experience/$artifactId"
-                      params={{ artifactId: artifact.id }}
-                      className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/20 bg-white/5 px-4 py-2 font-mono text-xs text-white/80 hover:text-white hover:bg-white/10 transition-colors"
-                    >
-                      <span>Open in Fullscreen Route</span>
-                      <ArrowRight className="size-3" />
-                    </Link>
+                  <h2 className="mt-2 font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                    Become the Spacecraft: {artifact.name}
+                  </h2>
+                  <p className="mt-2 text-sm text-foreground/80 leading-relaxed">
+                    {artifact.id === "mangalyaan"
+                      ? "Experience India's maiden interplanetary leap from a first-person perspective. Step inside the ISITE Bengaluru cleanroom, endure the roar of the PSLV-C25 launch, slingshot past Earth across 666 million kilometres, and execute the critical 24-minute autonomous braking burn behind the dark side of Mars."
+                      : `Experience the historic voyage of ${artifact.name} through the eyes of the machine itself. Witness cleanroom assembly by ${artifact.agency ?? "NASA"} engineers, experience liftoff as mission headquarters monitors ascent, cruise the solar system, and relive the moments that shaped planetary exploration.`}
+                  </p>
+                  <div className="mt-4 flex flex-wrap items-center gap-3 font-mono text-xs text-white/70">
+                    <span className="flex items-center gap-1.5"><Eye className="size-3.5 text-amber-400" /> 1st Person Optical POV</span>
+                    <span>·</span>
+                    <span className="flex items-center gap-1.5"><Radio className="size-3.5 text-teal" /> Realistic Audio & DSN Tones</span>
+                    <span>·</span>
+                    <span className="flex items-center gap-1.5"><Bot className="size-3.5 text-sky-400" /> Live ASTRO Copilot</span>
                   </div>
                 </div>
+                <div className="flex flex-col sm:flex-row lg:flex-col gap-2.5 shrink-0 w-full sm:w-auto">
+                  <button
+                    type="button"
+                    onClick={() => setExperienceOpen(true)}
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 px-6 py-3.5 font-display text-sm font-bold text-white shadow-glow transition-all hover:scale-105 active:scale-95"
+                  >
+                    <Play className="size-4 fill-current" />
+                    Launch First-Person Experience
+                  </button>
+                  <Link
+                    to="/experience/$artifactId"
+                    params={{ artifactId: artifact.id }}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/20 bg-white/5 px-4 py-2 font-mono text-xs text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                  >
+                    <span>Open in Fullscreen Route</span>
+                    <ArrowRight className="size-3" />
+                  </Link>
+                </div>
               </div>
-            )}
+            </div>
             <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
             <div>
               {spiritPart ? (
@@ -1802,7 +1798,7 @@ function ArtifactDetailPage() {
       {/* Universal Mission Experience Full-Screen Modal */}
       {experienceOpen && (
         <div className="fixed inset-0 z-[140] h-screen w-screen bg-black">
-          <MissionExperience onClose={() => setExperienceOpen(false)} />
+          <MissionExperience artifactId={artifact.id} onClose={() => setExperienceOpen(false)} />
         </div>
       )}
     </main>

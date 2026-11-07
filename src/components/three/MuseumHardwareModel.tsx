@@ -103,7 +103,7 @@ export default function MuseumHardwareModel({
   );
 }
 
-function GenericHardware({
+export function GenericHardware({
   artifact,
   selectedPart,
   sensorMode = "optical",

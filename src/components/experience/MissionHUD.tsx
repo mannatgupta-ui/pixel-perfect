@@ -45,6 +45,9 @@ interface MissionHUDProps {
   onSelectComponentById: (id: string) => void;
   isEngineFiring: boolean;
   onCloseExperience: () => void;
+  agency?: string;
+  spacecraftName?: string;
+  missionName?: string;
 }
 
 export function MissionHUD({
@@ -63,6 +66,9 @@ export function MissionHUD({
   onSelectComponentById,
   isEngineFiring,
   onCloseExperience,
+  agency = "NASA",
+  spacecraftName = "Spacecraft",
+  missionName,
 }: MissionHUDProps) {
   const currentChapter = chapters[activeChapterIndex] ?? chapters[0]!;
   const telemetry = currentChapter.telemetry;
@@ -134,8 +140,8 @@ export function MissionHUD({
               MISSION EXPERIENCE ENGINE
             </span>
             <span className="text-white/20">|</span>
-            <span className="font-mono text-[11px] text-amber-400 font-semibold">
-              ISRO · MOM MANGALYAAN
+            <span className="font-mono text-[11px] text-amber-400 font-semibold uppercase">
+              {agency} · {missionName ? `${missionName} (${spacecraftName})` : spacecraftName}
             </span>
           </div>
 
@@ -519,3 +525,4 @@ export function MissionHUD({
     </div>
   );
 }
+

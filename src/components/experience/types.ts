@@ -41,9 +41,12 @@ export interface MissionChapter {
     | "approach"
     | "insertion"
     | "science_orbit"
-    | "eclipse";
+    | "eclipse"
+    | "descent"
+    | "landing"
+    | "surface";
   telemetry: TelemetryData;
-  highlightedComponentId?: string;
+  highlightedComponentId?: string | undefined;
   eventPills: string[];
   astroPrompts: string[];
   sources: { title: string; url?: string; citation: string }[];

@@ -510,3 +510,4 @@ export function Mangalyaan3DModel({
     </group>
   );
 }
+

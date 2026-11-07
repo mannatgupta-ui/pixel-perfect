@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
-import { MANGALYAAN_EXPERIENCE_CONFIG } from "./MangalyaanMissionConfig";
+import { getMissionExperienceConfig } from "./missionExperienceRegistry";
 import { Mangalyaan3DModel } from "./Mangalyaan3DModel";
 import { CinematicEnvironment } from "./CinematicEnvironment";
 import { SpacecraftCameraRig } from "./SpacecraftCameraRig";
@@ -9,19 +9,24 @@ import { MissionHUD } from "./MissionHUD";
 import { soundEngine } from "./SpacecraftSoundEngine";
 import type { CameraMode, SpacecraftComponentInfo } from "./types";
 import { useAstro } from "@/components/astro/AstroContext";
+import { getArtifact } from "@/data/artifacts";
+import { GenericHardware } from "@/components/three/MuseumHardwareModel";
 
 interface MissionExperienceProps {
+  artifactId?: string;
   onClose?: () => void;
   initialChapterIndex?: number;
   initialCameraMode?: CameraMode;
 }
 
 export function MissionExperience({
+  artifactId = "mangalyaan",
   onClose,
   initialChapterIndex = 0,
   initialCameraMode = "chase",
 }: MissionExperienceProps) {
-  const config = MANGALYAAN_EXPERIENCE_CONFIG;
+  const config = getMissionExperienceConfig(artifactId);
+  const artifact = getArtifact(config.artifactId);
   const chapters = config.chapters;
   const { updateContext } = useAstro();
 
@@ -37,7 +42,8 @@ export function MissionExperience({
   const isEngineFiring =
     activeChapter.environmentType === "launch" ||
     activeChapter.environmentType === "earth_orbit" ||
-    activeChapter.environmentType === "insertion";
+    activeChapter.environmentType === "insertion" ||
+    activeChapter.environmentType === "descent";
 
   const isEclipse =
     activeChapter.environmentType === "insertion" ||
@@ -52,7 +58,7 @@ export function MissionExperience({
       currentStoryStage: `Chapter ${activeChapter.chapterNumber}: ${activeChapter.title}`,
       selectedComponent: selectedComponent?.name ?? null,
     });
-  }, [activeChapterIndex, selectedComponent]);
+  }, [activeChapterIndex, selectedComponent, config]);
 
   // Handle ambient hum and engine burn sounds
   useEffect(() => {
@@ -67,7 +73,7 @@ export function MissionExperience({
     return () => {
       soundEngine.stopAmbientHum();
     };
-  }, [activeChapterIndex, isEngineFiring]);
+  }, [activeChapterIndex, isEngineFiring, activeChapter.environmentType]);
 
   // Automated progression timer when playing
   useEffect(() => {
@@ -124,8 +130,13 @@ export function MissionExperience({
               toneMappingExposure: 1.1,
             }}
           >
-            {/* Dynamic Stage Environment */}
-            <CinematicEnvironment type={activeChapter.environmentType} />
+            {/* Dynamic Stage Environment with 3D Scientists & Mission Control */}
+            <CinematicEnvironment
+              type={activeChapter.environmentType}
+              agency={config.agency}
+              targetBody={config.targetBody}
+              spacecraftName={config.spacecraftName}
+            />
 
             {/* Dynamic Camera Controller */}
             <SpacecraftCameraRig
@@ -143,14 +154,27 @@ export function MissionExperience({
             />
 
             {/* 3D Spacecraft Model */}
-            <Mangalyaan3DModel
-              selectedComponentId={selectedComponent?.id ?? activeChapter.highlightedComponentId ?? null}
-              onSelectComponent={handleSelectComponent}
-              components={config.components}
-              isEngineFiring={isEngineFiring}
-              isEclipse={isEclipse}
-              cameraMode={cameraMode}
-            />
+            {config.artifactId === "mangalyaan" ? (
+              <Mangalyaan3DModel
+                selectedComponentId={selectedComponent?.id ?? activeChapter.highlightedComponentId ?? null}
+                onSelectComponent={handleSelectComponent}
+                components={config.components}
+                isEngineFiring={isEngineFiring}
+                isEclipse={isEclipse}
+                cameraMode={cameraMode}
+              />
+            ) : artifact ? (
+              <group position={[0, artifact.kind === "rover" ? 0.35 : 0.65, 0]}>
+                <GenericHardware
+                  artifact={artifact}
+                  selectedPart={selectedComponent?.name ?? null}
+                  onSelectPart={(name) => {
+                    const match = config.components.find((c) => c.name === name || c.id === name);
+                    if (match) handleSelectComponent(match);
+                  }}
+                />
+              </group>
+            ) : null}
           </Canvas>
         </Suspense>
       </div>
@@ -173,6 +197,9 @@ export function MissionExperience({
         onCloseComponent={() => setSelectedComponent(null)}
         onSelectComponentById={handleSelectComponentById}
         isEngineFiring={isEngineFiring}
+        agency={config.agency}
+        spacecraftName={config.spacecraftName}
+        missionName={config.missionName}
         onCloseExperience={() => {
           soundEngine.stopAmbientHum();
           onClose?.();
