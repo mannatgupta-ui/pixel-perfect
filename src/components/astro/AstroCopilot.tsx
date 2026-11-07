@@ -16,6 +16,7 @@ import { useAstro } from "./AstroContext";
 import { generateContextualAnswer } from "@/lib/astroKnowledge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { KurzgesagtBird } from "./KurzgesagtBird";
 
 interface ChatMessage {
   id: string;
@@ -163,36 +164,8 @@ export function AstroCopilot() {
 
   return (
     <>
-      {/* Floating launcher button */}
-      <div className="fixed bottom-5 right-5 z-40">
-        <motion.button
-          type="button"
-          onClick={toggleOpen}
-          aria-label="Open ASTRO AI Space Exploration Copilot"
-          className={cn(
-            "group relative flex items-center gap-2.5 rounded-full p-2.5 sm:px-4 sm:py-3 font-medium transition-all shadow-glow",
-            isOpen
-              ? "bg-secondary text-secondary-foreground border border-border"
-              : "bg-mars-gradient text-primary-foreground border border-primary/50 hover:scale-105",
-          )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <div className="relative">
-            <span className="grid size-8 place-items-center rounded-full bg-background/25">
-              <Bot className="size-5" />
-            </span>
-            <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-teal animate-ping" />
-            <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-teal" />
-          </div>
-          <div className="hidden sm:flex flex-col text-left">
-            <span className="text-xs font-semibold tracking-wide flex items-center gap-1 font-display">
-              ASTRO <Sparkles className="size-3 text-gold" />
-            </span>
-            <span className="text-[10px] opacity-80 font-mono">AI Exploration Copilot</span>
-          </div>
-        </motion.button>
-      </div>
+      {/* Animated Kurzgesagt Bird Mascot traveling companion */}
+      <KurzgesagtBird context={context} onClick={toggleOpen} isOpen={isOpen} />
 
       {/* Slide-in Conversation Interface */}
       <AnimatePresence>
@@ -207,18 +180,28 @@ export function AstroCopilot() {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-border/80 px-4 py-3 bg-space/60">
               <div className="flex items-center gap-3">
-                <div className="grid size-9 place-items-center rounded-2xl bg-mars-gradient text-primary-foreground shadow-glow">
-                  <Bot className="size-5" />
+                <div className="relative grid size-10 place-items-center rounded-2xl bg-amber-500/20 border border-amber-500/40 shadow-glow overflow-hidden">
+                  <svg viewBox="0 0 100 100" className="size-8">
+                    {/* Duck Head */}
+                    <circle cx="50" cy="50" r="32" fill="#facc15" />
+                    {/* Beak */}
+                    <path d="M72 48 Q 92 52 86 60 Q 70 62 68 54 Z" fill="#ea580c" />
+                    {/* Eye */}
+                    <ellipse cx="60" cy="45" rx="6" ry="8" fill="#1c1917" />
+                    <circle cx="62" cy="42" r="2.5" fill="#ffffff" />
+                    {/* Glass helmet */}
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#38bdf8" strokeWidth="3" opacity="0.8" />
+                  </svg>
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <h2 className="font-display text-sm font-semibold text-foreground">ASTRO</h2>
+                    <h2 className="font-display text-sm font-semibold text-foreground">ASTRO Duck</h2>
                     <span className="rounded-full bg-teal/20 px-1.5 py-0.2 font-mono text-[9px] uppercase tracking-wider text-teal">
                       Copilot
                     </span>
                   </div>
                   <p className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground">
-                    <ShieldCheck className="size-3 text-signal" /> Grounded NASA Archives
+                    <ShieldCheck className="size-3 text-signal" /> NASA · ISRO · ESA Archives
                   </p>
                 </div>
               </div>
