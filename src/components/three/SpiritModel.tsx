@@ -19,7 +19,7 @@ const C = {
   frame: "#9aa3ad",
   dark: "#2b2f38",
   wheel: "#bfc4c9",
-  lens: "#0e1220",
+  lens: "#030305",
 };
 
 interface PartCtx {

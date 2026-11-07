@@ -691,13 +691,13 @@ function DeepSpaceNebulae() {
         />
       </mesh>
 
-      {/* Cosmic Violet / Purple Haze */}
+      {/* Deep Space Obsidian Haze */}
       <mesh position={[-85, -20, -70]} rotation={[-0.3, -0.4, 0.5]}>
         <planeGeometry args={[190, 150]} />
         <meshBasicMaterial
-          color="#4c1d95"
+          color="#080c18"
           transparent
-          opacity={0.14}
+          opacity={0.07}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           side={THREE.DoubleSide}
