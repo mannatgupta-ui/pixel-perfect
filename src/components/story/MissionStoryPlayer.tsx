@@ -270,6 +270,8 @@ export function MissionStoryPlayer({
         <MultiMissionAnimationScene
           artifactId={storyMeta.artifactId}
           stageId={stage.id}
+          stageIndex={currentIdx}
+          totalStages={stages.length}
           speed={speed}
         />
 

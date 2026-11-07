@@ -1110,3 +1110,4 @@ export const MARS_EXTRA_STORIES: MissionStoryMeta[] = [
     stages: SCHIAPARELLI_STORY,
   },
 ];
+
