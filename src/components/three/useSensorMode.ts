@@ -21,12 +21,12 @@ export function useSensorMode(
     group.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         // Cache original material
-        if (!child.userData.__origMaterial) {
-          child.userData.__origMaterial = child.material;
+        if (!child.userData["__origMaterial"]) {
+          child.userData["__origMaterial"] = child.material;
         }
 
         if (mode === "optical") {
-          child.material = child.userData.__origMaterial;
+          child.material = child.userData["__origMaterial"];
         } else if (mode === "wireframe") {
           child.material = new THREE.MeshStandardMaterial({
             wireframe: true,
@@ -70,3 +70,4 @@ export function useSensorMode(
     });
   }, [mode, groupRef]);
 }
+

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Orbit, Compass, Calculator, X, Sparkles, ArrowRight, Zap, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,18 +35,32 @@ export function NasaOrbitalDynamicsModal({ open, onClose }: Props) {
   const deltaVGain = 2 * body.orbitalVelocity * Math.sin(deltaRad / 2);
   const finalVelocity = approachVelocity + deltaVGain;
 
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) onClose();
+          }}
+          className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md overflow-y-auto"
+        >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-primary/40 bg-panel/95 p-6 shadow-2xl backdrop-blur-xl"
+            initial={{ opacity: 0, scale: 0.95, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 12 }}
+            className="relative w-full max-w-3xl max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-4rem)] flex flex-col rounded-3xl border border-primary/40 bg-panel/95 shadow-2xl backdrop-blur-xl my-auto overflow-hidden"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-border/70 pb-4">
+            {/* Header (Pinned) */}
+            <div className="flex items-center justify-between border-b border-border/70 p-4 sm:p-5 pb-3 shrink-0 bg-panel/95 backdrop-blur z-20">
               <div className="flex items-center gap-3">
                 <span className="flex size-9 items-center justify-center rounded-xl bg-primary/20 text-primary-glow border border-primary/30">
                   <Orbit className="size-5" />
@@ -63,11 +77,16 @@ export function NasaOrbitalDynamicsModal({ open, onClose }: Props) {
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+                className="flex items-center gap-1.5 rounded-full border border-border/80 bg-background/80 px-2.5 py-1 text-xs font-mono text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                title="Close (Esc)"
               >
-                <X className="size-5" />
+                <span>Esc</span>
+                <X className="size-4" />
               </button>
             </div>
+
+            {/* Scrollable Content Body */}
+            <div className="overflow-y-auto flex-1 p-4 sm:p-5 pt-3 scrollbar-thin">
 
             {/* Visual Gravity Assist Vector Canvas */}
             <div className="mt-5 relative h-40 w-full overflow-hidden rounded-2xl border border-border bg-space flex items-center justify-center">
@@ -179,9 +198,19 @@ export function NasaOrbitalDynamicsModal({ open, onClose }: Props) {
                 Spacecraft steals kinetic energy from the planet's heliocentric orbit without burning rocket fuel, accelerating toward solar system escape velocity. Used by Voyager 1/2, Cassini, and New Horizons.
               </div>
             </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
+          </div>
+
+          {/* Footer (Pinned) */}
+          <div className="shrink-0 border-t border-border/70 p-3 sm:p-4 flex items-center justify-between bg-panel/90 text-xs">
+            <span className="font-mono text-[10px] text-muted-foreground">Press Esc or click outside to dismiss</span>
+            <Button size="sm" variant="glass" onClick={onClose} className="text-xs h-7">
+              Close Simulator
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+    )}
+  </AnimatePresence>
+);
 }
+

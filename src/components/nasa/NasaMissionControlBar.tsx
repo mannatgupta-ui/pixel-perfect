@@ -51,8 +51,8 @@ export function NasaMissionControlBar() {
 
   return (
     <>
-      <div className="w-full border-b border-border/70 bg-panel/90 px-4 py-1.5 backdrop-blur-md text-[11px] font-mono text-muted-foreground select-none">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2">
+      <div className="w-full border-b border-border/70 bg-panel/95 px-4 py-1.5 backdrop-blur-md text-[11px] font-mono text-muted-foreground select-none overflow-x-auto">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 min-w-[340px]">
           {/* Left: DSN Status & Ground Network Status */}
           <div className="flex items-center gap-3">
             <button
@@ -121,3 +121,4 @@ export function NasaMissionControlBar() {
     </>
   );
 }
+

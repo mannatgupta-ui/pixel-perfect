@@ -8,11 +8,13 @@ import { ReadySignal } from "./ReadySignal";
 import SpiritModel from "./SpiritModel";
 import type { SpiritPartId } from "@/data/spirit";
 import { useSensorMode, type SensorMode } from "./useSensorMode";
+import { PlanetarySurfaceEnvironment } from "./PlanetarySurfaceEnvironment";
 
 interface Props {
   artifact: Artifact;
   selectedPart?: string | null;
   sensorMode?: SensorMode;
+  viewEnvironment?: "surface" | "studio";
   onSelectPart?: (part: string | null) => void;
   onReady?: () => void;
 }
@@ -21,6 +23,7 @@ export default function MuseumHardwareModel({
   artifact,
   selectedPart,
   sensorMode = "optical",
+  viewEnvironment = "surface",
   onSelectPart,
   onReady,
 }: Props) {
@@ -29,6 +32,7 @@ export default function MuseumHardwareModel({
       <SpiritModel
         selected={(selectedPart as SpiritPartId) ?? null}
         sensorMode={sensorMode}
+        viewEnvironment={viewEnvironment}
         onSelect={(id) => onSelectPart?.(id)}
         {...(onReady ? { onReady } : {})}
       />
@@ -42,40 +46,57 @@ export default function MuseumHardwareModel({
       onPointerMissed={() => onSelectPart?.(null)}
       gl={{ toneMapping: THREE.ACESFilmicToneMapping }}
     >
-      <color attach="background" args={[SCENE.space]} />
-      <Stars radius={70} depth={35} count={2800} factor={3.5} fade speed={0.3} />
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 6, 4]} intensity={2.4} color="#fff2df" />
-      <directionalLight position={[-5, 2, -4]} intensity={0.5} color={SCENE.teal} />
-      <Environment resolution={128}>
-        <Lightformer intensity={2} position={[0, 5, 0]} scale={[10, 10, 1]} rotation-x={Math.PI / 2} />
-        <Lightformer
-          intensity={1.2}
-          color={artifact.bodyId === "mars" ? SCENE.marsGlow : SCENE.gold}
-          position={[-5, 1, -1]}
-          rotation-y={Math.PI / 2}
-          scale={[20, 1, 1]}
-        />
-        <Lightformer intensity={0.8} color={SCENE.teal} position={[5, 1, 2]} rotation-y={-Math.PI / 2} scale={[20, 1, 1]} />
-      </Environment>
+      {viewEnvironment === "surface" ? (
+        <>
+          <PlanetarySurfaceEnvironment artifact={artifact} />
+          <group position={[0, artifact.kind === "rover" ? 0.35 : 0.65, 0]}>
+            <GenericHardware
+              artifact={artifact}
+              selectedPart={selectedPart ?? null}
+              sensorMode={sensorMode}
+              {...(onSelectPart ? { onSelectPart } : {})}
+            />
+          </group>
+        </>
+      ) : (
+        <>
+          <color attach="background" args={[SCENE.space]} />
+          <Stars radius={70} depth={35} count={2800} factor={3.5} fade speed={0.3} />
+          <ambientLight intensity={0.4} />
+          <directionalLight position={[5, 6, 4]} intensity={2.4} color="#fff2df" />
+          <directionalLight position={[-5, 2, -4]} intensity={0.5} color={SCENE.teal} />
+          <Environment resolution={128}>
+            <Lightformer intensity={2} position={[0, 5, 0]} scale={[10, 10, 1]} rotation-x={Math.PI / 2} />
+            <Lightformer
+              intensity={1.2}
+              color={artifact.bodyId === "mars" ? SCENE.marsGlow : SCENE.gold}
+              position={[-5, 1, -1]}
+              rotation-y={Math.PI / 2}
+              scale={[20, 1, 1]}
+            />
+            <Lightformer intensity={0.8} color={SCENE.teal} position={[5, 1, 2]} rotation-y={-Math.PI / 2} scale={[20, 1, 1]} />
+          </Environment>
 
-      <Float speed={1.2} rotationIntensity={0.2} floatIntensity={0.4}>
-        <GenericHardware
-          artifact={artifact}
-          selectedPart={selectedPart ?? null}
-          sensorMode={sensorMode}
-          {...(onSelectPart ? { onSelectPart } : {})}
-        />
-      </Float>
+          <Float speed={1.2} rotationIntensity={0.2} floatIntensity={0.4}>
+            <GenericHardware
+              artifact={artifact}
+              selectedPart={selectedPart ?? null}
+              sensorMode={sensorMode}
+              {...(onSelectPart ? { onSelectPart } : {})}
+            />
+          </Float>
 
-      <ContactShadows
-        position={[0, -1.2, 0]}
-        opacity={0.4}
-        scale={6}
-        blur={2.4}
-        far={2}
-        color={artifact.bodyId === "mars" ? SCENE.mars : "#101628"}
-      />
+          <ContactShadows
+            position={[0, -1.2, 0]}
+            opacity={0.4}
+            scale={6}
+            blur={2.4}
+            far={2}
+            color={artifact.bodyId === "mars" ? SCENE.mars : "#101628"}
+          />
+        </>
+      )}
+
       <OrbitControls makeDefault enablePan={false} minDistance={1.8} maxDistance={9} enableDamping />
       {onReady && <ReadySignal onReady={onReady} />}
     </Canvas>

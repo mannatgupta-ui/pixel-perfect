@@ -33,6 +33,7 @@ import {
   Eye,
   Grid3X3,
   Zap,
+  Globe,
 } from "lucide-react";
 
 import { ClientScene } from "@/components/site/ClientScene";
@@ -111,6 +112,7 @@ function ArtifactDetailPage() {
 
   // NASA Grade Engineering States
   const [sensorMode, setSensorMode] = useState<SensorMode>("optical");
+  const [viewEnvironment, setViewEnvironment] = useState<"surface" | "studio">("surface");
   const [pdsOpen, setPdsOpen] = useState(false);
   const [audioOpen, setAudioOpen] = useState(false);
   const [dsnOpen, setDsnOpen] = useState(false);
@@ -160,6 +162,7 @@ function ArtifactDetailPage() {
                   artifact={artifact}
                   selectedPart={selectedPart}
                   sensorMode={sensorMode}
+                  viewEnvironment={viewEnvironment}
                   onSelectPart={handleSelectPart}
                   onReady={() => setReady(true)}
                 />
@@ -220,6 +223,29 @@ function ArtifactDetailPage() {
                 )}
               </div>
             </div>
+
+            {/* In-Situ Planetary Surface Telemetry HUD Overlay */}
+            {heroMode === "3d" && viewEnvironment === "surface" && (
+              <div className="pointer-events-none absolute bottom-4 right-4 z-10 hidden sm:block max-w-sm">
+                <div className="rounded-xl border border-amber-500/40 bg-black/85 px-3.5 py-2.5 font-mono text-[11px] backdrop-blur-md shadow-panel text-left">
+                  <div className="flex items-center gap-2 text-amber-400 font-bold">
+                    <span className="size-2 rounded-full bg-amber-400 animate-ping" />
+                    <span>IN-SITU PLANETARY LOCATION</span>
+                  </div>
+                  <div className="mt-1 font-display text-xs font-semibold text-foreground truncate">
+                    {artifact.site ?? artifact.finalLocation ?? (artifact.bodyId ? `${artifact.bodyId.toUpperCase()} SURFACE` : "DEEP SPACE TRAJECTORY")}
+                  </div>
+                  {artifact.coords && (
+                    <div className="mt-0.5 text-[10px] text-teal">
+                      Landing Site: {artifact.coords.lat >= 0 ? `${artifact.coords.lat.toFixed(4)}° N` : `${Math.abs(artifact.coords.lat).toFixed(4)}° S`}, {artifact.coords.lon >= 0 ? `${artifact.coords.lon.toFixed(4)}° E` : `${Math.abs(artifact.coords.lon).toFixed(4)}° W`}
+                    </div>
+                  )}
+                  <div className="mt-1.5 pt-1.5 border-t border-border/60 text-[10px] text-foreground/80 leading-snug">
+                    {artifact.remains ?? artifact.finalCondition ?? "Hardware preserved on the planetary surface under natural space weathering."}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Top Overlay Badge, Title & Mode Switcher */}
             <div className="pointer-events-none absolute inset-x-0 top-4 z-10 px-4 sm:px-8 flex flex-wrap justify-between items-start gap-4">
@@ -287,6 +313,38 @@ function ArtifactDetailPage() {
                       </button>
                     )}
                   </div>
+
+                  {/* Environment Mode: In-Situ Surface vs Cleanroom Studio (when in 3D Mode) */}
+                  {heroMode === "3d" && (
+                    <div className="flex items-center gap-1 rounded-2xl border border-border bg-panel/85 p-1 backdrop-blur shadow-panel">
+                      <button
+                        type="button"
+                        onClick={() => setViewEnvironment("surface")}
+                        className={cn(
+                          "flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-mono transition-colors",
+                          viewEnvironment === "surface"
+                            ? "bg-amber-600 text-white font-semibold shadow-glow"
+                            : "text-muted-foreground hover:text-foreground",
+                        )}
+                        title="View this machine as it currently rests on the planetary surface with authentic surroundings"
+                      >
+                        <Globe className="size-3 text-amber-300" /> Surface View
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setViewEnvironment("studio")}
+                        className={cn(
+                          "flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-mono transition-colors",
+                          viewEnvironment === "studio"
+                            ? "bg-primary text-primary-foreground font-semibold shadow-glow"
+                            : "text-muted-foreground hover:text-foreground",
+                        )}
+                        title="Floating technical 3D cleanroom studio view"
+                      >
+                        <Layers className="size-3" /> Studio
+                      </button>
+                    </div>
+                  )}
 
                   {/* NASA Quick Action Launchers */}
                   <div className="flex items-center gap-1.5">

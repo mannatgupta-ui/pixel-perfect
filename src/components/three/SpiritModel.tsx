@@ -7,6 +7,8 @@ import { SPIRIT_PART_BY_ID, type SpiritPartId } from "@/data/spirit";
 import { ReadySignal } from "./ReadySignal";
 import { SCENE } from "./scene-colors";
 import { useSensorMode, type SensorMode } from "./useSensorMode";
+import { PlanetarySurfaceEnvironment } from "./PlanetarySurfaceEnvironment";
+import { getArtifact } from "@/data/artifacts";
 
 /**
  * Illustrative reconstruction of a Mars Exploration Rover built from simple
@@ -245,13 +247,22 @@ const LABEL_POS: Record<SpiritPartId, [number, number, number]> = {
 interface Props {
   selected: SpiritPartId | null;
   sensorMode?: SensorMode;
+  viewEnvironment?: "surface" | "studio";
   onSelect: (id: SpiritPartId | null) => void;
   onReady?: () => void;
 }
 
-export default function SpiritModel({ selected, sensorMode = "optical", onSelect, onReady }: Props) {
+export default function SpiritModel({
+  selected,
+  sensorMode = "optical",
+  viewEnvironment = "surface",
+  onSelect,
+  onReady,
+}: Props) {
   const [hovered, setHovered] = useState<SpiritPartId | null>(null);
   const label = hovered ?? selected;
+  const spiritArtifact = getArtifact("spirit");
+
   return (
     <Canvas
       camera={{ position: [2.6, 1.6, 3.2], fov: 38 }}
@@ -259,29 +270,52 @@ export default function SpiritModel({ selected, sensorMode = "optical", onSelect
       onPointerMissed={() => onSelect(null)}
       gl={{ toneMapping: THREE.ACESFilmicToneMapping }}
     >
-      <color attach="background" args={[SCENE.space]} />
-      <Stars radius={60} depth={30} count={2500} factor={3} fade speed={0.3} />
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[4, 6, 3]} intensity={2.2} color="#fff0dc" />
-      <directionalLight position={[-4, 2, -3]} intensity={0.6} color={SCENE.teal} />
-      <Environment resolution={128}>
-        <Lightformer intensity={2} position={[0, 5, 0]} scale={[10, 10, 1]} rotation-x={Math.PI / 2} />
-        <Lightformer intensity={1.2} color={SCENE.marsGlow} position={[-5, 1, -1]} rotation-y={Math.PI / 2} scale={[20, 1, 1]} />
-        <Lightformer intensity={0.8} color={SCENE.teal} position={[5, 1, 2]} rotation-y={-Math.PI / 2} scale={[20, 1, 1]} />
-      </Environment>
+      {viewEnvironment === "surface" && spiritArtifact ? (
+        <PlanetarySurfaceEnvironment artifact={spiritArtifact} />
+      ) : (
+        <>
+          <color attach="background" args={[SCENE.space]} />
+          <Stars radius={60} depth={30} count={2500} factor={3} fade speed={0.3} />
+          <ambientLight intensity={0.35} />
+          <directionalLight position={[4, 6, 3]} intensity={2.2} color="#fff0dc" />
+          <directionalLight position={[-4, 2, -3]} intensity={0.6} color={SCENE.teal} />
+          <Environment resolution={128}>
+            <Lightformer intensity={2} position={[0, 5, 0]} scale={[10, 10, 1]} rotation-x={Math.PI / 2} />
+            <Lightformer intensity={1.2} color={SCENE.marsGlow} position={[-5, 1, -1]} rotation-y={Math.PI / 2} scale={[20, 1, 1]} />
+            <Lightformer intensity={0.8} color={SCENE.teal} position={[5, 1, 2]} rotation-y={-Math.PI / 2} scale={[20, 1, 1]} />
+          </Environment>
+        </>
+      )}
+
       <Ctx.Provider value={{ selected, hovered, setHovered, onSelect: (id) => onSelect(id) }}>
-        <Float speed={1.4} rotationIntensity={0.15} floatIntensity={0.5}>
-          <Rover sensorMode={sensorMode} />
-          {label && (
-            <Html position={LABEL_POS[label]} center zIndexRange={[20, 0]}>
-              <div className="pointer-events-none whitespace-nowrap rounded-full bg-primary px-3 py-1 font-mono text-[11px] font-semibold text-primary-foreground shadow-glow">
-                {SPIRIT_PART_BY_ID[label].name}
-              </div>
-            </Html>
-          )}
-        </Float>
+        {viewEnvironment === "surface" ? (
+          <group position={[0, 0.42, 0]}>
+            <Rover sensorMode={sensorMode} />
+            {label && (
+              <Html position={LABEL_POS[label]} center zIndexRange={[20, 0]}>
+                <div className="pointer-events-none whitespace-nowrap rounded-full bg-primary px-3 py-1 font-mono text-[11px] font-semibold text-primary-foreground shadow-glow">
+                  {SPIRIT_PART_BY_ID[label].name}
+                </div>
+              </Html>
+            )}
+          </group>
+        ) : (
+          <Float speed={1.4} rotationIntensity={0.15} floatIntensity={0.5}>
+            <Rover sensorMode={sensorMode} />
+            {label && (
+              <Html position={LABEL_POS[label]} center zIndexRange={[20, 0]}>
+                <div className="pointer-events-none whitespace-nowrap rounded-full bg-primary px-3 py-1 font-mono text-[11px] font-semibold text-primary-foreground shadow-glow">
+                  {SPIRIT_PART_BY_ID[label].name}
+                </div>
+              </Html>
+            )}
+          </Float>
+        )}
       </Ctx.Provider>
-      <ContactShadows position={[0, -1.1, 0]} opacity={0.35} scale={6} blur={2.6} far={2} color={SCENE.mars} />
+
+      {viewEnvironment === "studio" && (
+        <ContactShadows position={[0, -1.1, 0]} opacity={0.35} scale={6} blur={2.6} far={2} color={SCENE.mars} />
+      )}
       <OrbitControls makeDefault enablePan={false} minDistance={2} maxDistance={8} enableDamping />
       {onReady && <ReadySignal onReady={onReady} />}
     </Canvas>

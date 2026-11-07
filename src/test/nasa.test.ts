@@ -60,4 +60,18 @@ describe("NASA-Grade Telemetry, PDS4 and Orbital Mechanics", () => {
     expect(validModes).toContain("wireframe");
     expect(validModes).toContain("xray");
   });
+
+  it("assigns authentic in-situ planetary surface environments to every artifact", () => {
+    const validBodies = ["mars", "moon", "venus", "titan", "mercury", "jupiter", "saturn", "sun", null];
+
+    ARTIFACTS.forEach((a) => {
+      // Must be a recognized planetary body or interstellar deep space
+      expect(validBodies).toContain(a.bodyId ?? null);
+
+      // Surface landers and rovers must have documented or approximate landing coordinates
+      if (a.kind === "rover" || a.kind === "lander" || a.kind === "helicopter" || a.kind === "descent-stage") {
+        expect(a.site || a.finalLocation || a.coords).toBeTruthy();
+      }
+    });
+  });
 });

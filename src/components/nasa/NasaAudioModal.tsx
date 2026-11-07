@@ -341,18 +341,38 @@ export function NasaAudioModal({ open, onClose }: Props) {
     else playSound(activeTrack);
   };
 
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        stopAudio();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
+
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              stopAudio();
+              onClose();
+            }
+          }}
+          className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md overflow-y-auto"
+        >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-primary/40 bg-panel/95 p-6 shadow-2xl backdrop-blur-xl"
+            initial={{ opacity: 0, scale: 0.95, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 12 }}
+            className="relative w-full max-w-2xl max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-4rem)] flex flex-col rounded-3xl border border-primary/40 bg-panel/95 shadow-2xl backdrop-blur-xl my-auto overflow-hidden"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-border/70 pb-4">
+            {/* Header (Pinned) */}
+            <div className="flex items-center justify-between border-b border-border/70 p-4 sm:p-5 pb-3 shrink-0 bg-panel/95 backdrop-blur z-20">
               <div className="flex items-center gap-2.5">
                 <span className="flex size-8 items-center justify-center rounded-xl bg-primary/20 text-primary-glow border border-primary/30">
                   <Radio className="size-4" />
@@ -372,93 +392,114 @@ export function NasaAudioModal({ open, onClose }: Props) {
                   stopAudio();
                   onClose();
                 }}
-                className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+                className="flex items-center gap-1.5 rounded-full border border-border/80 bg-background/80 px-2.5 py-1 text-xs font-mono text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                title="Close (Esc)"
               >
+                <span>Esc</span>
                 <X className="size-4" />
               </button>
             </div>
 
-            {/* Live Audio Visualizer Canvas */}
-            <div className="mt-5 relative h-28 w-full overflow-hidden rounded-2xl bg-space border border-border/80 flex items-center justify-center px-6">
-              {/* Star Background & Glowing Grid */}
-              <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:16px_16px]" />
+            {/* Scrollable Content Body */}
+            <div className="overflow-y-auto flex-1 p-4 sm:p-5 pt-3 pr-2 scrollbar-thin space-y-4">
+              {/* Live Audio Visualizer Canvas */}
+              <div className="relative h-28 w-full overflow-hidden rounded-2xl bg-space border border-border/80 flex items-center justify-center px-6">
+                {/* Star Background & Glowing Grid */}
+                <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:16px_16px]" />
 
-              {/* Spectrum Frequency Bars */}
-              <div className="relative z-10 flex h-20 w-full items-end justify-between gap-1.5">
-                {meterLevel.map((level, i) => (
-                  <motion.div
-                    key={i}
-                    animate={{ height: `${isPlaying ? Math.max(10, level * 100) : 8}%` }}
-                    transition={{ duration: 0.08 }}
-                    className="w-full rounded-t-sm bg-gradient-to-t from-primary/60 to-primary-glow"
-                  />
-                ))}
-              </div>
-
-              {/* Center Status Overlay */}
-              <div className="absolute top-2.5 left-4 flex items-center gap-2 font-mono text-[11px] text-teal">
-                <span className={`inline-block size-2 rounded-full ${isPlaying ? "bg-teal animate-ping" : "bg-muted-foreground"}`} />
-                <span>{isPlaying ? "STREAMING TELEMETRY AUDIO" : "STANDBY"}</span>
-              </div>
-              <div className="absolute top-2.5 right-4 font-mono text-[11px] text-primary-glow">
-                {activeTrack.frequency}
-              </div>
-            </div>
-
-            {/* Currently Selected Track Info */}
-            <div className="mt-4 rounded-2xl border border-border/80 bg-background/50 p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-display text-sm font-semibold text-foreground">
-                    {activeTrack.title}
-                  </h4>
-                  <p className="font-mono text-xs text-muted-foreground">
-                    {activeTrack.source} · {activeTrack.date}
-                  </p>
+                {/* Spectrum Frequency Bars */}
+                <div className="relative z-10 flex h-20 w-full items-end justify-between gap-1.5">
+                  {meterLevel.map((level, i) => (
+                    <motion.div
+                      key={i}
+                      animate={{ height: `${isPlaying ? Math.max(10, level * 100) : 8}%` }}
+                      transition={{ duration: 0.08 }}
+                      className="w-full rounded-t-sm bg-gradient-to-t from-primary/60 to-primary-glow"
+                    />
+                  ))}
                 </div>
-                <Button
-                  onClick={togglePlay}
-                  size="sm"
-                  className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl"
-                >
-                  {isPlaying ? <Pause className="size-4" /> : <Play className="size-4" />}
-                  {isPlaying ? "Pause" : "Play Sound"}
-                </Button>
+
+                {/* Center Status Overlay */}
+                <div className="absolute top-2.5 left-4 flex items-center gap-2 font-mono text-[11px] text-teal">
+                  <span className={`inline-block size-2 rounded-full ${isPlaying ? "bg-teal animate-ping" : "bg-muted-foreground"}`} />
+                  <span>{isPlaying ? "STREAMING TELEMETRY AUDIO" : "STANDBY"}</span>
+                </div>
+                <div className="absolute top-2.5 right-4 font-mono text-[11px] text-primary-glow">
+                  {activeTrack.frequency}
+                </div>
               </div>
-              <p className="mt-2 text-xs text-foreground/80 leading-relaxed">
-                {activeTrack.description}
-              </p>
+
+              {/* Currently Selected Track Info */}
+              <div className="rounded-2xl border border-border/80 bg-background/50 p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-display text-sm font-semibold text-foreground">
+                      {activeTrack.title}
+                    </h4>
+                    <p className="font-mono text-xs text-muted-foreground">
+                      {activeTrack.source} · {activeTrack.date}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={togglePlay}
+                    size="sm"
+                    className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl"
+                  >
+                    {isPlaying ? <Pause className="size-4" /> : <Play className="size-4" />}
+                    {isPlaying ? "Pause" : "Play Sound"}
+                  </Button>
+                </div>
+                <p className="mt-2 text-xs text-foreground/80 leading-relaxed">
+                  {activeTrack.description}
+                </p>
+              </div>
+
+              {/* Track Selector List */}
+              <div>
+                <h5 className="font-mono text-xs text-muted-foreground mb-2">Select Acoustic Telemetry Track:</h5>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
+                  {NASA_SOUND_ARCHIVE.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => playSound(t)}
+                      className={`text-left rounded-xl border p-2.5 transition-all text-xs flex items-center justify-between ${
+                        activeTrack.id === t.id && isPlaying
+                          ? "border-primary bg-primary/15 text-foreground shadow-glow"
+                          : "border-border/70 bg-background/40 text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <div>
+                        <div className="font-semibold text-foreground flex items-center gap-1.5">
+                          {t.title}
+                        </div>
+                        <div className="font-mono text-[10px] text-muted-foreground">{t.source}</div>
+                      </div>
+                      {activeTrack.id === t.id && isPlaying ? (
+                        <Activity className="size-4 text-primary-glow animate-pulse" />
+                      ) : (
+                        <Play className="size-3.5 opacity-60" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            {/* Track Selector List */}
-            <div className="mt-4">
-              <h5 className="font-mono text-xs text-muted-foreground mb-2">Select Acoustic Telemetry Track:</h5>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
-                {NASA_SOUND_ARCHIVE.map((t) => (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => playSound(t)}
-                    className={`text-left rounded-xl border p-2.5 transition-all text-xs flex items-center justify-between ${
-                      activeTrack.id === t.id && isPlaying
-                        ? "border-primary bg-primary/15 text-foreground shadow-glow"
-                        : "border-border/70 bg-background/40 text-muted-foreground hover:text-foreground hover:bg-muted"
-                    }`}
-                  >
-                    <div>
-                      <div className="font-semibold text-foreground flex items-center gap-1.5">
-                        {t.title}
-                      </div>
-                      <div className="font-mono text-[10px] text-muted-foreground">{t.source}</div>
-                    </div>
-                    {activeTrack.id === t.id && isPlaying ? (
-                      <Activity className="size-4 text-primary-glow animate-pulse" />
-                    ) : (
-                      <Play className="size-3.5 opacity-60" />
-                    )}
-                  </button>
-                ))}
-              </div>
+            {/* Footer (Pinned) */}
+            <div className="shrink-0 border-t border-border/70 p-3 sm:p-4 flex items-center justify-between bg-panel/90 text-xs">
+              <span className="font-mono text-[10px] text-muted-foreground">Press Esc or click outside to dismiss</span>
+              <Button
+                size="sm"
+                variant="glass"
+                onClick={() => {
+                  stopAudio();
+                  onClose();
+                }}
+                className="text-xs h-7"
+              >
+                Close Archive
+              </Button>
             </div>
           </motion.div>
         </div>
@@ -466,3 +507,4 @@ export function NasaAudioModal({ open, onClose }: Props) {
     </AnimatePresence>
   );
 }
+
