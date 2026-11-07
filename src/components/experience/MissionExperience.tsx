@@ -136,6 +136,7 @@ export function MissionExperience({
               agency={config.agency}
               targetBody={config.targetBody}
               spacecraftName={config.spacecraftName}
+              artifact={artifact ?? undefined}
             />
 
             {/* Dynamic Camera Controller */}
