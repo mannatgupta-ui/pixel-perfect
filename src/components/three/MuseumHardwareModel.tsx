@@ -7,10 +7,12 @@ import { SCENE } from "./scene-colors";
 import { ReadySignal } from "./ReadySignal";
 import SpiritModel from "./SpiritModel";
 import type { SpiritPartId } from "@/data/spirit";
+import { useSensorMode, type SensorMode } from "./useSensorMode";
 
 interface Props {
   artifact: Artifact;
   selectedPart?: string | null;
+  sensorMode?: SensorMode;
   onSelectPart?: (part: string | null) => void;
   onReady?: () => void;
 }
@@ -18,6 +20,7 @@ interface Props {
 export default function MuseumHardwareModel({
   artifact,
   selectedPart,
+  sensorMode = "optical",
   onSelectPart,
   onReady,
 }: Props) {
@@ -25,6 +28,7 @@ export default function MuseumHardwareModel({
     return (
       <SpiritModel
         selected={(selectedPart as SpiritPartId) ?? null}
+        sensorMode={sensorMode}
         onSelect={(id) => onSelectPart?.(id)}
         {...(onReady ? { onReady } : {})}
       />
@@ -59,6 +63,7 @@ export default function MuseumHardwareModel({
         <GenericHardware
           artifact={artifact}
           selectedPart={selectedPart ?? null}
+          sensorMode={sensorMode}
           {...(onSelectPart ? { onSelectPart } : {})}
         />
       </Float>
@@ -80,13 +85,18 @@ export default function MuseumHardwareModel({
 function GenericHardware({
   artifact,
   selectedPart,
+  sensorMode = "optical",
   onSelectPart,
 }: {
   artifact: Artifact;
   selectedPart?: string | null;
+  sensorMode?: SensorMode;
   onSelectPart?: (part: string | null) => void;
 }) {
   const [hovered, setHovered] = useState<string | null>(null);
+  const modelGroupRef = useRef<THREE.Group>(null);
+
+  useSensorMode(modelGroupRef, sensorMode);
 
   const isChandrayaan = artifact.id === "chandrayaan-3";
   const isHuygens = artifact.id === "huygens";
@@ -116,7 +126,7 @@ function GenericHardware({
   });
 
   return (
-    <group position={[0, -0.2, 0]}>
+    <group ref={modelGroupRef} position={[0, -0.2, 0]}>
       {/* CHANDRAYAAN-3 (Vikram Lander & Pragyan Rover) */}
       {isChandrayaan && (
         <group>

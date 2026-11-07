@@ -43,7 +43,7 @@ function StoryPage() {
   const { stage } = Route.useSearch();
 
   return (
-    <main className="relative min-h-[100svh] bg-background pt-14 pb-16">
+    <main className="relative min-h-[100svh] bg-background pt-[84px] pb-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-4 pb-4">
         <div className="mb-4 flex items-center justify-between">
           <Button asChild variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">

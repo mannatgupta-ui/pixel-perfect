@@ -27,6 +27,12 @@ import {
   Quote,
   Flame,
   Search,
+  FileCode,
+  Volume2,
+  Orbit,
+  Eye,
+  Grid3X3,
+  Zap,
 } from "lucide-react";
 
 import { ClientScene } from "@/components/site/ClientScene";
@@ -40,6 +46,11 @@ import { cn } from "@/lib/utils";
 import { MissionStoryPlayer } from "@/components/story/MissionStoryPlayer";
 import { getMissionDossier } from "@/data/missionDossiers";
 import type { ArchivalPhoto } from "@/data/types";
+import type { SensorMode } from "@/components/three/useSensorMode";
+import { NasaPdsModal } from "@/components/nasa/NasaPdsModal";
+import { NasaAudioModal } from "@/components/nasa/NasaAudioModal";
+import { NasaDsnModal } from "@/components/nasa/NasaDsnModal";
+import { NasaOrbitalDynamicsModal } from "@/components/nasa/NasaOrbitalDynamicsModal";
 
 const MuseumHardwareModel = lazy(() => import("@/components/three/MuseumHardwareModel"));
 
@@ -98,6 +109,13 @@ function ArtifactDetailPage() {
   const [heroMode, setHeroMode] = useState<"3d" | "story">(view === "story" ? "story" : "3d");
   const [ready, setReady] = useState(false);
 
+  // NASA Grade Engineering States
+  const [sensorMode, setSensorMode] = useState<SensorMode>("optical");
+  const [pdsOpen, setPdsOpen] = useState(false);
+  const [audioOpen, setAudioOpen] = useState(false);
+  const [dsnOpen, setDsnOpen] = useState(false);
+  const [orbitOpen, setOrbitOpen] = useState(false);
+
   useEffect(() => {
     if (view) {
       setActiveTab(view);
@@ -127,7 +145,7 @@ function ArtifactDetailPage() {
   };
 
   return (
-    <main className="relative min-h-[100svh] bg-background pt-14 pb-20">
+    <main className="relative min-h-[100svh] bg-background pt-[84px] pb-20">
       {/* 3D Hardware / Interactive Story Viewport */}
       <section className="relative min-h-[64svh] sm:min-h-[70svh] w-full overflow-hidden border-b border-border bg-space starfield">
         {heroMode === "story" && artifact.hasStory ? (
@@ -141,10 +159,66 @@ function ArtifactDetailPage() {
                 <MuseumHardwareModel
                   artifact={artifact}
                   selectedPart={selectedPart}
+                  sensorMode={sensorMode}
                   onSelectPart={handleSelectPart}
                   onReady={() => setReady(true)}
                 />
               </ClientScene>
+            </div>
+
+            {/* NASA Sensor Telemetry HUD Overlay */}
+            <div className="pointer-events-none absolute bottom-4 left-4 z-10 hidden sm:block">
+              <div className="rounded-xl border border-border/70 bg-black/80 px-3.5 py-2 font-mono text-[11px] backdrop-blur-md shadow-panel">
+                {sensorMode === "optical" && (
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-primary-glow font-bold">NASA JPL STEREO MASTCAM</span>
+                      <span className="text-muted-foreground text-[10px]">· 380–740nm (Visible)</span>
+                    </div>
+                    <div className="text-[10px] text-muted-foreground/80 mt-1">
+                      Calibrated PBR Albedo · Exposure: 1/250s · F/11 Aperture · J2000 Primary
+                    </div>
+                  </div>
+                )}
+                {sensorMode === "thermal" && (
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="size-2 rounded-full bg-amber-400 animate-pulse" />
+                      <span className="text-amber-400 font-bold">FLIR LWIR INFRARED RADIOMETER</span>
+                      <span className="text-muted-foreground text-[10px]">· 8–14 µm</span>
+                    </div>
+                    <div className="text-[10px] text-muted-foreground/80 mt-1 flex items-center gap-2">
+                      <span>Cryo Sensor: 84.2 K · -128°C to +42°C</span>
+                      <span className="inline-block h-2 w-16 rounded bg-gradient-to-r from-cyan-500 via-purple-500 via-amber-500 to-red-500" />
+                    </div>
+                  </div>
+                )}
+                {sensorMode === "wireframe" && (
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="size-2 rounded-full bg-sky-400 animate-pulse" />
+                      <span className="text-sky-400 font-bold">NASTRAN FINITE ELEMENT MESH (FEM)</span>
+                      <span className="text-muted-foreground text-[10px]">· CAD Wireframe</span>
+                    </div>
+                    <div className="text-[10px] text-muted-foreground/80 mt-1">
+                      Nodes: 8,420 · Elements: 16,384 · Tolerance: ±0.05 mm · Stress: Nominal
+                    </div>
+                  </div>
+                )}
+                {sensorMode === "xray" && (
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="size-2 rounded-full bg-cyan-400 animate-pulse" />
+                      <span className="text-cyan-400 font-bold">COMPTON BACKSCATTER RADIOGRAPH</span>
+                      <span className="text-muted-foreground text-[10px]">· 160 keV</span>
+                    </div>
+                    <div className="text-[10px] text-muted-foreground/80 mt-1">
+                      Internal Avionics & Hydrazine Tank Density Scan: Active Penetration
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Top Overlay Badge, Title & Mode Switcher */}
@@ -158,7 +232,7 @@ function ArtifactDetailPage() {
                 <h1 className="mt-1 font-display text-3xl font-semibold sm:text-4xl text-foreground">
                   {artifact.name}
                 </h1>
-                <div className="mt-2.5 flex items-center gap-2">
+                <div className="mt-2.5 flex flex-wrap items-center gap-2">
                   <StatusBadge status={artifact.status} label={artifact.statusLabel} />
                   {artifact.hasStory && (
                     <button
@@ -175,39 +249,129 @@ function ArtifactDetailPage() {
                 </div>
               </div>
 
-              {/* View Mode Toggle Pill (3D Model vs Animated Story) */}
-              <div className="pointer-events-auto flex items-center gap-1 rounded-2xl border border-border bg-panel/85 p-1 backdrop-blur shadow-panel">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setHeroMode("3d");
-                    setActiveTab("inspect");
-                  }}
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
-                    heroMode === "3d"
-                      ? "bg-primary text-primary-foreground font-semibold shadow-glow"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  <Layers className="size-3.5" /> 3D Model
-                </button>
-                {artifact.hasStory && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setHeroMode("story");
-                      setActiveTab("story");
-                    }}
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
-                      heroMode === "story"
-                        ? "bg-primary text-primary-foreground font-semibold shadow-glow"
-                        : "text-muted-foreground hover:text-foreground",
+              {/* View Mode & NASA Engineering Sensor Controls */}
+              <div className="pointer-events-auto flex flex-col items-end gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* View Mode Toggle Pill (3D Model vs Animated Story) */}
+                  <div className="flex items-center gap-1 rounded-2xl border border-border bg-panel/85 p-1 backdrop-blur shadow-panel">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setHeroMode("3d");
+                        setActiveTab("inspect");
+                      }}
+                      className={cn(
+                        "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
+                        heroMode === "3d"
+                          ? "bg-primary text-primary-foreground font-semibold shadow-glow"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      <Layers className="size-3.5" /> 3D Model
+                    </button>
+                    {artifact.hasStory && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setHeroMode("story");
+                          setActiveTab("story");
+                        }}
+                        className={cn(
+                          "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
+                          heroMode === "story"
+                            ? "bg-primary text-primary-foreground font-semibold shadow-glow"
+                            : "text-muted-foreground hover:text-foreground",
+                        )}
+                      >
+                        <Sparkles className="size-3.5 text-gold" /> Animated Story
+                      </button>
                     )}
-                  >
-                    <Sparkles className="size-3.5 text-gold" /> Animated Story
-                  </button>
+                  </div>
+
+                  {/* NASA Quick Action Launchers */}
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setPdsOpen(true)}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary/10 px-2.5 py-1.5 font-mono text-xs font-medium text-primary-glow backdrop-blur hover:bg-primary/20 transition-colors"
+                      title="Inspect NASA PDS4 XML Product Label & Heritage Declaration"
+                    >
+                      <FileCode className="size-3.5 text-primary" /> PDS4 Label
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAudioOpen(true)}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-teal/40 bg-teal/10 px-2.5 py-1.5 font-mono text-xs font-medium text-teal backdrop-blur hover:bg-teal/20 transition-colors"
+                      title="Listen to Extraterrestrial Martian & Deep Space Audio Archive"
+                    >
+                      <Volume2 className="size-3.5 text-teal" /> Audio
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setOrbitOpen(true)}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-gold/40 bg-gold/10 px-2.5 py-1.5 font-mono text-xs font-medium text-gold backdrop-blur hover:bg-gold/20 transition-colors hidden sm:inline-flex"
+                      title="Calculate JPL Horizons Vis-Viva & Hyperbolic Gravity Assist"
+                    >
+                      <Orbit className="size-3.5 text-gold" /> Slingshot
+                    </button>
+                  </div>
+                </div>
+
+                {/* NASA Sensor Mode Toggle Selector (when in 3D Mode) */}
+                {heroMode === "3d" && (
+                  <div className="flex items-center gap-1 rounded-2xl border border-border/80 bg-panel/90 p-1 backdrop-blur shadow-panel">
+                    <span className="px-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground hidden md:inline">
+                      Sensor:
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setSensorMode("optical")}
+                      className={cn(
+                        "flex items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-mono transition-colors",
+                        sensorMode === "optical"
+                          ? "bg-primary text-primary-foreground font-semibold shadow-glow"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      <Eye className="size-3" /> VIS
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSensorMode("thermal")}
+                      className={cn(
+                        "flex items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-mono transition-colors",
+                        sensorMode === "thermal"
+                          ? "bg-amber-500 text-black font-semibold shadow-glow"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      <Flame className="size-3 text-amber-300" /> FLIR
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSensorMode("wireframe")}
+                      className={cn(
+                        "flex items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-mono transition-colors",
+                        sensorMode === "wireframe"
+                          ? "bg-sky-500 text-black font-semibold shadow-glow"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      <Grid3X3 className="size-3 text-sky-300" /> CAD
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSensorMode("xray")}
+                      className={cn(
+                        "flex items-center gap-1 rounded-xl px-2.5 py-1 text-xs font-mono transition-colors",
+                        sensorMode === "xray"
+                          ? "bg-cyan-500 text-black font-semibold shadow-glow"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      <Zap className="size-3 text-cyan-300" /> X-Ray
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
@@ -899,6 +1063,44 @@ function ArtifactDetailPage() {
               </p>
             </div>
 
+            {/* Official NASA PDS4 Planetary Data System & Outer Space Treaty Card */}
+            <div className="rounded-3xl border border-primary/40 bg-gradient-to-r from-primary/10 via-panel to-teal/10 p-6 sm:p-8 shadow-panel">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+                <div className="flex items-start gap-4">
+                  <div className="grid size-12 shrink-0 place-items-center rounded-2xl bg-primary/20 text-primary-glow border border-primary/30">
+                    <ShieldCheck className="size-6" />
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-mono text-xs font-semibold uppercase tracking-wider text-primary-glow">
+                        NASA Planetary Data System (PDS4)
+                      </span>
+                      <span className="rounded-full bg-teal/20 px-2 py-0.5 font-mono text-[10px] text-teal">
+                        U.S. PL 116-275 Protected
+                      </span>
+                      <span className="rounded-full bg-gold/20 px-2 py-0.5 font-mono text-[10px] text-gold">
+                        UN OST Art. VIII
+                      </span>
+                    </div>
+                    <h3 className="font-display text-lg font-bold text-foreground mt-1">
+                      Planetary Science Archival Label & Extraterrestrial Heritage
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-1 max-w-2xl leading-relaxed">
+                      This hardware and its coordinates are cataloged under the NASA PDS4 Information Model v1.21.0 standard and legally protected under the One Small Step to Protect Human Heritage in Space Act.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    onClick={() => setPdsOpen(true)}
+                    className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 font-mono text-xs shadow-glow"
+                  >
+                    <FileCode className="size-4" /> Open PDS4 XML Dossier
+                  </Button>
+                </div>
+              </div>
+            </div>
+
             {/* Flight Engineering Telemetry Matrix */}
             {dossier?.specs && (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -1166,6 +1368,49 @@ function ArtifactDetailPage() {
                   </Button>
                 )}
               </div>
+
+              {/* NASA Mission Operations & Deep Space Communications */}
+              <div className="mt-8 pt-8 border-t border-border/60 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-2xl border border-teal/30 bg-teal/5 p-5">
+                  <div className="flex items-center gap-2 text-teal">
+                    <Volume2 className="size-5" />
+                    <h4 className="font-display text-base font-semibold text-foreground">
+                      NASA Extraterrestrial Acoustic Sound Archive
+                    </h4>
+                  </div>
+                  <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                    Synthesize and listen to the actual acoustic environment of other worlds — Martian wind turbulence, SuperCam laser ablation cracks, Ingenuity rotor sound waves, and Apollo Quindar beeps.
+                  </p>
+                  <Button
+                    onClick={() => setAudioOpen(true)}
+                    variant="glass"
+                    size="sm"
+                    className="mt-4 gap-1.5 text-xs text-teal border-teal/40 hover:bg-teal/20"
+                  >
+                    <Volume2 className="size-3.5" /> Launch Audio Archive Player
+                  </Button>
+                </div>
+
+                <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5">
+                  <div className="flex items-center gap-2 text-primary-glow">
+                    <Radio className="size-5" />
+                    <h4 className="font-display text-base font-semibold text-foreground">
+                      NASA Deep Space Network (DSN) Telemetry
+                    </h4>
+                  </div>
+                  <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                    Inspect active 70m/34m parabolic antennas at Goldstone, Madrid, and Canberra tracking deep space probes with round-trip light times, carrier locks, and X/Ka-band downlinks.
+                  </p>
+                  <Button
+                    onClick={() => setDsnOpen(true)}
+                    variant="glass"
+                    size="sm"
+                    className="mt-4 gap-1.5 text-xs text-primary-glow border-primary/40 hover:bg-primary/20"
+                  >
+                    <Radio className="size-3.5" /> Open DSN Tracking Console
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -1408,6 +1653,18 @@ function ArtifactDetailPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Official NASA PDS4 & Heritage Dossier Modal */}
+      <NasaPdsModal artifact={artifact} open={pdsOpen} onClose={() => setPdsOpen(false)} />
+
+      {/* NASA Extraterrestrial Audio Archive Modal */}
+      <NasaAudioModal open={audioOpen} onClose={() => setAudioOpen(false)} />
+
+      {/* NASA Deep Space Network Tracking Console Modal */}
+      <NasaDsnModal open={dsnOpen} onClose={() => setDsnOpen(false)} />
+
+      {/* NASA Horizons Orbital Dynamics & Gravity Slingshot Modal */}
+      <NasaOrbitalDynamicsModal open={orbitOpen} onClose={() => setOrbitOpen(false)} />
     </main>
   );
 }

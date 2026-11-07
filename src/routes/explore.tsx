@@ -12,6 +12,9 @@ import {
   Sparkles,
   Telescope,
   X,
+  Radio,
+  Orbit,
+  Volume2,
 } from "lucide-react";
 import { lazy, useState, useEffect } from "react";
 
@@ -23,6 +26,9 @@ import { BODIES, BODY_BY_ID, isBodyId, SCALE_NOTE } from "@/data/bodies";
 import type { BodyId } from "@/data/types";
 import { useAstro } from "@/components/astro/AstroContext";
 import { cn } from "@/lib/utils";
+import { NasaDsnModal } from "@/components/nasa/NasaDsnModal";
+import { NasaOrbitalDynamicsModal } from "@/components/nasa/NasaOrbitalDynamicsModal";
+import { NasaAudioModal } from "@/components/nasa/NasaAudioModal";
 
 const SolarSystemScene = lazy(() => import("@/components/three/SolarSystemScene"));
 
@@ -92,6 +98,9 @@ function ExplorePage() {
   const [showNebulae, setShowNebulae] = useState(true);
   const [showComet, setShowComet] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [dsnOpen, setDsnOpen] = useState(false);
+  const [orbitOpen, setOrbitOpen] = useState(false);
+  const [audioOpen, setAudioOpen] = useState(false);
 
   // Cinematic Auto-Tour state
   const [tourActive, setTourActive] = useState(false);
@@ -130,8 +139,8 @@ function ExplorePage() {
   };
 
   return (
-    <main className="relative h-[100svh] overflow-hidden bg-background pt-14">
-      <div className="absolute inset-0 top-14" data-scene-ready={ready ? "true" : undefined}>
+    <main className="relative h-[100svh] overflow-hidden bg-background pt-[84px]">
+      <div className="absolute inset-0 top-[84px]" data-scene-ready={ready ? "true" : undefined}>
         <ClientScene label="Rendering Deep Space Solar System…">
           <SolarSystemScene
             selected={sceneSelected}
@@ -156,7 +165,7 @@ function ExplorePage() {
       </div>
 
       {/* Intro + quick picks */}
-      <div className="pointer-events-none absolute inset-x-0 top-14 z-10 p-4 sm:p-6">
+      <div className="pointer-events-none absolute inset-x-0 top-[84px] z-10 p-4 sm:p-6">
         <div className="pointer-events-auto max-w-md">
           <div className="flex items-center gap-2">
             <p className="eyebrow">Deep space sandbox</p>
@@ -311,6 +320,34 @@ function ExplorePage() {
             <Sparkles className="size-3.5 text-teal" />
             {tourActive ? "Stop Tour" : "Cinematic Tour"}
           </Button>
+
+          {/* NASA Deep Space Network & Mechanics Tools */}
+          <div className="flex items-center gap-1 border-l border-border/60 pl-2">
+            <button
+              type="button"
+              onClick={() => setDsnOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-2 py-1 font-mono text-[11px] font-medium text-primary-glow hover:bg-primary/20 transition-colors"
+              title="NASA Deep Space Network Live Carrier Dish Console"
+            >
+              <Radio className="size-3" /> DSN
+            </button>
+            <button
+              type="button"
+              onClick={() => setOrbitOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-gold/40 bg-gold/10 px-2 py-1 font-mono text-[11px] font-medium text-gold hover:bg-gold/20 transition-colors hidden sm:inline-flex"
+              title="JPL Horizons Orbital Mechanics & Gravity Slingshot Simulator"
+            >
+              <Orbit className="size-3" /> Slingshot
+            </button>
+            <button
+              type="button"
+              onClick={() => setAudioOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-teal/40 bg-teal/10 px-2 py-1 font-mono text-[11px] font-medium text-teal hover:bg-teal/20 transition-colors"
+              title="NASA Extraterrestrial Acoustic Sound Archive"
+            >
+              <Volume2 className="size-3" /> Audio
+            </button>
+          </div>
         </div>
       </div>
 
@@ -406,6 +443,11 @@ function ExplorePage() {
       </p>
 
       <AnimatePresence>{focus && <FocusPanel key={focus} focus={focus} onClose={() => select(null)} />}</AnimatePresence>
+
+      {/* NASA Modals */}
+      <NasaDsnModal open={dsnOpen} onClose={() => setDsnOpen(false)} />
+      <NasaOrbitalDynamicsModal open={orbitOpen} onClose={() => setOrbitOpen(false)} />
+      <NasaAudioModal open={audioOpen} onClose={() => setAudioOpen(false)} />
     </main>
   );
 }

@@ -91,8 +91,8 @@ function PlanetPage() {
   }, [body, selected]);
 
   return (
-    <main className="relative h-[100svh] overflow-hidden bg-background pt-14">
-      <div className="absolute inset-0 top-14" data-scene-ready={ready ? "true" : undefined}>
+    <main className="relative h-[100svh] overflow-hidden bg-background pt-[84px]">
+      <div className="absolute inset-0 top-[84px]" data-scene-ready={ready ? "true" : undefined}>
         <ClientScene label={`Mapping ${body.name}…`}>
           <PlanetGlobe
             bodyId={planetId}
@@ -104,7 +104,7 @@ function PlanetPage() {
         </ClientScene>
       </div>
 
-      <aside className="absolute left-3 top-[4.5rem] z-10 hidden max-h-[calc(100svh-6rem)] w-72 overflow-y-auto rounded-3xl border border-border bg-panel p-4 shadow-panel md:block">
+      <aside className="absolute left-3 top-[96px] z-10 hidden max-h-[calc(100svh-7.5rem)] w-72 overflow-y-auto rounded-3xl border border-border bg-panel p-4 shadow-panel md:block">
         <p className="eyebrow">Surface map</p>
         <h1 className="mt-1 text-2xl font-medium">{body.name}</h1>
         <p className="mt-1 text-xs text-muted-foreground">Tap a marker or a site below to fly there.</p>
@@ -128,7 +128,7 @@ function PlanetPage() {
       </aside>
 
       {selected && (
-        <aside className="absolute inset-x-3 bottom-3 z-20 max-h-[55svh] overflow-y-auto rounded-3xl border border-border bg-panel p-5 shadow-panel sm:inset-x-auto sm:bottom-6 sm:right-6 sm:top-20 sm:max-h-none sm:w-[380px]">
+        <aside className="absolute inset-x-3 bottom-3 z-20 max-h-[55svh] overflow-y-auto rounded-3xl border border-border bg-panel p-5 shadow-panel sm:inset-x-auto sm:bottom-6 sm:right-6 sm:top-[96px] sm:max-h-none sm:w-[380px]">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="eyebrow">{KIND_LABEL[selected.kind]} · {selected.mission}</p>

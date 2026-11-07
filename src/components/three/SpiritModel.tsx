@@ -1,11 +1,12 @@
 import { ContactShadows, Environment, Float, Html, Lightformer, OrbitControls, Stars } from "@react-three/drei";
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, useRef, type ReactNode } from "react";
 import * as THREE from "three";
 
 import { SPIRIT_PART_BY_ID, type SpiritPartId } from "@/data/spirit";
 import { ReadySignal } from "./ReadySignal";
 import { SCENE } from "./scene-colors";
+import { useSensorMode, type SensorMode } from "./useSensorMode";
 
 /**
  * Illustrative reconstruction of a Mars Exploration Rover built from simple
@@ -85,11 +86,15 @@ function Wheel({ position }: { position: [number, number, number] }) {
   );
 }
 
-function Rover() {
+function Rover({ sensorMode = "optical" }: { sensorMode?: SensorMode }) {
   const wheelX = 0.62;
   const wheelZ = [-0.55, 0, 0.55];
+  const roverGroupRef = useRef<THREE.Group>(null);
+
+  useSensorMode(roverGroupRef, sensorMode);
+
   return (
-    <group position={[0, -0.55, 0]}>
+    <group ref={roverGroupRef} position={[0, -0.55, 0]}>
       {/* Wheels + rocker-bogie */}
       <Part id="wheels">
         {[-1, 1].map((side) => (
@@ -239,11 +244,12 @@ const LABEL_POS: Record<SpiritPartId, [number, number, number]> = {
 
 interface Props {
   selected: SpiritPartId | null;
+  sensorMode?: SensorMode;
   onSelect: (id: SpiritPartId | null) => void;
   onReady?: () => void;
 }
 
-export default function SpiritModel({ selected, onSelect, onReady }: Props) {
+export default function SpiritModel({ selected, sensorMode = "optical", onSelect, onReady }: Props) {
   const [hovered, setHovered] = useState<SpiritPartId | null>(null);
   const label = hovered ?? selected;
   return (
@@ -265,7 +271,7 @@ export default function SpiritModel({ selected, onSelect, onReady }: Props) {
       </Environment>
       <Ctx.Provider value={{ selected, hovered, setHovered, onSelect: (id) => onSelect(id) }}>
         <Float speed={1.4} rotationIntensity={0.15} floatIntensity={0.5}>
-          <Rover />
+          <Rover sensorMode={sensorMode} />
           {label && (
             <Html position={LABEL_POS[label]} center zIndexRange={[20, 0]}>
               <div className="pointer-events-none whitespace-nowrap rounded-full bg-primary px-3 py-1 font-mono text-[11px] font-semibold text-primary-foreground shadow-glow">
