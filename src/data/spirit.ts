@@ -265,7 +265,7 @@ export const SPIRIT_STORY: StoryStage[] = [
     title: "My Challenges",
     date: "2004 – 2009",
     narration: [
-      "Just 18 sols after landing, my memory filled up and I went silent. Engineers on Earth fixed me from 200 million kilometres away.",
+      "Just 18 sols after landing, my memory filled up and I went silent. Engineers on Earth fixed me from more than 150 million kilometres away.",
       "Then my right-front wheel stopped turning, and I learned to drive backwards. Dust storms dimmed my Sun. Every winter, I parked on a slope to catch the light.",
     ],
     scienceTitle: "Dust is a solar rover's enemy",
