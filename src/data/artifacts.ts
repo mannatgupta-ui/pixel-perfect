@@ -206,7 +206,7 @@ export const ARTIFACTS: Artifact[] = [
     summary: "InSight listened to more than 1,300 marsquakes and mapped the planet's deep interior.",
     sources: [
       { label: "NASA Science — InSight", url: "https://science.nasa.gov/mission/insight/" },
-      nssdc("2018-027A", "InSight"),
+      nssdc("2018-042A", "InSight"),
     ],
   },
   {
@@ -436,7 +436,7 @@ export const ARTIFACTS: Artifact[] = [
     summary: "Four probes dived into different parts of Venus's atmosphere at once.",
     sources: [
       { label: "NASA Science — Pioneer Venus 2", url: "https://science.nasa.gov/mission/pioneer-venus-2/" },
-      nssdc("1978-078A", "Pioneer Venus 2"),
+      nssdc("1978-078A", "Pioneer Venus Probe Bus"),
     ],
   },
   {
