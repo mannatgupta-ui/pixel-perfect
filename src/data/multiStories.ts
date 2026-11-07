@@ -1,4 +1,9 @@
 import { SPIRIT_STORY, STORY_DISCLAIMER, type StoryStage } from "./spirit";
+import { MARS_EXTRA_STORIES } from "./stories/marsStories";
+import { MOON_EXTRA_STORIES } from "./stories/moonStories";
+import { DEEP_SPACE_EXTRA_STORIES } from "./stories/deepSpaceStories";
+import { getArtifact } from "./artifacts";
+import type { Artifact } from "./types";
 
 export interface MissionStoryMeta {
   artifactId: string;
@@ -1180,8 +1185,105 @@ export const ALL_MISSION_STORIES: MissionStoryMeta[] = [
     destination: "Interstellar Space (>24 Billion km)",
     stages: VOYAGER1_STORY,
   },
+  ...MARS_EXTRA_STORIES,
+  ...MOON_EXTRA_STORIES,
+  ...DEEP_SPACE_EXTRA_STORIES,
 ];
 
-export function getStoryForArtifact(id: string): MissionStoryMeta | undefined {
-  return ALL_MISSION_STORIES.find((s) => s.artifactId === id) ?? ALL_MISSION_STORIES[0];
+/**
+ * Universal dynamic fallback generator for any artifact in the museum
+ */
+export function generateUniversalMissionStory(artifact: Artifact): MissionStoryMeta {
+  const destName = artifact.site ?? artifact.bodyId ?? "Deep Space";
+  const agency = (artifact.agency === "ISRO" || artifact.agency === "ESA" ? artifact.agency : "NASA") as "NASA" | "ISRO" | "ESA";
+
+  const stages: StoryStage[] = [
+    {
+      id: "creation",
+      number: "01",
+      title: "Born on Earth",
+      date: artifact.launchDate ? `Launched ${artifact.launchDate}` : "Mission Genesis",
+      narration: [
+        `I was built by ${artifact.agency} for the ${artifact.mission} mission.`,
+        `My purpose was ambitious: venture across the solar system as a ${artifact.kind} to explore ${destName}.`,
+        artifact.summary,
+      ],
+      scienceTitle: "Engineering Specifications & Mission Architecture",
+      science: `${artifact.name} was engineered by ${artifact.agency} to withstand the extreme vacuum, radiation, and thermal extremes of space.`,
+      facts: [
+        `Agency: ${artifact.agency}`,
+        `Mission: ${artifact.mission}`,
+        `Hardware Class: ${artifact.kind}`,
+      ],
+      hotspots: [
+        { x: 50, y: 40, label: artifact.name, text: `${artifact.name} flight vehicle hardware.` },
+      ],
+    },
+    {
+      id: "arrival",
+      number: "02",
+      title: "Journey & Arrival",
+      date: artifact.arrivalDate ? `${artifact.arrivalLabel ?? "Arrival"}: ${artifact.arrivalDate}` : "Arrival in Space",
+      narration: [
+        `After crossing millions of kilometres of space, I arrived at my destination: ${destName}.`,
+        `Every instrument began executing its programmed commands, transmitting valuable telemetry and observations home to Earth.`,
+        `I became humanity's eyes and hands in this distant corner of the cosmos.`,
+      ],
+      scienceTitle: "Arrival Dynamics and Trajectory",
+      science: `Navigating to ${destName} required orbital mechanics, high-gain communications, and autonomous operations across light-delay intervals.`,
+      facts: [
+        `Target Body: ${artifact.bodyId ?? "Deep Space"}`,
+        `Operational Location: ${destName}`,
+        `Status Record: ${artifact.statusLabel ?? artifact.status}`,
+      ],
+      hotspots: [
+        { x: 50, y: 50, label: destName, text: `Operational area at ${destName}.` },
+      ],
+    },
+    {
+      id: "monument",
+      number: "03",
+      title: "Abandoned but Not Forgotten",
+      date: artifact.lastSignal ? `Last Signal: ${artifact.lastSignal}` : "Eternal Monument",
+      narration: [
+        artifact.endReason ?? `Having completed my mission, my instruments fell silent.`,
+        artifact.finalLocation ? `Today, I rest at ${artifact.finalLocation}` : `I remain at ${destName}, preserved in the clean vacuum of space.`,
+        `I am abandoned, but never forgotten — an eternal testament to humanity's yearning to explore the unknown.`,
+      ],
+      scienceTitle: "Permanent Scientific Legacy",
+      science: `The hardware remains as an extraterrestrial archaeological site, preserving humanity's early robotic and human space exploration heritage.`,
+      facts: [
+        `Final Condition: ${artifact.finalCondition ?? "Preserved intact on site"}`,
+        `Historical Relic: ${artifact.remains ?? "Flight hardware intact"}`,
+        `Museum Status: Permanent entry in Abandoned but Not Forgotten collection`,
+      ],
+      hotspots: [
+        { x: 50, y: 50, label: "Eternal Monument", text: `The resting site of ${artifact.name}.` },
+      ],
+    },
+  ];
+
+  return {
+    artifactId: artifact.id,
+    title: `${artifact.name}: The Mission Story`,
+    subtitle: `${artifact.agency} · ${artifact.mission} · ${destName}`,
+    agency,
+    heroTagline: artifact.summary,
+    stagesCount: stages.length,
+    durationMinutes: `${stages.length} min`,
+    destination: destName,
+    stages,
+  };
+}
+
+export function getStoryForArtifact(id: string): MissionStoryMeta {
+  const found = ALL_MISSION_STORIES.find((s) => s.artifactId === id);
+  if (found) return found;
+
+  const artifact = getArtifact(id);
+  if (artifact) {
+    return generateUniversalMissionStory(artifact);
+  }
+
+  return ALL_MISSION_STORIES[0]!;
 }

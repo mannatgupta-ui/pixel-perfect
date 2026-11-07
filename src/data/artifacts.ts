@@ -127,7 +127,7 @@ export const ARTIFACTS: Artifact[] = [
     sources: [
       esaSrc("Beagle 2 Rediscovery", "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Beagle_2_found_on_Mars"),
     ],
-    hasStory: false,
+    hasStory: true,
     hasModel: true,
   },
   {
@@ -149,7 +149,7 @@ export const ARTIFACTS: Artifact[] = [
     sources: [
       esaSrc("Schiaparelli Landing Report", "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars"),
     ],
-    hasStory: false,
+    hasStory: true,
     hasModel: true,
   },
   {
@@ -175,6 +175,7 @@ export const ARTIFACTS: Artifact[] = [
       { label: "NASA Science — Viking", url: "https://science.nasa.gov/mission/viking/" },
       nssdc("1975-075C", "Viking 1 Lander"),
     ],
+    hasStory: true,
   },
   {
     id: "viking-2",
@@ -198,6 +199,7 @@ export const ARTIFACTS: Artifact[] = [
       { label: "NASA Science — Viking", url: "https://science.nasa.gov/mission/viking/" },
       nssdc("1975-083C", "Viking 2 Lander"),
     ],
+    hasStory: true,
   },
   {
     id: "pathfinder",
@@ -221,6 +223,7 @@ export const ARTIFACTS: Artifact[] = [
       { label: "NASA Science — Mars Pathfinder", url: "https://science.nasa.gov/mission/mars-pathfinder/" },
       nssdc("1996-068A", "Mars Pathfinder"),
     ],
+    hasStory: true,
   },
   {
     id: "sojourner",
@@ -248,6 +251,7 @@ export const ARTIFACTS: Artifact[] = [
     sources: [
       { label: "NASA Science — Mars Pathfinder", url: "https://science.nasa.gov/mission/mars-pathfinder/" },
     ],
+    hasStory: true,
   },
   {
     id: "phoenix",
@@ -272,6 +276,7 @@ export const ARTIFACTS: Artifact[] = [
       { label: "NASA Science — Phoenix", url: "https://science.nasa.gov/mission/phoenix/" },
       nssdc("2007-034A", "Phoenix"),
     ],
+    hasStory: true,
   },
   {
     id: "insight",
@@ -295,6 +300,7 @@ export const ARTIFACTS: Artifact[] = [
       { label: "NASA Science — InSight", url: "https://science.nasa.gov/mission/insight/" },
       nssdc("2018-042A", "InSight"),
     ],
+    hasStory: true,
   },
   {
     id: "curiosity",
@@ -312,7 +318,7 @@ export const ARTIFACTS: Artifact[] = [
     statusLabel: "Still exploring Mount Sharp",
     summary: "A car-sized, nuclear-powered rover that landed via a dramatic rocket sky crane and proved ancient Gale was habitable.",
     sources: [{ label: "NASA Science — Curiosity", url: "https://science.nasa.gov/mission/msl-curiosity/" }],
-    hasStory: false,
+    hasStory: true,
     hasModel: true,
   },
   {
@@ -331,6 +337,7 @@ export const ARTIFACTS: Artifact[] = [
     statusLabel: "Collecting samples in Jezero",
     summary: "Perseverance is caching core samples of an ancient river delta for future return to Earth.",
     sources: [{ label: "NASA Science — Perseverance", url: "https://science.nasa.gov/mission/mars-2020-perseverance/" }],
+    hasStory: true,
   },
   {
     id: "ingenuity",
@@ -361,6 +368,7 @@ export const ARTIFACTS: Artifact[] = [
         url: "https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/",
       },
     ],
+    hasStory: true,
   },
 
   // ───────────────────────── MOON (NASA, ISRO, ESA) ─────────────────────────
@@ -409,7 +417,7 @@ export const ARTIFACTS: Artifact[] = [
     sources: [
       isroSrc("Chandrayaan-2 Overview", "https://www.isro.gov.in/Chandrayaan2.html"),
     ],
-    hasStory: false,
+    hasStory: true,
     hasModel: true,
   },
   {
@@ -431,6 +439,7 @@ export const ARTIFACTS: Artifact[] = [
     sources: [
       isroSrc("Chandrayaan-1 Discovery", "https://www.isro.gov.in/Chandrayaan_1.html"),
     ],
+    hasStory: true,
   },
   {
     id: "smart-1",
@@ -451,6 +460,7 @@ export const ARTIFACTS: Artifact[] = [
     sources: [
       esaSrc("SMART-1 Mission", "https://www.esa.int/Science_Exploration/Space_Science/SMART-1"),
     ],
+    hasStory: true,
   },
   {
     id: "apollo-11",
@@ -499,6 +509,7 @@ export const ARTIFACTS: Artifact[] = [
     remains: "Apollo 12 astronauts brought its camera back to Earth; the rest of the lander is still there.",
     summary: "A robotic lander that was later visited by humans — the only one ever.",
     sources: [{ label: "NASA Science — Surveyor 3", url: "https://science.nasa.gov/mission/surveyor-3/" }],
+    hasStory: true,
   },
   {
     id: "apollo-12",
@@ -517,6 +528,7 @@ export const ARTIFACTS: Artifact[] = [
     remains: "The descent stage and surface experiments. " + LRO_NOTE,
     summary: "A pinpoint landing right next to Surveyor 3, proving precise lunar landings were possible.",
     sources: [{ label: "NASA — Apollo 12", url: "https://www.nasa.gov/mission/apollo-12/" }],
+    hasStory: true,
   },
   {
     id: "apollo-14",
@@ -535,6 +547,7 @@ export const ARTIFACTS: Artifact[] = [
     remains: "The descent stage, a hand-pulled equipment cart and a laser retroreflector. " + LRO_NOTE,
     summary: "The mission that brought back samples from the Fra Mauro highlands.",
     sources: [{ label: "NASA — Apollo 14", url: "https://www.nasa.gov/mission/apollo-14/" }],
+    hasStory: true,
   },
   {
     id: "apollo-15",
@@ -553,6 +566,7 @@ export const ARTIFACTS: Artifact[] = [
     remains: "The descent stage, the first Lunar Roving Vehicle and a laser retroreflector. " + LRO_NOTE,
     summary: "The first mission to drive a car on the Moon.",
     sources: [{ label: "NASA — Apollo 15", url: "https://www.nasa.gov/mission/apollo-15/" }],
+    hasStory: true,
   },
   {
     id: "apollo-16",
@@ -571,6 +585,7 @@ export const ARTIFACTS: Artifact[] = [
     remains: "The descent stage and the second Lunar Roving Vehicle. " + LRO_NOTE,
     summary: "The only Apollo landing in the lunar central highlands.",
     sources: [{ label: "NASA — Apollo 16", url: "https://www.nasa.gov/mission/apollo-16/" }],
+    hasStory: true,
   },
   {
     id: "apollo-17",
@@ -589,6 +604,7 @@ export const ARTIFACTS: Artifact[] = [
     remains: "The descent stage, the third Lunar Roving Vehicle and a plaque on the lander leg. " + LRO_NOTE,
     summary: "The last time humans walked on the Moon — so far.",
     sources: [{ label: "NASA — Apollo 17", url: "https://www.nasa.gov/mission/apollo-17/" }],
+    hasStory: true,
   },
 
   // ───────────────────────── OTHER PLANETS & SATURN (ESA/NASA) ─────────────────────────
@@ -634,6 +650,7 @@ export const ARTIFACTS: Artifact[] = [
       { label: "NASA Science — MESSENGER", url: "https://science.nasa.gov/mission/messenger/" },
       nssdc("2004-030A", "MESSENGER"),
     ],
+    hasStory: true,
   },
   {
     id: "pioneer-venus-multiprobe",
@@ -653,6 +670,7 @@ export const ARTIFACTS: Artifact[] = [
       { label: "NASA Science — Pioneer Venus 2", url: "https://science.nasa.gov/mission/pioneer-venus-2/" },
       nssdc("1978-078A", "Pioneer Venus Probe Bus"),
     ],
+    hasStory: true,
   },
   {
     id: "magellan",
@@ -669,6 +687,7 @@ export const ARTIFACTS: Artifact[] = [
     endReason: "Engineers steered it into Venus's atmosphere as a final experiment.",
     summary: "Magellan used radar to see through Venus's clouds and mapped almost the whole planet.",
     sources: [{ label: "NASA Science — Magellan", url: "https://science.nasa.gov/mission/magellan/" }],
+    hasStory: true,
   },
   {
     id: "galileo",
@@ -686,6 +705,7 @@ export const ARTIFACTS: Artifact[] = [
       "To avoid any chance of contaminating Europa's possible ocean, the nearly out-of-fuel orbiter was deliberately sent into Jupiter.",
     summary: "The first spacecraft to orbit Jupiter, and the first to drop a probe into a giant planet.",
     sources: [{ label: "NASA Science — Galileo", url: "https://science.nasa.gov/mission/galileo/" }],
+    hasStory: true,
   },
   {
     id: "cassini",
@@ -702,6 +722,7 @@ export const ARTIFACTS: Artifact[] = [
     endReason: "Low on fuel, Cassini dived into Saturn to protect moons that might host life, sending data until the end.",
     summary: "13 years orbiting Saturn: it found oceans hidden under Enceladus's ice.",
     sources: [{ label: "NASA Science — Cassini", url: "https://science.nasa.gov/mission/cassini/" }],
+    hasStory: true,
   },
 
   // ───────────────────────── DEEP SPACE & COMETS ─────────────────────────
@@ -765,6 +786,7 @@ export const ARTIFACTS: Artifact[] = [
       { label: "NASA Science — Voyager", url: "https://science.nasa.gov/mission/voyager/" },
       nssdc("1977-076A", "Voyager 2"),
     ],
+    hasStory: true,
   },
   {
     id: "pioneer-10",
@@ -781,6 +803,7 @@ export const ARTIFACTS: Artifact[] = [
     endReason: "Its nuclear power source weakened until its signal became too faint to detect.",
     summary: "The first spacecraft to cross the asteroid belt and fly past Jupiter.",
     sources: [{ label: "NASA Science — Pioneer 10", url: "https://science.nasa.gov/mission/pioneer-10/" }],
+    hasStory: true,
   },
   {
     id: "pioneer-11",
@@ -797,6 +820,7 @@ export const ARTIFACTS: Artifact[] = [
     endReason: "Its power source could no longer run its instruments or keep its antenna pointed at Earth.",
     summary: "The first spacecraft to fly past Saturn.",
     sources: [{ label: "NASA Science — Pioneer 11", url: "https://science.nasa.gov/mission/pioneer-11/" }],
+    hasStory: true,
   },
   {
     id: "new-horizons",
@@ -810,6 +834,7 @@ export const ARTIFACTS: Artifact[] = [
     statusLabel: "Still flying through the Kuiper Belt",
     summary: "Gave us our first close-up look at Pluto in 2015.",
     sources: [{ label: "NASA Science — New Horizons", url: "https://science.nasa.gov/mission/new-horizons/" }],
+    hasStory: true,
   },
 ];
 
