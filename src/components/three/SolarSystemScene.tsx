@@ -269,8 +269,8 @@ function SaturnRing({ radius }: { radius: number }) {
     const inner = radius * 1.25;
     const outer = radius * 2.3;
     const g = new THREE.RingGeometry(inner, outer, 96, 1);
-    const pos = g.attributes.position as THREE.BufferAttribute;
-    const uv = g.attributes.uv as THREE.BufferAttribute;
+    const pos = g.attributes["position"] as THREE.BufferAttribute;
+    const uv = g.attributes["uv"] as THREE.BufferAttribute;
     const v = new THREE.Vector3();
     for (let i = 0; i < pos.count; i++) {
       v.fromBufferAttribute(pos, i);

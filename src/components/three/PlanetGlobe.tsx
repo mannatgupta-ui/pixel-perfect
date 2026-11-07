@@ -188,7 +188,7 @@ function SiteMarker({
         <meshBasicMaterial color={color} transparent opacity={0.6} side={THREE.DoubleSide} depthWrite={false} />
       </mesh>
       {active && (
-        <Html position={[0, 0.22, 0]} center occlude={[occluder]} zIndexRange={[20, 0]}>
+        <Html position={[0, 0.22, 0]} center occlude={[occluder as React.RefObject<THREE.Object3D>]} zIndexRange={[20, 0]}>
           <div
             className={cn(
               "pointer-events-none whitespace-nowrap rounded-full border border-border bg-panel px-3 py-1 font-mono text-[11px] text-foreground shadow-panel",
