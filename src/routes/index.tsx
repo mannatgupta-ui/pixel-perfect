@@ -81,7 +81,13 @@ function Index() {
             <footer className="mt-2 font-mono text-xs text-muted-foreground">— Spirit Rover, as imagined. {STORY_DISCLAIMER.split(".")[0]}.</footer>
           </motion.blockquote>
           <motion.div variants={fadeUp} initial="hidden" animate="show" custom={3} className="mt-9 flex flex-wrap gap-3">
-            <Button asChild variant="hero" size="lg">
+            <Button asChild variant="hero" size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 shadow-glow hover:scale-105 transition-all">
+              <Link to="/experience/$artifactId" params={{ artifactId: "mangalyaan" }}>
+                <span className="size-2 rounded-full bg-white animate-ping mr-2" />
+                🚀 Become the Spacecraft: Mangalyaan
+              </Link>
+            </Button>
+            <Button asChild variant="glass" size="lg">
               <Link to="/explore">
                 Enter the Solar System <ArrowRight />
               </Link>

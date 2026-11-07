@@ -1,6 +1,7 @@
 import { ARTIFACTS } from "@/data/artifacts";
 import { BODIES } from "@/data/bodies";
 import { SPIRIT_PARTS, SPIRIT_STORY } from "@/data/spirit";
+import { MANGALYAAN_EXPERIENCE_CONFIG } from "@/components/experience/MangalyaanMissionConfig";
 import type { AstroContextState } from "@/components/astro/AstroContext";
 
 export interface KnowledgeSnippet {
@@ -73,6 +74,38 @@ export const KNOWLEDGE_BASE: KnowledgeSnippet[] = [
     }. Day length: ${b.dayLength}. ${b.noHardwareNote ?? "Explorable celestial body holding historical NASA hardware."}`,
     source: "NASA Solar System Exploration",
     keywords: [b.id.toLowerCase(), b.name.toLowerCase(), "planet", "world", "solar system"],
+  })),
+  ...MANGALYAAN_EXPERIENCE_CONFIG.components.map((c) => ({
+    topic: `Mangalyaan Subsystem: ${c.name}`,
+    category: "component" as const,
+    content: `${c.name} (${c.category} subsystem): ${c.description} Specifications: ${c.specs.join("; ")}`,
+    source: "ISRO Mars Orbiter Mission Engineering Specifications",
+    keywords: [
+      c.id.toLowerCase(),
+      c.name.toLowerCase(),
+      c.category.toLowerCase(),
+      "mangalyaan",
+      "isro",
+      "component",
+      "subsystem",
+      "hardware",
+    ],
+  })),
+  ...MANGALYAAN_EXPERIENCE_CONFIG.chapters.map((ch) => ({
+    topic: `Mangalyaan Mission Chapter ${ch.chapterNumber}: ${ch.title}`,
+    category: "story" as const,
+    content: `Chapter ${ch.chapterNumber} (${ch.title}, ${ch.historicalDate}): ${ch.firstPersonVoice.join(" ")} Scientific context: ${ch.scientificContext}. Key events: ${ch.eventPills.join(", ")}. Telemetry: Speed ${ch.telemetry.speedKmS} km/s, Earth distance ${ch.telemetry.distEarthKm} km, Propellant ${ch.telemetry.propellantMassKg} kg.`,
+    source: ch.sources[0]?.title ?? "ISRO Mission Operations Complex",
+    keywords: [
+      ch.id.toLowerCase(),
+      ch.title.toLowerCase(),
+      `chapter ${ch.chapterNumber}`,
+      "mangalyaan",
+      "isro",
+      "story",
+      "experience",
+      ...ch.eventPills.map((p) => p.toLowerCase()),
+    ],
   })),
 ];
 

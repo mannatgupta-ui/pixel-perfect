@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ArtifactArtifactIdRouteImport } from './routes/artifact.$artifactId'
+import { Route as ExperienceArtifactIdRouteImport } from './routes/experience.$artifactId'
 import { Route as PlanetPlanetIdRouteImport } from './routes/planet.$planetId'
 import { Route as StoryArtifactIdRouteImport } from './routes/story.$artifactId'
 
@@ -30,6 +31,11 @@ const ArtifactArtifactIdRoute = ArtifactArtifactIdRouteImport.update({
   path: '/artifact/$artifactId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExperienceArtifactIdRoute = ExperienceArtifactIdRouteImport.update({
+  id: '/experience/$artifactId',
+  path: '/experience/$artifactId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlanetPlanetIdRoute = PlanetPlanetIdRouteImport.update({
   id: '/planet/$planetId',
   path: '/planet/$planetId',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/explore': typeof ExploreRoute
   '/artifact/$artifactId': typeof ArtifactArtifactIdRoute
+  '/experience/$artifactId': typeof ExperienceArtifactIdRoute
   '/planet/$planetId': typeof PlanetPlanetIdRoute
   '/story/$artifactId': typeof StoryArtifactIdRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/explore': typeof ExploreRoute
   '/artifact/$artifactId': typeof ArtifactArtifactIdRoute
+  '/experience/$artifactId': typeof ExperienceArtifactIdRoute
   '/planet/$planetId': typeof PlanetPlanetIdRoute
   '/story/$artifactId': typeof StoryArtifactIdRoute
 }
@@ -60,6 +68,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/explore': typeof ExploreRoute
   '/artifact/$artifactId': typeof ArtifactArtifactIdRoute
+  '/experience/$artifactId': typeof ExperienceArtifactIdRoute
   '/planet/$planetId': typeof PlanetPlanetIdRoute
   '/story/$artifactId': typeof StoryArtifactIdRoute
 }
@@ -69,6 +78,7 @@ export interface FileRouteTypes {
     | '/'
     | '/explore'
     | '/artifact/$artifactId'
+    | '/experience/$artifactId'
     | '/planet/$planetId'
     | '/story/$artifactId'
   fileRoutesByTo: FileRoutesByTo
@@ -76,6 +86,7 @@ export interface FileRouteTypes {
     | '/'
     | '/explore'
     | '/artifact/$artifactId'
+    | '/experience/$artifactId'
     | '/planet/$planetId'
     | '/story/$artifactId'
   id:
@@ -83,6 +94,7 @@ export interface FileRouteTypes {
     | '/'
     | '/explore'
     | '/artifact/$artifactId'
+    | '/experience/$artifactId'
     | '/planet/$planetId'
     | '/story/$artifactId'
   fileRoutesById: FileRoutesById
@@ -91,6 +103,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ExploreRoute: typeof ExploreRoute
   ArtifactArtifactIdRoute: typeof ArtifactArtifactIdRoute
+  ExperienceArtifactIdRoute: typeof ExperienceArtifactIdRoute
   PlanetPlanetIdRoute: typeof PlanetPlanetIdRoute
   StoryArtifactIdRoute: typeof StoryArtifactIdRoute
 }
@@ -118,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArtifactArtifactIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/experience/$artifactId': {
+      id: '/experience/$artifactId'
+      path: '/experience/$artifactId'
+      fullPath: '/experience/$artifactId'
+      preLoaderRoute: typeof ExperienceArtifactIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/planet/$planetId': {
       id: '/planet/$planetId'
       path: '/planet/$planetId'
@@ -139,6 +159,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ExploreRoute: ExploreRoute,
   ArtifactArtifactIdRoute: ArtifactArtifactIdRoute,
+  ExperienceArtifactIdRoute: ExperienceArtifactIdRoute,
   PlanetPlanetIdRoute: PlanetPlanetIdRoute,
   StoryArtifactIdRoute: StoryArtifactIdRoute,
 }

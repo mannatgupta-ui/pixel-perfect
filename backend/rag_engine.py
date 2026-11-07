@@ -117,6 +117,49 @@ Both probes carry a 12-inch gold-plated copper phonograph record containing soun
         source="NASA JPL Interstellar Mission Archive",
         metadata={"body": "deep-space", "voyager1": "interstellar", "voyager2": "interstellar"}
     ),
+
+    # ── MANGALYAAN (MARS ORBITER MISSION) — ISRO ──
+    KnowledgeDocument(
+        doc_id="mangalyaan-overview",
+        title="Mars Orbiter Mission (Mangalyaan) Overview & Frugal Engineering",
+        category="orbiter",
+        content="""India's Mars Orbiter Mission (MOM), unofficially dubbed Mangalyaan, was India's first interplanetary expedition 
+and one of the greatest feats of frugal aerospace engineering in human history. Built in a record 15 months for ₹450 crore 
+(~$74 million USD), it launched on 5 November 2013 on a PSLV-XL rocket and entered Mars orbit on 24 September 2014 on its very 
+first attempt — making India the first Asian nation to reach Mars and the first in the world to succeed on a maiden trial. 
+Designed for 6 months, Mangalyaan operated for nearly 8 years until April 2022.""",
+        source="ISRO Mars Orbiter Mission Official Archive (isro.gov.in/MarsOrbiterMission.html)",
+        metadata={"body": "mars", "agency": "ISRO", "launch": "2013-11-05", "arrival": "2014-09-24", "status": "silent"}
+    ),
+    KnowledgeDocument(
+        doc_id="mangalyaan-instruments-hardware",
+        title="Mangalyaan Spacecraft Engineering, Bus & 5 Scientific Payloads",
+        category="hardware",
+        content="""Mangalyaan was built on an adapted I-1K satellite bus with a total launch mass of 1,337 kg. 
+Key subsystems:
+1. 440N Liquid Apogee Motor (LAM): Bipropellant engine (MMH + MON-3) that completed the 1,388s Mars Orbit Insertion burn.
+2. Solar Wing: Three panels (7.56 m² total) generating 840 W at Mars, backed by a 36 Ah lithium-ion battery.
+3. 2.2m High-Gain Antenna (HGA): Steerable dual-axis parabolic dish for X-band communication across 400M km.
+4. Mars Colour Camera (MCC): 3-color CCD returning >1,000 full-disk color portraits of Mars and Phobos.
+5. Lyman Alpha Photometer (LAP): UV photometer measuring D/H ratio and hydrogen loss from the upper atmosphere.
+6. Methane Sensor for Mars (MSM): Differential absorption Fabry-Pérot interferometer searching for biological/geothermal methane.
+7. Thermal IR Spectrometer (TIS): Microbolometer measuring surface temperatures and mineral emissivity.
+8. MENCA: Quadrupole mass spectrometer analyzing neutral exospheric composition.""",
+        source="ISRO Satellite Centre (ISAC) Engineering Specifications",
+        metadata={"spacecraft": "Mangalyaan", "subsystems": ["LAM", "HGA", "MCC", "LAP", "MSM", "TIS", "MENCA"]}
+    ),
+    KnowledgeDocument(
+        doc_id="mangalyaan-moi-slingshot",
+        title="Oberth Slingshot Trajectory and 24-Minute Mars Orbit Insertion Burn",
+        category="trajectory",
+        content="""Because the PSLV rocket lacked the power to push Mangalyaan directly onto a trans-Mars trajectory, 
+ISRO utilized the Oberth effect. Over 25 days, six progressive engine firings at Earth perigee raised the spacecraft's apogee 
+from 23,000 km to nearly 193,000 km before Trans-Mars Injection on 1 December 2013. 
+On 24 September 2014, after 298 days of deep space cruise, the main 440N engine was reignited behind the dark side of Mars 
+during total radio blackout, firing for 1,388 seconds to decelerate the probe by 1,098 m/s into a 421 km × 76,993 km elliptical orbit.""",
+        source="ISRO Mission Operations Complex (MOX) Flight Telemetry",
+        metadata={"body": "mars", "moi_date": "2014-09-24", "delta_v": "1098 m/s", "burn_duration": "1388s"}
+    ),
 ]
 
 class RAGEngine:

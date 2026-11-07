@@ -58,6 +58,15 @@ export function SiteHeader() {
           >
             Story
           </Link>
+          <Link
+            to="/experience/$artifactId"
+            params={{ artifactId: "mangalyaan" }}
+            className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-red-500/20 border border-amber-500/40 px-3 py-1 text-xs font-semibold text-amber-300 transition-all hover:bg-amber-500/30 hover:text-white shadow-glow"
+            activeProps={{ className: "bg-amber-500/40 text-white" }}
+          >
+            <span className="size-1.5 rounded-full bg-amber-400 animate-pulse" />
+            <span>🚀 Experience Mangalyaan</span>
+          </Link>
         </nav>
         <button
           type="button"
@@ -107,6 +116,15 @@ export function SiteHeader() {
           className="block rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           Story
+        </Link>
+        <Link
+          to="/experience/$artifactId"
+          params={{ artifactId: "mangalyaan" }}
+          onClick={() => setOpen(false)}
+          className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold text-amber-400 hover:bg-muted"
+        >
+          <span className="size-2 rounded-full bg-amber-400 animate-pulse" />
+          🚀 Experience Mangalyaan
         </Link>
       </nav>
     </header>
