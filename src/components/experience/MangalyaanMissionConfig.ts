@@ -200,8 +200,8 @@ export const MANGALYAAN_EXPERIENCE_CONFIG: MissionExperienceConfig = {
       scientificContext:
         "The Polar Satellite Launch Vehicle in its XL configuration delivered Mangalyaan into an elliptical parking orbit of 248 km × 23,550 km with an inclination of 19.2°.",
       cameraMode: "chase",
-      cameraPosition: [0, 3.5, 6.0],
-      cameraTarget: [0, 0, 0],
+      cameraPosition: [0, 2.2, 4.2],
+      cameraTarget: [0, 0.6, -1.0],
       environmentType: "launch",
       telemetry: {
         met: "T+ 00:44:00",

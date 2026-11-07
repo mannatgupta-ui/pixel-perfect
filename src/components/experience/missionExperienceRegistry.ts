@@ -145,7 +145,8 @@ export function getMissionExperienceConfig(artifactId: string): MissionExperienc
     } else if (idx === 1 || titleLower.includes("launch") || titleLower.includes("liftoff") || titleLower.includes("roar")) {
       envType = "launch";
       camMode = "chase";
-      camPos = [0, 2.5, 5.0];
+      camPos = [0, 2.2, 4.2];
+      camTarget = [0, 0.6, -1.0];
     } else if (idx === stageCount - 1 || titleLower.includes("silent") || titleLower.includes("legacy") || titleLower.includes("monument") || titleLower.includes("eternal")) {
       envType = artifact.kind === "rover" || artifact.kind === "lander" ? "surface" : "eclipse";
       camMode = "chase";

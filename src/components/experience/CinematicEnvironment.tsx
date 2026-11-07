@@ -78,84 +78,85 @@ function EnclosedCleanroomLaboratory({ agency, spacecraftName }: { agency: strin
     <group>
       {/* Soft, even, clinical cleanroom overhead illumination */}
       <color attach="background" args={["#0c1222"]} />
-      <ambientLight intensity={1.2} color="#f0f9ff" />
-      <directionalLight position={[0, 7.5, 0]} intensity={2.6} color="#ffffff" castShadow />
-      <directionalLight position={[-8, 4, -6]} intensity={1.4} color="#93c5fd" />
-      <directionalLight position={[8, 4, 6]} intensity={1.4} color="#fed7aa" />
+      <ambientLight intensity={1.4} color="#f0f9ff" />
+      <directionalLight position={[0, 4.5, 0]} intensity={2.8} color="#ffffff" />
+      <directionalLight position={[-5, 3, -4]} intensity={1.6} color="#93c5fd" />
+      <directionalLight position={[5, 3, 4]} intensity={1.6} color="#fed7aa" />
 
       {/* ──────────────────────────────────────────────────────────
           ENCLOSED LABORATORY ROOM (6 SIDES: FLOOR, CEILING, 4 WALLS)
+          Room Dimensions: Width 15m (X: ±7.5), Depth 14m (Z: ±7.0), Height 7m
           ────────────────────────────────────────────────────────── */}
 
       {/* 1. FLOOR (High-Gloss White/Navy Cleanroom Epoxy with Grid) */}
       <mesh position={[0, -2.2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[28, 28]} />
+        <planeGeometry args={[15, 14]} />
         <meshStandardMaterial color="#0b1329" roughness={0.12} metalness={0.7} />
       </mesh>
-      <gridHelper args={[24, 24, "#38bdf8", "#1e293b"]} position={[0, -2.19, 0]} />
+      <gridHelper args={[14, 14, "#38bdf8", "#1e293b"]} position={[0, -2.19, 0]} />
 
       {/* Yellow/Black Striped Safety Perimeter Zone on Floor */}
       <mesh position={[0, -2.18, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[2.8, 3.0, 32]} />
+        <ringGeometry args={[2.5, 2.7, 32]} />
         <meshBasicMaterial color="#eab308" />
       </mesh>
 
       {/* 2. CEILING (Enclosed Cleanroom Ceiling Grid with Recessed Fluorescent Panels) */}
-      <mesh position={[0, 7.8, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[28, 28]} />
+      <mesh position={[0, 4.8, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[15, 14]} />
         <meshStandardMaterial color="#1e293b" roughness={0.4} />
       </mesh>
       {/* Recessed Light Panels on Ceiling */}
-      {[-6, 0, 6].map((x) =>
-        [-6, 0, 6].map((z) => (
-          <group key={`light-${x}-${z}`} position={[x, 7.78, z]}>
+      {[-4.5, 0, 4.5].map((x) =>
+        [-4, 0, 4].map((z) => (
+          <group key={`light-${x}-${z}`} position={[x, 4.78, z]}>
             <mesh rotation={[Math.PI / 2, 0, 0]}>
-              <planeGeometry args={[2.4, 1.2]} />
+              <planeGeometry args={[2.0, 1.0]} />
               <meshBasicMaterial color="#f8fafc" />
             </mesh>
-            <pointLight intensity={0.6} distance={8} color="#ffffff" />
+            <pointLight intensity={0.6} distance={6} color="#ffffff" />
           </group>
         ))
       )}
 
       {/* Heavy Yellow Industrial Crane Bridge Rails suspended from ceiling */}
-      <group position={[0, 6.4, 0]}>
-        {[-8, -2, 4, 9].map((z) => (
+      <group position={[0, 4.0, 0]}>
+        {[-4, 0, 4].map((z) => (
           <mesh key={`crane-beam-${z}`} position={[0, 0, z]}>
-            <boxGeometry args={[26, 0.45, 0.45]} />
+            <boxGeometry args={[14.5, 0.35, 0.35]} />
             <meshStandardMaterial color="#eab308" metalness={0.8} roughness={0.25} />
           </mesh>
         ))}
         {/* Overhead Hoist Carriage */}
-        <mesh position={[-2, -0.4, 0]}>
-          <boxGeometry args={[3.2, 0.65, 2.0]} />
+        <mesh position={[-1.5, -0.3, 0]}>
+          <boxGeometry args={[2.2, 0.5, 1.6]} />
           <meshStandardMaterial color="#ca8a04" />
         </mesh>
-        <mesh position={[-2, -2.2, 0]}>
-          <cylinderGeometry args={[0.02, 0.02, 4.0, 8]} />
+        <mesh position={[-1.5, -1.8, 0]}>
+          <cylinderGeometry args={[0.02, 0.02, 3.0, 8]} />
           <meshStandardMaterial color="#94a3b8" metalness={0.9} />
         </mesh>
       </group>
 
-      {/* 3. NORTH WALL (Front Wall at Z = -13.9) */}
-      <group position={[0, 2.8, -13.9]}>
+      {/* 3. NORTH WALL (Front Wall at Z = -7.0) */}
+      <group position={[0, 1.3, -7.0]}>
         <mesh>
-          <planeGeometry args={[28, 10]} />
+          <planeGeometry args={[15, 7.0]} />
           <meshStandardMaterial color="#111827" roughness={0.5} />
         </mesh>
 
         {/* Large Digital LED Facility Screen on North Wall */}
-        <group position={[0, 1.4, 0.05]}>
+        <group position={[0, 1.2, 0.05]}>
           <mesh>
-            <planeGeometry args={[16, 2.8]} />
+            <planeGeometry args={[10.5, 2.4]} />
             <meshStandardMaterial color="#030712" roughness={0.3} metalness={0.8} />
           </mesh>
           <mesh position={[0, 0, -0.01]}>
-            <planeGeometry args={[16.3, 3.1]} />
+            <planeGeometry args={[10.8, 2.7]} />
             <meshBasicMaterial color="#38bdf8" />
           </mesh>
-          <Html position={[0, 0, 0.05]} center transform distanceFactor={14}>
-            <div className="w-[880px] p-4 text-center font-mono select-none bg-black/90 rounded-2xl border border-cyan-500/50 shadow-2xl">
+          <Html position={[0, 0, 0.05]} center transform distanceFactor={10}>
+            <div className="w-[840px] p-4 text-center font-mono select-none bg-black/90 rounded-2xl border border-cyan-500/50 shadow-2xl">
               <div className="flex items-center justify-between border-b border-cyan-500/30 pb-2">
                 <span className="flex items-center gap-2 text-cyan-400 font-bold text-sm tracking-widest">
                   <span className="size-2.5 rounded-full bg-cyan-400 animate-ping" />
@@ -168,7 +169,7 @@ function EnclosedCleanroomLaboratory({ agency, spacecraftName }: { agency: strin
               <div className="mt-2.5 flex items-center justify-around text-xs text-white/80">
                 <div>
                   <span className="text-white/40 block text-[10px]">CURRENT INTEGRATION</span>
-                  <span className="font-bold text-amber-400">{spacecraftName.toUpperCase()} · FLIGHT MODEL QUALIFICATION</span>
+                  <span className="font-bold text-amber-400">{spacecraftName.toUpperCase()} · FLIGHT QUALIFICATION</span>
                 </div>
                 <div>
                   <span className="text-white/40 block text-[10px]">AIR PURITY / HEPA</span>
@@ -179,7 +180,7 @@ function EnclosedCleanroomLaboratory({ agency, spacecraftName }: { agency: strin
                   <span className="font-bold text-teal">20.2°C · 42% RH</span>
                 </div>
                 <div>
-                  <span className="text-white/40 block text-[10px]">FACILITY AGENCY</span>
+                  <span className="text-white/40 block text-[10px]">AGENCY FACILITY</span>
                   <span className="font-bold text-purple-400">{agencyLogo} AEROSPACE CLEANROOM</span>
                 </div>
               </div>
@@ -188,83 +189,81 @@ function EnclosedCleanroomLaboratory({ agency, spacecraftName }: { agency: strin
         </group>
 
         {/* Stainless Steel HEPA Air Filter Bank along bottom of North Wall */}
-        {[-9, -5, -1, 3, 7, 11].map((x) => (
-          <mesh key={`hepa-${x}`} position={[x, -2.5, 0.1]}>
-            <boxGeometry args={[3.4, 2.6, 0.2]} />
+        {[-5.5, -2.2, 1.1, 4.4].map((x) => (
+          <mesh key={`hepa-${x}`} position={[x, -2.0, 0.1]}>
+            <boxGeometry args={[2.8, 2.2, 0.2]} />
             <meshStandardMaterial color="#1f2937" metalness={0.7} roughness={0.3} />
           </mesh>
         ))}
       </group>
 
-      {/* 4. SOUTH WALL (Back Wall at Z = +13.9 with Ingress Airlock Doors & Observation Windows) */}
-      <group position={[0, 2.8, 13.9]} rotation={[0, Math.PI, 0]}>
+      {/* 4. SOUTH WALL (Back Wall at Z = +7.0 with Airlock Doors & Observation Windows) */}
+      <group position={[0, 1.3, 7.0]} rotation={[0, Math.PI, 0]}>
         <mesh>
-          <planeGeometry args={[28, 10]} />
+          <planeGeometry args={[15, 7.0]} />
           <meshStandardMaterial color="#111827" roughness={0.5} />
         </mesh>
 
         {/* Double Air-Shower Airlock Entry Doors */}
-        <group position={[0, -1.2, 0.05]}>
-          <mesh position={[-1.2, 0, 0]}>
-            <boxGeometry args={[2.2, 4.4, 0.1]} />
+        <group position={[0, -0.8, 0.05]}>
+          <mesh position={[-1.1, 0, 0]}>
+            <boxGeometry args={[1.9, 3.8, 0.1]} />
             <meshStandardMaterial color="#334155" metalness={0.7} roughness={0.3} />
           </mesh>
-          <mesh position={[1.2, 0, 0]}>
-            <boxGeometry args={[2.2, 4.4, 0.1]} />
+          <mesh position={[1.1, 0, 0]}>
+            <boxGeometry args={[1.9, 3.8, 0.1]} />
             <meshStandardMaterial color="#334155" metalness={0.7} roughness={0.3} />
           </mesh>
-          {/* Round Glass Portholes */}
-          {[-1.2, 1.2].map((x) => (
-            <mesh key={`porthole-${x}`} position={[x, 0.8, 0.06]}>
-              <circleGeometry args={[0.3, 24]} />
+          {[-1.1, 1.1].map((x) => (
+            <mesh key={`porthole-${x}`} position={[x, 0.6, 0.06]}>
+              <circleGeometry args={[0.25, 24]} />
               <meshBasicMaterial color="#38bdf8" transparent opacity={0.6} />
             </mesh>
           ))}
-          {/* Illuminated Exit / Airlock Sign */}
-          <group position={[0, 2.6, 0.1]}>
+          {/* Illuminated Airlock Sign */}
+          <group position={[0, 2.2, 0.1]}>
             <mesh>
-              <boxGeometry args={[2.8, 0.5, 0.1]} />
+              <boxGeometry args={[2.2, 0.4, 0.1]} />
               <meshStandardMaterial color="#065f46" />
             </mesh>
             <mesh position={[0, 0, 0.06]}>
-              <planeGeometry args={[2.6, 0.4]} />
+              <planeGeometry args={[2.0, 0.3]} />
               <meshBasicMaterial color="#10b981" />
             </mesh>
           </group>
         </group>
 
-        {/* Visitor Gallery Observation Glass Windows on Left & Right */}
-        {[-8, 8].map((x) => (
-          <group key={`obs-${x}`} position={[x, 0.8, 0.05]}>
+        {/* Visitor Gallery Observation Glass Windows */}
+        {[-4.8, 4.8].map((x) => (
+          <group key={`obs-${x}`} position={[x, 0.6, 0.05]}>
             <mesh>
-              <boxGeometry args={[6, 2.8, 0.1]} />
+              <boxGeometry args={[3.8, 2.2, 0.1]} />
               <meshStandardMaterial color="#1e293b" />
             </mesh>
             <mesh position={[0, 0, 0.06]}>
-              <planeGeometry args={[5.6, 2.4]} />
+              <planeGeometry args={[3.5, 1.9]} />
               <meshBasicMaterial color="#0284c7" transparent opacity={0.25} />
             </mesh>
           </group>
         ))}
       </group>
 
-      {/* 5. WEST WALL (Left Wall at X = -13.9 with Blinking Diagnostic Server Racks) */}
-      <group position={[-13.9, 2.8, 0]} rotation={[0, Math.PI / 2, 0]}>
+      {/* 5. WEST WALL (Left Wall at X = -7.5 with Server Racks) */}
+      <group position={[-7.5, 1.3, 0]} rotation={[0, Math.PI / 2, 0]}>
         <mesh>
-          <planeGeometry args={[28, 10]} />
+          <planeGeometry args={[14, 7.0]} />
           <meshStandardMaterial color="#111827" roughness={0.5} />
         </mesh>
 
         {/* 19-Inch Telemetry & Diagnostic Computer Server Racks */}
-        {[-8, -5, -2, 1, 4].map((z, i) => (
-          <group key={`rack-${i}`} position={[z, -1.0, 0.4]}>
+        {[-4.5, -1.8, 0.9, 3.6].map((z, i) => (
+          <group key={`rack-${i}`} position={[z, -0.6, 0.4]}>
             <mesh>
-              <boxGeometry args={[1.8, 4.2, 0.8]} />
+              <boxGeometry args={[1.6, 3.6, 0.7]} />
               <meshStandardMaterial color="#0f172a" metalness={0.7} roughness={0.3} />
             </mesh>
-            {/* Blinking Rack Status LEDs */}
-            {[-1.2, -0.6, 0, 0.6, 1.2].map((y, idx) => (
-              <mesh key={`led-${idx}`} position={[0.6, y, 0.42]}>
+            {[-1.0, -0.4, 0.2, 0.8].map((y, idx) => (
+              <mesh key={`led-${idx}`} position={[0.5, y, 0.36]}>
                 <sphereGeometry args={[0.04, 8, 8]} />
                 <meshBasicMaterial color={idx % 2 === 0 ? "#10b981" : "#38bdf8"} />
               </mesh>
@@ -273,69 +272,55 @@ function EnclosedCleanroomLaboratory({ agency, spacecraftName }: { agency: strin
         ))}
       </group>
 
-      {/* 6. EAST WALL (Right Wall at X = +13.9 with Cleanroom Workbenches & Tool Cabinets) */}
-      <group position={[13.9, 2.8, 0]} rotation={[0, -Math.PI / 2, 0]}>
+      {/* 6. EAST WALL (Right Wall at X = +7.5 with Workbenches) */}
+      <group position={[7.5, 1.3, 0]} rotation={[0, -Math.PI / 2, 0]}>
         <mesh>
-          <planeGeometry args={[28, 10]} />
+          <planeGeometry args={[14, 7.0]} />
           <meshStandardMaterial color="#111827" roughness={0.5} />
         </mesh>
 
-        {/* Anti-Static Stainless Steel Workbenches & Diagnostic Equipment */}
-        {[-6, 0, 6].map((z, i) => (
-          <group key={`bench-${i}`} position={[z, -1.8, 0.6]}>
-            {/* Table top */}
-            <mesh position={[0, 0.8, 0]}>
-              <boxGeometry args={[3.5, 0.1, 1.2]} />
+        {/* Anti-Static Stainless Steel Workbenches */}
+        {[-3.5, 1.5].map((z, i) => (
+          <group key={`bench-${i}`} position={[z, -1.2, 0.5]}>
+            <mesh position={[0, 0.6, 0]}>
+              <boxGeometry args={[3.0, 0.1, 1.0]} />
               <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} />
             </mesh>
-            {/* Table legs */}
-            {[-1.6, 1.6].map((x) => (
-              <mesh key={`leg-${x}`} position={[x, 0.35, 0]}>
-                <cylinderGeometry args={[0.05, 0.05, 0.8, 8]} />
+            {[-1.3, 1.3].map((x) => (
+              <mesh key={`leg-${x}`} position={[x, 0.25, 0]}>
+                <cylinderGeometry args={[0.04, 0.04, 0.6, 8]} />
                 <meshStandardMaterial color="#64748b" metalness={0.8} />
               </mesh>
             ))}
             {/* Oscilloscope on bench */}
-            <mesh position={[-0.8, 1.1, 0]}>
-              <boxGeometry args={[0.8, 0.5, 0.6]} />
+            <mesh position={[-0.6, 0.85, 0]}>
+              <boxGeometry args={[0.65, 0.4, 0.5]} />
               <meshStandardMaterial color="#334155" />
             </mesh>
-            <mesh position={[-0.8, 1.1, 0.31]}>
-              <planeGeometry args={[0.6, 0.35]} />
+            <mesh position={[-0.6, 0.85, 0.26]}>
+              <planeGeometry args={[0.5, 0.28]} />
               <meshBasicMaterial color="#10b981" />
             </mesh>
           </group>
         ))}
-
-        {/* Cleanroom Safety Signs & Posters on East Wall */}
-        <group position={[0, 2.0, 0.05]}>
-          <mesh>
-            <planeGeometry args={[4.2, 1.8]} />
-            <meshStandardMaterial color="#1e293b" />
-          </mesh>
-          <mesh position={[0, 0, 0.02]}>
-            <planeGeometry args={[4.0, 1.6]} />
-            <meshBasicMaterial color="#fbbf24" />
-          </mesh>
-        </group>
       </group>
 
       {/* ──────────────────────────────────────────────────────────
-          3D SCIENTISTS & INTEGRATION STAND
+          3D SCIENTISTS & CENTRAL INTEGRATION PEDESTAL
           ────────────────────────────────────────────────────────── */}
-      <CleanroomScientist position={[-2.4, -2.2, 1.4]} rotationY={0.6} pose="tablet" label="Lead Systems Engineer" />
-      <CleanroomScientist position={[2.4, -2.2, 1.2]} rotationY={-0.8} pose="inspecting" label="Payload Integration Specialist" />
-      <CleanroomScientist position={[0, -2.2, 2.8]} rotationY={Math.PI} pose="monitoring" label="Avionics & Telemetry QA" />
-      <CleanroomScientist position={[-2.0, -2.2, -2.2]} rotationY={0.2} pose="inspecting" label="Thermal MLI Engineer" />
+      <CleanroomScientist position={[-2.0, -2.2, 1.2]} rotationY={0.6} pose="tablet" label="Lead Systems Engineer" />
+      <CleanroomScientist position={[2.0, -2.2, 1.0]} rotationY={-0.8} pose="inspecting" label="Payload Integration Specialist" />
+      <CleanroomScientist position={[0, -2.2, 2.2]} rotationY={Math.PI} pose="monitoring" label="Avionics & Telemetry QA" />
+      <CleanroomScientist position={[-1.8, -2.2, -1.8]} rotationY={0.2} pose="inspecting" label="Thermal MLI Engineer" />
 
-      {/* Central Heavy Duty Hydraulic Integration Stand holding the Spacecraft */}
+      {/* Central Hydraulic Assembly Stand holding the Spacecraft */}
       <group position={[0, -1.8, 0]}>
         <mesh position={[0, 0, 0]}>
-          <cylinderGeometry args={[1.4, 1.6, 0.65, 24]} />
+          <cylinderGeometry args={[1.3, 1.5, 0.65, 24]} />
           <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.3} />
         </mesh>
         <mesh position={[0, 0.42, 0]}>
-          <torusGeometry args={[1.6, 0.04, 12, 32]} />
+          <torusGeometry args={[1.5, 0.04, 12, 32]} />
           <meshStandardMaterial color="#eab308" metalness={0.9} />
         </mesh>
       </group>
@@ -345,6 +330,7 @@ function EnclosedCleanroomLaboratory({ agency, spacecraftName }: { agency: strin
 
 /* ────────────────────────────────────────────────────────────────
    2. FULLY ENCLOSED MISSION CONTROL ROOM (LAUNCH STAGE)
+   Room Dimensions: Width 15m (X: ±7.5), Depth 12m (Z: ±6.0), Height 5.6m
    ──────────────────────────────────────────────────────────────── */
 
 function EnclosedMissionControlRoom({ agency, spacecraftName }: { agency: string; spacecraftName: string }) {
@@ -366,207 +352,274 @@ function EnclosedMissionControlRoom({ agency, spacecraftName }: { agency: string
 
   return (
     <group>
-      <color attach="background" args={["#030712"]} />
-      <ambientLight intensity={0.7} color="#93c5fd" />
-      <directionalLight position={[0, 6, 2]} intensity={2.2} color="#ffffff" />
-      <directionalLight position={[0, -2, -6]} intensity={3.5} color="#ea580c" />
+      <color attach="background" args={["#0a0f1d"]} />
+      <ambientLight intensity={1.3} color="#93c5fd" />
+      <directionalLight position={[0, 3.5, 1]} intensity={2.4} color="#ffffff" />
 
-      {/* Control Room Floor (Navy Carpet with Stepped Ranks) */}
-      <mesh position={[0, -2.4, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[30, 26]} />
-        <meshStandardMaterial color="#090d1a" roughness={0.4} metalness={0.6} />
+      {/* ──────────────────────────────────────────────────────────
+          ROOM SHELL (CARPET FLOOR, CEILING, ACOUSTIC WALLS)
+          ────────────────────────────────────────────────────────── */}
+
+      {/* Floor: Dark Navy/Charcoal Anti-Static Carpet */}
+      <mesh position={[0, -1.8, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[15, 12]} />
+        <meshStandardMaterial color="#0d1322" roughness={0.5} metalness={0.4} />
       </mesh>
 
-      {/* Control Room Ceiling with Soft Downlights */}
-      <mesh position={[0, 7.2, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[30, 26]} />
-        <meshStandardMaterial color="#0f172a" />
-      </mesh>
-
-      {/* Giant Front Video Wall (North Wall at Z = -11.5) */}
-      <group position={[0, 3.8, -11.5]}>
-        <mesh>
-          <planeGeometry args={[18, 7.5]} />
-          <meshStandardMaterial color="#030712" roughness={0.3} metalness={0.8} />
+      {/* Luminous Blue LED Aisle Floor Runners */}
+      {[-2.4, 2.4].map((x) => (
+        <mesh key={`runner-${x}`} position={[x, -1.79, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[0.08, 12]} />
+          <meshBasicMaterial color="#38bdf8" />
         </mesh>
-        <mesh position={[0, 0, -0.02]}>
-          <planeGeometry args={[18.4, 7.9]} />
-          <meshBasicMaterial color="#f97316" />
-        </mesh>
-
-        <Html position={[0, 0, 0.05]} center transform distanceFactor={13}>
-          <div className="w-[960px] h-[400px] p-6 text-center font-mono select-none bg-gradient-to-b from-black/90 via-black/80 to-black/95 rounded-2xl border border-orange-500/40 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-orange-500/30 pb-3">
-              <span className="flex items-center gap-2 text-amber-400 font-bold text-sm tracking-wider">
-                <span className="size-3 rounded-full bg-red-500 animate-ping" />
-                {hqTitle}
-              </span>
-              <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-300 font-bold border border-emerald-500/40">
-                ALL FLIGHT STATIONS GO FOR LAUNCH
-              </span>
-            </div>
-
-            <div className="mt-4 grid grid-cols-3 gap-4 text-left">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs space-y-1.5">
-                <div className="text-[11px] text-white/50 font-bold uppercase tracking-wider">MISSION CLOCK</div>
-                <div className="text-3xl font-display font-bold text-emerald-400">T+ 00:03:14</div>
-                <div className="text-[11px] text-amber-400">STATUS: BOOSTER STAGING NOMINAL</div>
-                <div className="text-[10px] text-white/70">Vehicle: Polar / Delta Heavy Stack</div>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs space-y-1.5">
-                <div className="text-[11px] text-white/50 font-bold uppercase tracking-wider">FLIGHT DYNAMICS</div>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-white/60">Altitude:</span>
-                  <span className="font-bold text-cyan-400 text-sm">184.2 km</span>
-                </div>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-white/60">Velocity:</span>
-                  <span className="font-bold text-white text-sm">7,420 m/s (Mach 21)</span>
-                </div>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-white/60">Downrange:</span>
-                  <span className="font-bold text-teal text-sm">490 km</span>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs space-y-1.5">
-                <div className="text-[11px] text-white/50 font-bold uppercase tracking-wider">TRACKING NETWORK</div>
-                <div className="flex items-center gap-1.5 text-emerald-400 font-semibold text-[11px]">
-                  <span className="size-2 rounded-full bg-emerald-400" />
-                  DSN Station Tracking Locked
-                </div>
-                <div className="text-[10px] text-white/70">Carrier: S-Band Transponder Active</div>
-                <div className="text-[10px] text-sky-400">Telemetry Bitrate: 2.048 Mbps</div>
-              </div>
-            </div>
-
-            <div className="mt-4 rounded-xl bg-orange-500/15 border border-orange-500/30 p-2 text-center text-xs text-orange-300 font-bold tracking-widest uppercase">
-              🚀 {spacecraftName.toUpperCase()} EN ROUTE TO ORBIT · ALL SYSTEMS PERFORMING AS EXPECTED
-            </div>
-          </div>
-        </Html>
-      </group>
-
-      {/* Flight Control Console Banks */}
-      {[-4, 0, 4].map((x, i) => (
-        <group key={`console-${i}`} position={[x, -1.8, -4]}>
-          <mesh position={[0, 0.4, 0]}>
-            <boxGeometry args={[3.2, 0.8, 1.2]} />
-            <meshStandardMaterial color="#111827" metalness={0.7} roughness={0.3} />
-          </mesh>
-          {[-0.6, 0.6].map((mx) => (
-            <group key={`mon-${mx}`} position={[mx, 1.0, -0.2]}>
-              <mesh>
-                <boxGeometry args={[0.85, 0.55, 0.05]} />
-                <meshStandardMaterial color="#0f172a" />
-              </mesh>
-              <mesh position={[0, 0, 0.03]}>
-                <planeGeometry args={[0.8, 0.5]} />
-                <meshBasicMaterial color={mx < 0 ? "#0284c7" : "#10b981"} />
-              </mesh>
-            </group>
-          ))}
-          <MissionFlightController position={[0, 0, 0.8]} label={i === 1 ? "FLIGHT DIRECTOR" : i === 0 ? "PROPULSION (PROP)" : "NAV / DYNAMICS"} />
-        </group>
       ))}
 
-      {/* Ascending Rocket Stack */}
-      <group position={[0, 1.5, -6]}>
-        <mesh position={[0, 0.8, 0]}>
-          <cylinderGeometry args={[0.5, 0.5, 3.8, 24]} />
-          <meshStandardMaterial color="#e2e8f0" metalness={0.6} roughness={0.3} />
+      {/* Ceiling: Acoustic Grid Ceiling with Soft Warm Recessed LED Panels */}
+      <mesh position={[0, 3.8, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[15, 12]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.8} />
+      </mesh>
+      {[-4, 0, 4].map((x) =>
+        [-3, 0, 3].map((z) => (
+          <group key={`c-light-${x}-${z}`} position={[x, 3.78, z]}>
+            <mesh rotation={[Math.PI / 2, 0, 0]}>
+              <planeGeometry args={[1.8, 0.9]} />
+              <meshBasicMaterial color="#f8fafc" />
+            </mesh>
+            <pointLight intensity={0.5} distance={6} color="#ffffff" />
+          </group>
+        ))
+      )}
+
+      {/* ──────────────────────────────────────────────────────────
+          GIANT PANORAMIC LAUNCH SCREEN (NORTH WALL AT Z = -5.4)
+          All Flight Controllers are seated facing this giant display!
+          ────────────────────────────────────────────────────────── */}
+      <group position={[0, 1.0, -5.4]}>
+        {/* Wall Frame */}
+        <mesh position={[0, 0, -0.05]}>
+          <boxGeometry args={[12.6, 4.4, 0.1]} />
+          <meshStandardMaterial color="#020617" roughness={0.3} metalness={0.8} />
         </mesh>
-        <mesh position={[0, 3.2, 0]}>
-          <coneGeometry args={[0.5, 1.4, 24]} />
-          <meshStandardMaterial color="#f8fafc" />
+        <mesh position={[0, 0, -0.01]}>
+          <planeGeometry args={[12.2, 4.0]} />
+          <meshBasicMaterial color="#ea580c" />
         </mesh>
-        <mesh ref={rocketFlameRef} position={[0, -2.2, 0]} rotation={[Math.PI, 0, 0]}>
-          <coneGeometry args={[0.8, 3.8, 24, 1, true]} />
-          <meshBasicMaterial color="#f97316" transparent opacity={0.85} side={THREE.DoubleSide} />
+
+        {/* 3D Simulated Rocket Liftoff Display inside the Video Wall */}
+        <group position={[0, 0, 0.05]}>
+          {/* Screen Background: Coastal Sky turning to Space */}
+          <mesh>
+            <planeGeometry args={[12.0, 3.8]} />
+            <meshBasicMaterial color="#0c172e" />
+          </mesh>
+
+          {/* Ascending Rocket Booster inside the Screen Video Feed */}
+          <group position={[0, 0.1, 0.1]}>
+            {/* Rocket Hull */}
+            <mesh position={[0, 0.4, 0]}>
+              <cylinderGeometry args={[0.2, 0.2, 1.8, 16]} />
+              <meshStandardMaterial color="#f8fafc" metalness={0.6} roughness={0.3} />
+            </mesh>
+            {/* Payload Fairing Cone */}
+            <mesh position={[0, 1.5, 0]}>
+              <coneGeometry args={[0.2, 0.6, 16]} />
+              <meshStandardMaterial color="#e2e8f0" />
+            </mesh>
+            {/* Solid Rocket Booster Exhaust Flame */}
+            <mesh ref={rocketFlameRef} position={[0, -0.85, 0]} rotation={[Math.PI, 0, 0]}>
+              <coneGeometry args={[0.32, 1.3, 16, 1, true]} />
+              <meshBasicMaterial color="#f97316" transparent opacity={0.9} side={THREE.DoubleSide} />
+            </mesh>
+            {/* Engine Light on Screen */}
+            <pointLight position={[0, -0.8, 0.2]} intensity={3.5} distance={7} color="#f97316" />
+
+            {/* Launch Smoke Clouds below rocket */}
+            {[-0.5, 0, 0.5].map((sx, idx) => (
+              <mesh key={`cloud-${idx}`} position={[sx, -1.6, 0.05]}>
+                <sphereGeometry args={[0.4, 12, 12]} />
+                <meshBasicMaterial color="#cbd5e1" transparent opacity={0.5} />
+              </mesh>
+            ))}
+          </group>
+
+          {/* Real-time HTML Telemetry Overlay on the Screen */}
+          <Html position={[0, 0, 0.15]} center transform distanceFactor={8.5}>
+            <div className="w-[820px] h-[340px] p-4 text-center font-mono select-none bg-gradient-to-b from-black/85 via-black/70 to-black/90 rounded-xl border border-orange-500/50 shadow-2xl flex flex-col justify-between">
+              <div className="flex items-center justify-between border-b border-orange-500/40 pb-2">
+                <span className="flex items-center gap-2 text-amber-400 font-bold text-xs tracking-widest">
+                  <span className="size-2.5 rounded-full bg-red-500 animate-ping" />
+                  {hqTitle}
+                </span>
+                <span className="rounded-full bg-emerald-500/25 px-2.5 py-0.5 text-[11px] text-emerald-300 font-bold border border-emerald-500/50">
+                  ALL FLIGHT STATIONS GO FOR LAUNCH · VEHICLE EN ROUTE
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3 text-left my-2">
+                <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-xs">
+                  <div className="text-[10px] text-white/50 font-bold">MISSION CLOCK</div>
+                  <div className="text-2xl font-display font-bold text-emerald-400">T+ 00:03:14</div>
+                  <div className="text-[10px] text-amber-400">STATUS: BOOSTER STAGING NOMINAL</div>
+                </div>
+
+                <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-xs">
+                  <div className="text-[10px] text-white/50 font-bold">FLIGHT DYNAMICS</div>
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-white/60">Altitude:</span>
+                    <span className="font-bold text-cyan-400">184.2 km</span>
+                  </div>
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-white/60">Velocity:</span>
+                    <span className="font-bold text-white">7,420 m/s (Mach 21)</span>
+                  </div>
+                </div>
+
+                <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-xs">
+                  <div className="text-[10px] text-white/50 font-bold">TRACKING NETWORK</div>
+                  <div className="text-emerald-400 font-semibold text-[11px]">DSN Station Locked</div>
+                  <div className="text-[10px] text-white/70">Carrier: S-Band Active</div>
+                  <div className="text-[10px] text-sky-400">Bitrate: 2.048 Mbps</div>
+                </div>
+              </div>
+
+              <div className="rounded-lg bg-orange-500/20 border border-orange-500/40 p-1.5 text-center text-xs text-orange-300 font-bold tracking-widest uppercase">
+                🚀 {spacecraftName.toUpperCase()} · LIFTOFF NOMINAL · FLIGHT COMPUTERS AUTONOMOUS
+              </div>
+            </div>
+          </Html>
+        </group>
+      </group>
+
+      {/* Screen Launch Glow illuminating the Flight Floor */}
+      <pointLight position={[0, 1.2, -4.8]} intensity={3.5} distance={10} color="#ea580c" />
+
+      {/* ──────────────────────────────────────────────────────────
+          CENTRAL HOLOGRAPHIC TELEMETRY PLATFORM (Z = 0)
+          The Spacecraft hovers directly over this pedestal as a
+          Live 3D Holographic Telemetry Projection!
+          ────────────────────────────────────────────────────────── */}
+      <group position={[0, -1.75, 0]}>
+        {/* Raised Circular Base */}
+        <mesh position={[0, 0.08, 0]}>
+          <cylinderGeometry args={[1.5, 1.7, 0.16, 32]} />
+          <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.3} />
         </mesh>
-        <pointLight position={[0, -1.8, 0]} intensity={6.0} distance={15} color="#ea580c" />
+        {/* Concentric Luminous Projection Rings */}
+        <mesh position={[0, 0.17, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[1.3, 1.38, 32]} />
+          <meshBasicMaterial color="#38bdf8" />
+        </mesh>
+        <mesh position={[0, 0.175, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[1.48, 1.55, 32]} />
+          <meshBasicMaterial color="#eab308" />
+        </mesh>
+
+        {/* 4 Emitter Nodes with Vertical Hologram Guide Beams */}
+        {[0, Math.PI / 2, Math.PI, Math.PI * 1.5].map((angle, idx) => {
+          const ex = Math.cos(angle) * 1.42;
+          const ez = Math.sin(angle) * 1.42;
+          return (
+            <group key={`emitter-${idx}`} position={[ex, 0.2, ez]}>
+              <mesh>
+                <cylinderGeometry args={[0.05, 0.07, 0.14, 8]} />
+                <meshStandardMaterial color="#0284c7" />
+              </mesh>
+              {/* Vertical projector light column */}
+              <mesh position={[0, 0.9, 0]}>
+                <cylinderGeometry args={[0.015, 0.015, 1.8, 8]} />
+                <meshBasicMaterial color="#38bdf8" transparent opacity={0.35} />
+              </mesh>
+            </group>
+          );
+        })}
       </group>
 
       {/* ──────────────────────────────────────────────────────────
-          ENCLOSED CONTROL ROOM WALLS (ALL 4 SIDES ENCLOSED)
+          FLIGHT CONSOLE BANKS & SEATED FLIGHT CONTROLLERS (Z = -3.0)
+          ALL SEATED FACING -Z (LOOKING DIRECTLY AT THE GIANT SCREEN)
+          ────────────────────────────────────────────────────────── */}
+      {[-3.6, 0, 3.6].map((x, i) => (
+        <MissionFlightConsole
+          key={`console-${i}`}
+          position={[x, -1.8, -3.0]}
+          roleBadge={i === 1 ? "FLIGHT DIRECTOR" : i === 0 ? "PROPULSION (PROP)" : "NAV & DYNAMICS (FIDO)"}
+        />
+      ))}
+
+      {/* ──────────────────────────────────────────────────────────
+          SIDE WALLS WITH DIGITAL DSN WORLD CLOCKS (X = ±7.5)
           ────────────────────────────────────────────────────────── */}
 
-      {/* South Wall (Back of Mission Control Room at Z = +12.9) with VIP Viewing Gallery */}
-      <group position={[0, 2.4, 12.9]} rotation={[0, Math.PI, 0]}>
+      {/* West Wall (Left at X = -7.5) */}
+      <group position={[-7.5, 1.0, 0]} rotation={[0, Math.PI / 2, 0]}>
         <mesh>
-          <planeGeometry args={[30, 9.6]} />
-          <meshStandardMaterial color="#0b0f19" roughness={0.8} />
-        </mesh>
-        {/* VIP Observation Glass Gallery above rear */}
-        <mesh position={[0, 2.2, 0.05]}>
-          <boxGeometry args={[20, 2.8, 0.1]} />
-          <meshStandardMaterial color="#1e293b" />
-        </mesh>
-        <mesh position={[0, 2.2, 0.11]}>
-          <planeGeometry args={[19.4, 2.4]} />
-          <meshBasicMaterial color="#38bdf8" transparent opacity={0.25} />
-        </mesh>
-        {/* Rear Exit Security Doors */}
-        {[-8, 8].map((x) => (
-          <group key={`door-${x}`} position={[x, -1.2, 0.05]}>
-            <mesh>
-              <planeGeometry args={[2.2, 3.6]} />
-              <meshStandardMaterial color="#1e293b" metalness={0.8} />
-            </mesh>
-            <mesh position={[0, 1.9, 0.02]}>
-              <planeGeometry args={[1.2, 0.3]} />
-              <meshBasicMaterial color="#22c55e" />
-            </mesh>
-          </group>
-        ))}
-      </group>
-
-      {/* West Wall (Left Wall at X = -14.9) with Global DSN Tracking Clocks */}
-      <group position={[-14.9, 2.4, 0]} rotation={[0, Math.PI / 2, 0]}>
-        <mesh>
-          <planeGeometry args={[26, 9.6]} />
+          <planeGeometry args={[12, 5.6]} />
           <meshStandardMaterial color="#0f172a" roughness={0.7} />
         </mesh>
-        {/* DSN Station Time Panels */}
-        {[-7, -2.5, 2.5, 7].map((z, idx) => (
-          <group key={`clock-${idx}`} position={[z, 2.0, 0.1]}>
+        {/* World Clocks */}
+        {[-3.5, 3.5].map((z, idx) => (
+          <group key={`clock-w-${idx}`} position={[z, 1.5, 0.1]}>
             <mesh>
-              <boxGeometry args={[3.6, 1.6, 0.1]} />
+              <boxGeometry args={[3.2, 1.2, 0.1]} />
               <meshStandardMaterial color="#020617" />
             </mesh>
             <mesh position={[0, 0, 0.06]}>
-              <planeGeometry args={[3.4, 1.4]} />
+              <planeGeometry args={[3.0, 1.0]} />
               <meshBasicMaterial color="#0f766e" transparent opacity={0.3} />
             </mesh>
+            <Html position={[0, 0, 0.1]} center distanceFactor={8}>
+              <div className="font-mono text-center text-xs select-none">
+                <div className="text-[9px] text-teal-300 font-bold">{idx === 0 ? "SRIHARIKOTA (IST)" : "GOLDSTONE (PST)"}</div>
+                <div className="text-base font-bold text-emerald-400">{idx === 0 ? "14:38:14" : "01:08:14"}</div>
+              </div>
+            </Html>
           </group>
-        ))}
-        {/* Flight Telemetry Status Lights */}
-        {[-8, -4, 0, 4, 8].map((z, idx) => (
-          <mesh key={`rack-led-${idx}`} position={[z, -0.8, 0.2]}>
-            <boxGeometry args={[2.2, 2.6, 0.4]} />
-            <meshStandardMaterial color="#1e293b" metalness={0.7} />
-          </mesh>
         ))}
       </group>
 
-      {/* East Wall (Right Wall at X = +14.9) with Mission Telemetry & Operations Boards */}
-      <group position={[14.9, 2.4, 0]} rotation={[0, -Math.PI / 2, 0]}>
+      {/* East Wall (Right at X = +7.5) */}
+      <group position={[7.5, 1.0, 0]} rotation={[0, -Math.PI / 2, 0]}>
         <mesh>
-          <planeGeometry args={[26, 9.6]} />
+          <planeGeometry args={[12, 5.6]} />
           <meshStandardMaterial color="#0f172a" roughness={0.7} />
         </mesh>
-        {/* Giant Orbital Trajectory Map Board */}
-        <group position={[0, 1.8, 0.1]}>
-          <mesh>
-            <boxGeometry args={[14, 4.2, 0.1]} />
-            <meshStandardMaterial color="#020617" />
-          </mesh>
-          <mesh position={[0, 0, 0.06]}>
-            <planeGeometry args={[13.6, 3.8]} />
-            <meshBasicMaterial color="#1e3a8a" transparent opacity={0.35} />
-          </mesh>
-        </group>
+        {/* World Clocks */}
+        {[-3.5, 3.5].map((z, idx) => (
+          <group key={`clock-e-${idx}`} position={[z, 1.5, 0.1]}>
+            <mesh>
+              <boxGeometry args={[3.2, 1.2, 0.1]} />
+              <meshStandardMaterial color="#020617" />
+            </mesh>
+            <mesh position={[0, 0, 0.06]}>
+              <planeGeometry args={[3.0, 1.0]} />
+              <meshBasicMaterial color="#0f766e" transparent opacity={0.3} />
+            </mesh>
+            <Html position={[0, 0, 0.1]} center distanceFactor={8}>
+              <div className="font-mono text-center text-xs select-none">
+                <div className="text-[9px] text-teal-300 font-bold">{idx === 0 ? "MADRID (CET)" : "CANBERRA (AEST)"}</div>
+                <div className="text-base font-bold text-emerald-400">{idx === 0 ? "10:08:14" : "20:08:14"}</div>
+              </div>
+            </Html>
+          </group>
+        ))}
+      </group>
+
+      {/* Rear Wall (South Wall at Z = +6.0) with VIP Viewing Gallery */}
+      <group position={[0, 1.0, 6.0]} rotation={[0, Math.PI, 0]}>
+        <mesh>
+          <planeGeometry args={[15, 5.6]} />
+          <meshStandardMaterial color="#0b0f19" roughness={0.8} />
+        </mesh>
+        {/* VIP Observation Glass Gallery */}
+        <mesh position={[0, 1.2, 0.05]}>
+          <boxGeometry args={[11, 2.2, 0.1]} />
+          <meshStandardMaterial color="#1e293b" />
+        </mesh>
+        <mesh position={[0, 1.2, 0.11]}>
+          <planeGeometry args={[10.6, 1.8]} />
+          <meshBasicMaterial color="#38bdf8" transparent opacity={0.2} />
+        </mesh>
       </group>
     </group>
   );
@@ -958,37 +1011,139 @@ function CleanroomScientist({
 function MissionFlightController({
   position,
   label,
+  rotationY = 0,
 }: {
   position: [number, number, number];
   label: string;
+  rotationY?: number;
+}) {
+  return (
+    <group position={position} rotation={[0, rotationY, 0]}>
+      {/* Ergonomic Flight Task Chair */}
+      <group position={[0, -0.3, 0]}>
+        {/* Star base */}
+        <mesh position={[0, 0.05, 0]}>
+          <cylinderGeometry args={[0.3, 0.35, 0.08, 12]} />
+          <meshStandardMaterial color="#0f172a" metalness={0.8} />
+        </mesh>
+        {/* Stem */}
+        <mesh position={[0, 0.28, 0]}>
+          <cylinderGeometry args={[0.04, 0.04, 0.4, 8]} />
+          <meshStandardMaterial color="#64748b" metalness={0.9} />
+        </mesh>
+        {/* Cushion */}
+        <mesh position={[0, 0.5, 0]}>
+          <boxGeometry args={[0.55, 0.08, 0.52]} />
+          <meshStandardMaterial color="#1e293b" roughness={0.7} />
+        </mesh>
+        {/* Mesh backrest */}
+        <mesh position={[0, 0.88, -0.24]} rotation={[-0.1, 0, 0]}>
+          <boxGeometry args={[0.5, 0.65, 0.05]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.8} />
+        </mesh>
+      </group>
+
+      {/* Seated Torso with Mission Lanyard */}
+      <mesh position={[0, 0.52, 0]}>
+        <boxGeometry args={[0.42, 0.55, 0.26]} />
+        <meshStandardMaterial color="#1e3a8a" roughness={0.6} />
+      </mesh>
+
+      {/* Head */}
+      <mesh position={[0, 0.98, 0]}>
+        <sphereGeometry args={[0.14, 16, 16]} />
+        <meshStandardMaterial color="#d4a373" roughness={0.5} />
+      </mesh>
+
+      {/* Flight Communication Headset with Boom Mic */}
+      <mesh position={[0, 1.0, 0]}>
+        <torusGeometry args={[0.15, 0.02, 8, 16]} />
+        <meshStandardMaterial color="#020617" />
+      </mesh>
+      {/* Earcups */}
+      {[-0.14, 0.14].map((x) => (
+        <mesh key={`earcup-${x}`} position={[x, 0.98, 0]}>
+          <boxGeometry args={[0.04, 0.08, 0.07]} />
+          <meshStandardMaterial color="#0f172a" />
+        </mesh>
+      ))}
+      {/* Microphone Boom Arm pointing to front */}
+      <mesh position={[0.12, 0.94, 0.12]} rotation={[0.4, 0.3, 0]}>
+        <cylinderGeometry args={[0.008, 0.008, 0.14, 8]} />
+        <meshStandardMaterial color="#94a3b8" />
+      </mesh>
+
+      {/* Forward Arms resting on desk / typing */}
+      {[-0.2, 0.2].map((x) => (
+        <mesh key={`arm-${x}`} position={[x, 0.48, 0.2]} rotation={[1.1, 0, x > 0 ? -0.2 : 0.2]}>
+          <cylinderGeometry args={[0.05, 0.05, 0.42, 8]} />
+          <meshStandardMaterial color="#1e3a8a" />
+        </mesh>
+      ))}
+
+      {/* Floating Role Badge above chair */}
+      {label && (
+        <Html position={[0, 1.35, 0]} center distanceFactor={10}>
+          <div className="pointer-events-none whitespace-nowrap rounded-md bg-slate-900/90 px-2 py-0.5 font-mono text-[9px] font-bold text-amber-400 border border-amber-500/40 shadow-lg">
+            {label}
+          </div>
+        </Html>
+      )}
+    </group>
+  );
+}
+
+function MissionFlightConsole({
+  position,
+  roleBadge,
+}: {
+  position: [number, number, number];
+  roleBadge: string;
 }) {
   return (
     <group position={position}>
-      {/* Seated Torso with Mission Lanyard */}
-      <mesh position={[0, 0.7, 0]}>
-        <cylinderGeometry args={[0.22, 0.24, 0.7, 16]} />
-        <meshStandardMaterial color="#1e3a8a" roughness={0.6} />
+      {/* Console Desk Body */}
+      <mesh position={[0, 0.38, 0]}>
+        <boxGeometry args={[2.8, 0.75, 1.1]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.4} metalness={0.6} />
       </mesh>
-      {/* Head */}
-      <mesh position={[0, 1.25, 0]}>
-        <sphereGeometry args={[0.16, 16, 16]} />
-        <meshStandardMaterial color="#d4a373" />
+      {/* Work Surface */}
+      <mesh position={[0, 0.76, 0]}>
+        <boxGeometry args={[2.85, 0.04, 1.15]} />
+        <meshStandardMaterial color="#1e293b" roughness={0.3} metalness={0.4} />
       </mesh>
-      {/* Flight Headset */}
-      <mesh position={[0, 1.28, 0]}>
-        <torusGeometry args={[0.17, 0.02, 8, 16]} />
-        <meshStandardMaterial color="#111827" />
+
+      {/* Dual Angled 27-inch High-Res Flight Monitors */}
+      {[-0.65, 0.65].map((mx, idx) => (
+        <group key={`monitor-${idx}`} position={[mx, 1.18, -0.22]} rotation={[0, mx > 0 ? -0.15 : 0.15, 0]}>
+          {/* Monitor Stand */}
+          <mesh position={[0, -0.25, 0]}>
+            <cylinderGeometry args={[0.025, 0.025, 0.3, 8]} />
+            <meshStandardMaterial color="#334155" metalness={0.8} />
+          </mesh>
+          {/* Bezel */}
+          <mesh>
+            <boxGeometry args={[0.95, 0.58, 0.04]} />
+            <meshStandardMaterial color="#020617" roughness={0.2} />
+          </mesh>
+          {/* Display Panel facing flight controller at +Z */}
+          <mesh position={[0, 0, 0.022]}>
+            <planeGeometry args={[0.9, 0.54]} />
+            <meshBasicMaterial color={idx === 0 ? "#0369a1" : "#047857"} />
+          </mesh>
+          {/* Subtle screen glow */}
+          <pointLight position={[0, 0, 0.15]} intensity={0.4} distance={2.5} color={idx === 0 ? "#38bdf8" : "#34d399"} />
+        </group>
+      ))}
+
+      {/* Keyboard and Controls */}
+      <mesh position={[0, 0.79, 0.2]}>
+        <boxGeometry args={[1.1, 0.02, 0.3]} />
+        <meshStandardMaterial color="#090d16" roughness={0.5} />
       </mesh>
-      <mesh position={[0.16, 1.26, 0]}>
-        <sphereGeometry args={[0.05, 8, 8]} />
-        <meshStandardMaterial color="#374151" />
-      </mesh>
-      {/* Role Badge */}
-      <Html position={[0, 1.55, 0]} center distanceFactor={10}>
-        <div className="pointer-events-none whitespace-nowrap rounded-md bg-black/85 px-1.5 py-0.5 font-mono text-[8px] font-bold text-amber-400 border border-amber-500/30">
-          {label}
-        </div>
-      </Html>
+
+      {/* Flight Controller Seated at Console, FACING FORWARD TOWARD THE SCREEN (-Z) */}
+      <MissionFlightController position={[0, 0, 0.72]} label={roleBadge} rotationY={Math.PI} />
     </group>
   );
 }
