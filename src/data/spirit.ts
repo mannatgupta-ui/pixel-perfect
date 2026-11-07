@@ -30,63 +30,63 @@ export const SPIRIT_PARTS: SpiritPart[] = [
     short: "Body & brain",
     purpose: "Keeps the computer, batteries and electronics warm enough to survive Martian nights.",
     detail:
-      "Nights at Gusev dropped far below freezing. Insulation, heaters and small radioisotope heater units kept the rover's 'organs' inside a safe temperature range. Inside also sat the Mini-TES infrared spectrometer, which looked out through a mirror in the mast.",
+      "Nights at Gusev dropped far below freezing (often below -100°C). Aerogel insulation, electrical heaters and small radioisotope heater units (RHUs) kept the rover's vital computer and lithium-ion batteries inside a safe operating temperature range. Inside also sat the Mini-TES infrared spectrometer, which looked out through an optical periscope in the mast.",
   },
   {
     id: "solar",
     name: "Solar Arrays",
-    short: "Power",
-    purpose: "Turn sunlight into electricity and recharge the rover's batteries.",
+    short: "Power generation",
+    purpose: "Turn sunlight into electricity and recharge the rover's lithium-ion batteries.",
     detail:
-      "Dust settling on the panels steadily reduced power. In March 2005, passing dust devils swept the panels clean and raised power from about 60% to 93% — one of the lucky events that kept Spirit alive for years.",
+      "Covering 1.3 square metres across the main deck and deployable wings, the multi-junction solar cells produced around 700 to 900 watt-hours per sol at the start. Dust steadily accumulated on the panels, but periodic passing Martian dust devils swept them clean — raising power from 60% back to 93% in March 2005 and extending the 90-day mission into years.",
   },
   {
     id: "mast",
     name: "Pancam Mast Assembly",
-    short: "Eyes",
+    short: "Panoramic eyes",
     purpose: "Holds the Pancam colour cameras and Navcam navigation cameras about 1.5 m above the ground.",
     detail:
-      "From this height Spirit took 360° stereo panoramas — like a person's eye level. The mast also hosted the periscope mirror for the Mini-TES infrared spectrometer, which identified minerals from a distance.",
+      "Standing at human eye level (1.5 m), the mast carried high-resolution stereo Panoramic Cameras (Pancam) with multi-wavelength filters to determine mineralogy, wide-field stereo Navigation Cameras (Navcam), and a periscope mirror for the Mini-TES thermal infrared spectrometer.",
   },
   {
     id: "wheels",
     name: "Six Wheels & Rocker-Bogie",
-    short: "Legs",
-    purpose: "A rocker-bogie suspension lets all six wheels stay on the ground over rocks and slopes.",
+    short: "Mobility & suspension",
+    purpose: "A rocker-bogie suspension lets all six wheels stay on the ground over rocks and steep slopes.",
     detail:
-      "In 2006 the right-front wheel stopped working, so Spirit drove backwards, dragging it. That dragging wheel scraped up bright, almost pure silica in 2007 — one of the mission's biggest discoveries.",
+      "Each aluminum wheel had its own drive motor, with cleated treads for climbing sand and rocks. When the right-front wheel motor failed in March 2006, NASA engineers commanded Spirit to drive backwards, dragging the dead wheel. In 2007, that dragging wheel unexpectedly churned up soil that was 90% pure silica — proving ancient hot spring activity.",
   },
   {
     id: "arm",
     name: "Instrument Deployment Device",
     short: "Robotic arm",
-    purpose: "Places science instruments directly against rocks and soil.",
+    purpose: "Places science instruments directly against rocks and soil targets.",
     detail:
-      "The arm's turret carried the Microscopic Imager (a close-up camera), the Alpha Particle X-ray Spectrometer (APXS) and the Mössbauer spectrometer, which measured what rocks are made of — especially iron-bearing minerals.",
+      "With five degrees of freedom, the 1.5-metre robotic arm maneuvered a 4-instrument turret directly against geological targets. It carried the Microscopic Imager, Alpha Particle X-ray Spectrometer (APXS) for chemical elements, Mössbauer Spectrometer for iron mineralogy, and the Rock Abrasion Tool.",
   },
   {
     id: "rat",
     name: "Rock Abrasion Tool (RAT)",
-    short: "Rock grinder",
-    purpose: "Grinds away a rock's dusty, weathered skin to expose fresh rock inside.",
+    short: "Diamond rock grinder",
+    purpose: "Grinds away a rock's dusty, weathered skin to expose fresh unweathered rock inside.",
     detail:
-      "On 6 Feb 2004 Spirit ground into a rock called Adirondack — the first time a rock had ever been ground open on Mars. Fresh surfaces let the arm's instruments read the rock's true composition.",
+      "Using diamond-tipped resin grinding teeth spinning at high speeds, the RAT created a shallow circular borehole 45 mm in diameter and up to 5 mm deep. On 6 February 2004, Spirit ground into Adirondack rock — making history as the first machine ever to grind open a rock on another world.",
   },
   {
     id: "hga",
     name: "High-Gain Antenna",
-    short: "Voice to Earth",
-    purpose: "A dish-shaped antenna that sends data directly to NASA's Deep Space Network on Earth.",
+    short: "Direct voice to Earth",
+    purpose: "A steerable dish antenna that sends high-speed telemetry and photos directly to NASA's Deep Space Network.",
     detail:
-      "It had to be pointed precisely at Earth. Most of Spirit's data actually travelled home via orbiters like Mars Odyssey, using a separate UHF antenna.",
+      "A 28-centimetre steerable parabolic reflector operating in the X-band. Spirit tracked Earth's position across the Martian sky and aimed the dish directly at NASA's 70-metre and 34-metre antennas in California, Spain, and Australia.",
   },
   {
     id: "lga",
     name: "Low-Gain Antenna",
-    short: "Backup voice",
-    purpose: "A simple antenna that can send and receive slowly without being pointed.",
+    short: "Omnidirectional backup",
+    purpose: "A simple omnidirectional antenna that sends and receives signals at lower rates without needing to be pointed.",
     detail:
-      "Useful when the rover can't aim its dish — for example while recovering from a fault, like the flash-memory problem of January 2004.",
+      "Essential during critical events or unexpected safe-mode transitions when the rover lost attitude orientation. It saved the mission during the January 2004 flash-memory anomaly when Spirit stopped responding via the dish.",
   },
 ];
 
@@ -96,8 +96,9 @@ export const SPIRIT_PART_BY_ID = Object.fromEntries(SPIRIT_PARTS.map((p) => [p.i
 >;
 
 /* ────────────────────────────────────────────────────────────────
- * First-person story. The narration is a creative storytelling device
- * based on NASA mission records — not real words from the rover.
+ * First-person story: 11 sequential lifecycle stages.
+ * The narration is a creative storytelling device based on NASA
+ * mission records — not real spoken words from the rover.
  * ──────────────────────────────────────────────────────────────── */
 
 export type SceneKey =
@@ -105,14 +106,15 @@ export type SceneKey =
   | "launch"
   | "journey"
   | "arrival"
-  | "first-steps"
+  | "descent"
+  | "landing"
+  | "exploration"
   | "discoveries"
   | "challenges"
   | "last-days"
   | "legacy";
 
 export interface Hotspot {
-  /** Percent of scene width / height. */
   x: number;
   y: number;
   label: string;
@@ -121,6 +123,7 @@ export interface Hotspot {
 
 export interface StoryStage {
   id: SceneKey;
+  number: string;
   title: string;
   date: string;
   narration: string[];
@@ -140,193 +143,271 @@ const nasaImg = (id: string, size: "medium" | "small", caption: string, credit =
 export const SPIRIT_STORY: StoryStage[] = [
   {
     id: "creation",
+    number: "01",
     title: "My Creation",
     date: "2000 – 2003",
     narration: [
-      "I was built on Earth, at NASA's Jet Propulsion Laboratory in California. Engineers gave me a purpose, a destination, and a limited amount of time: 90 Martian days.",
-      "I have a twin. We were built side by side. They called us the Mars Exploration Rovers — and a nine-year-old girl named Sofi Collis gave us our names: Spirit and Opportunity.",
+      "I was born inside a sterile cleanroom at NASA's Jet Propulsion Laboratory in Pasadena, California.",
+      "Engineers gave me an aluminum chassis, six motorized wheels, a camera mast for eyes, and a robotic arm for hands. A nine-year-old girl named Sofi Collis won the naming contest and called my twin and me 'Spirit' and 'Opportunity'.",
+      "We were given a design lifespan of 90 Martian days. None of us imagined how long the journey would truly last.",
     ],
-    scienceTitle: "Why send a robot geologist?",
+    scienceTitle: "Engineering an Interplanetary Field Geologist",
     science:
-      "Our job was to look for clues that liquid water once shaped Mars. Water leaves fingerprints in rocks — particular minerals, layers and textures — so I was given cameras, spectrometers, a microscope and a rock grinder.",
-    facts: ["Mass: about 185 kg — roughly the weight of a large motorbike", "Size: about as big as a golf cart", "Planned mission: 90 sols (Martian days)"],
-    photo: nasaImg("PIA04413", "medium", "Artist's concept of a Mars Exploration Rover at work.", "NASA/JPL/Cornell"),
+      "Spirit was built to investigate whether liquid water was ever present in Mars' past. Water creates distinctive alteration minerals like sulfates, hematite, and carbonates. Spirit packed four analytical instruments, five camera systems, and a rock grinder into a 185-kilogram chassis powered by gallium arsenide solar cells.",
+    facts: [
+      "Total mass: 185 kg (408 lb) — roughly the size of a golf cart",
+      "Chassis: Warm Electronics Box insulated with aerogel",
+      "Target site: Gusev Crater, a 166-km wide crater suspected to be an ancient lake bed",
+    ],
+    photo: nasaImg("PIA04413", "medium", "Artist's concept of a Mars Exploration Rover at work on the surface.", "NASA/JPL/Cornell"),
     hotspots: [
-      { x: 52, y: 30, label: "Camera mast", text: "My eyes: colour and navigation cameras about 1.5 m off the ground." },
-      { x: 30, y: 46, label: "Solar arrays", text: "My power: solar panels charging two batteries." },
-      { x: 72, y: 62, label: "Robotic arm", text: "My hand: instruments that touch rocks directly." },
+      { x: 50, y: 32, label: "Pancam Mast", text: "Stereo color and navigation cameras mounted at human eye level." },
+      { x: 32, y: 48, label: "Solar Arrays", text: "Triple-junction gallium arsenide cells providing up to 900 Wh per sol." },
+      { x: 74, y: 64, label: "Robotic Arm", text: "5-jointed arm carrying the spectrometer turret and rock grinder." },
     ],
   },
   {
     id: "launch",
-    title: "My Departure",
+    number: "02",
+    title: "My Launch",
     date: "10 June 2003",
     narration: [
-      "Folded inside a protective shell on top of a Delta II rocket, I waited at Cape Canaveral, Florida.",
-      "Then, one day, I left the only world I had ever known. The Earth grew smaller below me until it was just a blue dot.",
+      "I was folded tightly like mechanical origami inside a conical aeroshell and bolted to the top of a Boeing Delta II rocket.",
+      "On 10 June 2003 at 17:58 UTC, the engines ignited at Space Launch Complex 17A in Cape Canaveral, Florida. Thunder shook the coast.",
+      "The rocket broke free of Earth's gravity, and the brilliant blue planet that created me shrank into a distant crescent behind my cruise stage.",
     ],
-    scienceTitle: "Escaping Earth's gravity",
+    scienceTitle: "Escape Velocity and Orbital Insertion",
     science:
-      "The rocket first put me in a parking orbit around Earth. Then an upper stage fired again to fling me onto a path around the Sun that would cross paths with Mars months later.",
-    facts: ["Launch: 10 June 2003, 17:58:47 UTC", "Rocket: Delta II 7925", "Pad: Space Launch Complex 17A, Cape Canaveral"],
-    photo: nasaImg("KSC-03pd1900", "medium", "The Delta II rocket carrying Spirit lifts off, 10 June 2003.", "NASA/KSC"),
+      "To break orbit and head toward Mars, the Delta II 7925 heavy launcher fired its first stage, nine solid rocket boosters, and a Star-48 solid-propellant third stage to achieve hyperbolic escape velocity of over 11.2 km/s (25,000 mph).",
+    facts: [
+      "Launch time: 10 June 2003, 17:58:47 UTC",
+      "Launch vehicle: Delta II 7925 with 9 strap-on graphite epoxy motors",
+      "Launch site: Cape Canaveral Space Force Station, Florida",
+    ],
+    photo: nasaImg("KSC-03pd1900", "medium", "The Delta II rocket carrying Spirit lifts off from Cape Canaveral.", "NASA/KSC"),
     hotspots: [
-      { x: 50, y: 30, label: "Delta II", text: "A three-stage rocket. I rode in its nose, folded up like origami." },
-      { x: 50, y: 85, label: "Earth", text: "From orbit, the planet I came from slowly shrank away." },
+      { x: 50, y: 28, label: "Payload Fairing", text: "Spirit sat folded safely inside the protective aerodynamic nosecone." },
+      { x: 50, y: 88, label: "Earth", text: "Home slowly receded as the cruise stage embarked on the transfer orbit." },
     ],
   },
   {
     id: "journey",
+    number: "03",
     title: "My Journey",
     date: "June 2003 – Jan 2004",
     narration: [
-      "For seven months I drifted through the dark, carried by a cruise stage with its own solar panels.",
-      "Engineers on Earth nudged my path several times — four small course corrections — aiming me at a crater named Gusev.",
+      "For nearly seven months, I drifted across 487 million kilometres of silent interplanetary space.",
+      "You do not aim straight at Mars; Mars is moving around the Sun at 24 kilometres per second. We flew a grand elliptical arc called a Hohmann transfer orbit.",
+      "My cruise stage fired small thrusters four times for trajectory correction maneuvers, fine-tuning my trajectory until Gusev Crater was locked precisely in my crosshairs.",
     ],
-    scienceTitle: "You don't fly straight to Mars",
+    scienceTitle: "Interplanetary Orbital Mechanics",
     science:
-      "Spacecraft follow a curved path around the Sun, called a transfer orbit. Launch is timed so that Mars arrives at the same point in space at the same moment we do — like throwing a ball to where a friend will be.",
-    facts: ["Cruise: about 7 months", "Course corrections: 1 at 10 days after launch, then 3 more", "Destination: Gusev Crater, a possible ancient lake bed"],
+      "A Hohmann transfer orbit is the most fuel-efficient trajectory between two planetary orbits. Launch windows only open roughly every 26 months when Earth and Mars reach the necessary relative alignment around the Sun.",
+    facts: [
+      "Total cruise distance: 487 million kilometres (302 million miles)",
+      "Cruise duration: 208 days",
+      "Trajectory correction burns: 4 precision TCM burns during transit",
+    ],
     hotspots: [
-      { x: 18, y: 62, label: "Earth", text: "Where I started. Earth keeps moving along its own orbit." },
-      { x: 82, y: 38, label: "Mars", text: "Where I was going — Mars would be waiting there in January 2004." },
+      { x: 22, y: 65, label: "Earth Orbit", text: "Where the journey began in June 2003." },
+      { x: 80, y: 35, label: "Mars Rendezvous", text: "Mars arriving at the orbital intersection in January 2004." },
     ],
   },
   {
     id: "arrival",
+    number: "04",
     title: "My Arrival",
     date: "4 January 2004 (UTC)",
     narration: [
-      "I hit the top of the Martian atmosphere at thousands of kilometres per hour. My heat shield glowed. A parachute snapped open.",
-      "Rockets fired, airbags inflated around me — and I fell, bouncing 28 times across the ground before rolling to a stop.",
+      "On 4 January 2004, interplanetary silence ended violently. I slammed into the upper Martian atmosphere at 19,300 kilometres per hour.",
+      "My ablative heat shield reached temperatures exceeding 1,500°C, glowing red-hot and turning atmospheric gases into incandescent plasma.",
+      "Inside the aeroshell, I experienced deceleration forces peaking at nearly 10 times Earth gravity.",
     ],
-    scienceTitle: "Landing inside a bouncing ball",
+    scienceTitle: "Atmospheric Entry and Thermal Protection",
     science:
-      "Mars' air is less than 1% as dense as Earth's, so a parachute alone can't slow you enough. After the parachute, retrorockets braked the fall, then giant airbags — the same type used by Mars Pathfinder — absorbed the impact at about 14 m/s.",
+      "Mars' atmosphere is very thin (less than 1% of Earth's atmospheric pressure), but at hypersonic entry velocities of Mach 16, atmospheric friction and compression dissipate 99% of the spacecraft's kinetic energy before parachute deploy.",
     facts: [
-      "Parachute opened ~6–7.5 km above the ground",
-      "Retrorockets fired until ~8.5 m above the ground",
-      "Rolled 250–300 m from the first impact",
-      "Landed ~13.4 km from the planned target",
+      "Atmospheric entry speed: ~5.4 km/s (12,000 mph / Mach 16)",
+      "Peak thermal load: ~1,500°C (2,732°F) on the phenolic-impregnated heat shield",
+      "Peak deceleration: 9.8 g",
     ],
     hotspots: [
-      { x: 50, y: 18, label: "Parachute", text: "Opened about 6 to 7.5 km above the ground." },
-      { x: 50, y: 52, label: "Retrorockets", text: "Fired at the base of the parachute to slow the final fall." },
-      { x: 50, y: 78, label: "Airbags", text: "Four airbag clusters surrounded the lander like a beach ball." },
+      { x: 50, y: 48, label: "Heat Shield", text: "Absorbed intense plasma friction, slowing Spirit from 19,300 km/h." },
+      { x: 50, y: 22, label: "Backshell", text: "Protected the rover and contained the parachute pack." },
     ],
   },
   {
-    id: "first-steps",
-    title: "My First Steps",
-    date: "January 2004",
+    id: "descent",
+    number: "05",
+    title: "My Descent",
+    date: "4 January 2004, 04:31 UTC",
     narration: [
-      "When the airbags deflated, my lander opened its petals like a flower. I unfolded my solar panels and lifted my camera mast.",
-      "I saw a wide, dusty plain scattered with rocks. My landing place was named Columbia Memorial Station, for the seven astronauts lost on the space shuttle Columbia.",
+      "At 7.5 kilometres above the Martian ground, a massive 15-metre parachute deployed at supersonic speed with a sharp explosive crack.",
+      "Twenty seconds later, my glowing heat shield dropped away. Radar altimeters pinged the ground, measuring my closing speed.",
+      "Seconds before impact, giant airbags made of layered synthetic Vectran inflated all around me like a massive cluster of beach balls. Retrorockets on the backshell fired to halt my final vertical fall.",
     ],
-    scienceTitle: "Why Gusev Crater?",
+    scienceTitle: "The Airbag Landing Architecture",
     science:
-      "From orbit, Gusev looked like it might once have held a lake, fed by a long valley called Ma'adim Vallis. Scientists hoped its floor held sediments laid down by water.",
+      "Pioneered by Mars Pathfinder, the airbag landing system eliminated the need for heavy throttling descent engines. 24 interconnected Vectran fabric lobes cushion impact forces of up to 40 g and withstand rolling over boulder-strewn terrain.",
     facts: [
-      "Landing coordinates: 14.5692° S, 175.4729° E",
-      "Rolled off the lander onto Martian soil on 15 Jan 2004",
-      "First colour image released within days of landing",
+      "Parachute deployment altitude: ~7.5 km above ground at Mach 1.7",
+      "Airbag material: 4 layers of high-strength synthetic Vectran",
+      "Retrorocket burn: RAD (Rocket Assisted Descent) motors fired ~10 m above the surface",
     ],
-    photo: nasaImg("PIA04995", "medium", "The first colour image from Spirit at Gusev Crater."),
     hotspots: [
-      { x: 30, y: 72, label: "Lander petals", text: "The lander's triangular petals opened to let me roll off." },
-      { x: 70, y: 40, label: "Columbia Hills", text: "Hills on the horizon — later named after the Columbia crew." },
+      { x: 50, y: 15, label: "Supersonic Parachute", text: "Slowed the lander from 1,600 km/h to about 300 km/h." },
+      { x: 50, y: 55, label: "RAD Rockets", text: "Three solid motors fired to cancel remaining downward speed." },
+      { x: 50, y: 82, label: "Vectran Airbags", text: "Inflated in less than one second into a 5-metre spherical cocoon." },
+    ],
+  },
+  {
+    id: "landing",
+    number: "06",
+    title: "My Landing",
+    date: "4 January 2004, 04:35 UTC",
+    narration: [
+      "I hit the ground of Gusev Crater at 50 kilometres per hour and bounced into the sky.",
+      "I bounced 28 times, leaping several stories high with each rebound and rolling nearly 300 metres across the plains before settling into a shallow depression.",
+      "The airbags deflated and retracted. Three triangular petals slowly unfolded like a metal lotus blossom. I stood upright, opened my solar arrays, and transmitted my first telemetry beacon back to Earth: I had arrived.",
+    ],
+    scienceTitle: "Touchdown at Columbia Memorial Station",
+    science:
+      "Landing occurred at 14.5684° S, 175.4726° E. NASA named the landing site 'Columbia Memorial Station' to honor the seven crew members of the Space Shuttle Columbia lost in February 2003. Spirit's high-gain antenna transmitted the first full-resolution stereoscopic color mosaic within 72 hours.",
+    facts: [
+      "Touchdown time: 4 January 2004, 04:35 UTC (Earth received time)",
+      "First impact velocity: ~14 m/s (31 mph / 50 km/h)",
+      "Total bounces: 28 bounces over a distance of ~300 m",
+      "Landing coordinates: 14.5692° S, 175.4729° E",
+    ],
+    photo: nasaImg("PIA04995", "medium", "Spirit's first panoramic color view from Columbia Memorial Station."),
+    hotspots: [
+      { x: 30, y: 72, label: "Lander Petals", text: "Pyramid-shaped petals folded open to provide an exit ramp." },
+      { x: 72, y: 42, label: "Columbia Hills", text: "The distant mountain range ~3 km to the east that Spirit would later climb." },
+    ],
+  },
+  {
+    id: "exploration",
+    number: "07",
+    title: "My Exploration",
+    date: "2004 – 2005",
+    narration: [
+      "On 15 January 2004, my wheels rolled off the lander ramp and made the first tire tracks in the virgin soil of Gusev Crater.",
+      "The flat volcanic plains initially seemed dry and barren. My human drivers on Earth set our sights on the Columbia Hills, three kilometres away.",
+      "Over months of steady driving, I crossed craters, navigated boulder fields, and climbed steep slopes of up to 30 degrees, eventually reaching the summit of Husband Hill 106 metres above the surrounding plain.",
+    ],
+    scienceTitle: "Crossing the Floor of Gusev Crater",
+    science:
+      "Spirit navigated with autonomous hazard avoidance software (AutoNav), processing stereo image pairs from front and rear Hazcams to plot safe paths around rocks larger than 25 cm. The climb up Husband Hill confirmed altered sedimentary rock layers that could not be seen from the plain.",
+    facts: [
+      "Surface rollout: 15 January 2004 (Sol 12)",
+      "Summit reached: Husband Hill, 29 September 2005 (Sol 618)",
+      "Elevation gained: 106 metres (348 feet) above the landing plain",
+      "Maximum slope climbed: 30 degrees",
+    ],
+    photo: nasaImg("PIA07075", "small", "Spirit looks back at its own tracks across the Martian plains."),
+    hotspots: [
+      { x: 42, y: 78, label: "Wheel Tracks", text: "Six cleated tires leaving twin trenches in the iron-oxide dust." },
+      { x: 68, y: 35, label: "Husband Hill", text: "Named after Rick Husband, commander of STS-107 Columbia." },
     ],
   },
   {
     id: "discoveries",
+    number: "08",
     title: "My Discoveries",
     date: "2004 – 2007",
     narration: [
-      "I ground into rocks, sniffed them with my spectrometers and climbed the hills on the horizon — all the way to the summit of Husband Hill.",
-      "And then, by accident, my broken wheel dug up something remarkable: soil made almost entirely of silica.",
+      "On Sol 34, I pressed my Rock Abrasion Tool into a basalt boulder named 'Adirondack', becoming the first machine to grind open a rock on Mars.",
+      "Then came an extraordinary accident. In 2006, my right-front wheel jammed completely. I had to drag it backwards through the dirt like a wounded limb.",
+      "In May 2007, near an ancient plateau called 'Home Plate', that dragging wheel gouged deep into the soil and unearthed something dazzling white: soil that was 90% pure amorphous silica.",
     ],
-    scienceTitle: "Clues of a wetter Mars",
+    scienceTitle: "Evidence of Hydrothermal Hot Springs",
     science:
-      "Nearly pure silica forms where hot water interacts with rock — like hot springs or steam vents on Earth. Finding it was strong evidence that ancient Mars was much wetter than it is now, with environments that could have been friendly to microbes.",
+      "On Earth, 90% pure silica only precipitates in active hydrothermal systems — hot springs, geysers, or acid fumaroles. This was groundbreaking proof that ancient Mars possessed both hot water and volcanic heat sources simultaneously: an ideal habitat where microbial life could have thrived.",
     facts: [
-      "6 Feb 2004: first rock ever ground open on Mars (Adirondack)",
-      "29 Sep 2005: reached the summit of Husband Hill",
-      "2006: evidence of an ancient explosion at Home Plate",
-      "2007: nearly pure silica patch nicknamed 'Gertrude Weise'",
+      "First rock drilled: 'Adirondack' basalt on 6 Feb 2004 (Sol 34)",
+      "Discovery site: 'Gertrude Weise' trench near Home Plate",
+      "Silica concentration: 90% pure SiO2 (amorphous opal-A silica)",
+      "Volcanic discovery: Bomb sag impact structure at Home Plate proving explosive volcanic steam eruptions",
     ],
-    photo: nasaImg("PIA09491", "small", "Bright silica-rich soil churned up by Spirit's dragging wheel, 2007."),
+    photo: nasaImg("PIA09491", "small", "Bright silica-rich soil churned up by Spirit's dragging right-front wheel."),
     hotspots: [
-      { x: 38, y: 64, label: "Rock Abrasion Tool", text: "Ground a shallow circle into rock to expose its fresh interior." },
-      { x: 70, y: 76, label: "Silica soil", text: "Bright soil — nearly pure silica, the main ingredient of glass." },
+      { x: 40, y: 65, label: "Rock Abrasion Tool", text: "Diamond teeth ground 45 mm wide windows into rock cores." },
+      { x: 72, y: 78, label: "Pure Silica Soil", text: "Bright deposits left behind by ancient boiling hydrothermal springs." },
     ],
   },
   {
     id: "challenges",
+    number: "09",
     title: "My Challenges",
     date: "2004 – 2009",
     narration: [
-      "Just 18 sols after landing, my memory filled up and I went silent. Engineers on Earth fixed me from more than 150 million kilometres away.",
-      "Then my right-front wheel stopped turning, and I learned to drive backwards. Dust storms dimmed my Sun. Every winter, I parked on a slope to catch the light.",
+      "Mars tests every wire and weld. On Sol 18, my flash memory corrupted and I went into an endless reboot loop. From 150 million kilometres away, engineers diagnosed the operating system and saved my life.",
+      "In March 2006, my right-front wheel motor died for good. In 2007, a massive planet-encircling dust storm blotted out 99% of the direct sunlight, plunging my solar power down to critical survival thresholds.",
+      "Every winter, the Sun dipped low to the north. Without enough power to run internal survival heaters, I had to climb steep north-facing slopes and park there for months just to catch enough rays to avoid freezing to death.",
     ],
-    scienceTitle: "Dust is a solar rover's enemy",
+    scienceTitle: "Surviving Deep Winter and Global Dust Storms",
     science:
-      "Dust settling on solar panels blocks sunlight. At the end of 2008 Spirit's panels produced only about 89 watt-hours per day, compared with roughly 700 normally — so lucky gusts of wind that blew the dust away were life-saving.",
+      "Spirit depended entirely on solar energy. Normal power output was 700 to 900 Wh/day; during the 2007 and 2008 dust storms and winters, it plummeted below 90 Wh/day — barely enough to run the clock and prevent the battery electrolyte from freezing solid at -40°C.",
     facts: [
-      "21 Jan 2004: flash-memory fault — normal operations resumed 5 Feb",
-      "2006: right-front wheel stopped working",
-      "2007: massive dust storms reduced power",
-      "Late 2008: power fell to ~89 Wh per sol",
+      "Sol 18 flash memory crisis: Resolved by deleting thousands of cached files via Low-Gain Antenna",
+      "March 2006 (Sol 779): Right-front wheel drive motor failed completely",
+      "2007 global dust storm: Atmospheric opacity (tau) exceeded 4.0; power dropped to 128 Wh/sol",
+      "Late 2008: Power dropped to a record low of 89 Wh/sol",
     ],
-    photo: nasaImg("PIA07075", "small", "The track left by Spirit's dragging right wheel (3D view)."),
     hotspots: [
-      { x: 30, y: 30, label: "Dust storm", text: "Dust in the sky and on the panels cut my power." },
-      { x: 62, y: 70, label: "Stuck wheel", text: "My right-front wheel stopped in 2006. I dragged it behind me." },
+      { x: 30, y: 32, label: "Dust-Covered Solar Array", text: "Fine reddish dust choked off solar light, slashing available power." },
+      { x: 64, y: 72, label: "Jammed Wheel", text: "Required Spirit to drive all remaining kilometers in reverse." },
     ],
   },
   {
     id: "last-days",
-    title: "My Last Days",
+    number: "10",
+    title: "My Final Days",
     date: "May 2009 – March 2010",
     narration: [
-      "On 1 May 2009, driving beside a plateau called Home Plate, my wheels broke through a crust into soft sand. I could not climb out.",
-      "Engineers tried for months. Then they gave me a new job: stay still and do science. But winter came, my panels faced the wrong way, and the cold grew too strong. After 22 March 2010, I could no longer answer.",
+      "On 1 May 2009 (Sol 1892), while driving beside Home Plate, my wheels broke through a deceptively thin crust into hidden powdery sand.",
+      "The site was named 'Troy'. The sand underneath was slippery iron sulfate with virtually no traction. For eight months, engineers used a sandbox replica at JPL to simulate every wheel turn.",
+      "In November 2009, my right-rear wheel failed too. In January 2010, NASA transitioned me to a stationary science platform.",
+      "Martian winter approached. Stuck at an unfavorable tilt of 9 degrees south, my solar panels could not tilt toward the low northern Sun. On 22 March 2010, after sending my final transmission, I went to sleep. I never woke up.",
     ],
-    scienceTitle: "Why couldn't Spirit survive the winter?",
+    scienceTitle: "The Troy Sand Trap and Mission Conclusion",
     science:
-      "To survive winter, Spirit needed its panels tilted north toward the low Sun. Stuck in the sand, it could not achieve that tilt. With too little power, its survival heaters probably could not keep it warm — NASA's most probable cause for the loss of contact.",
+      "Spirit became embedded in sulfate-rich soil at 14.6° S. Because it could not achieve the required northerly tilt for the 2010 winter solstice, temperatures inside the electronics box dropped below -55°C. NASA sent more than 1,300 recovery commands over 14 months via the Deep Space Network before officially ending the mission on 25 May 2011.",
     facts: [
-      "1 May 2009: stuck in soft soil at a site nicknamed 'Troy'",
-      "28 Nov 2009: right-rear wheel stopped working",
-      "Jan 2010: re-tasked as a stationary science platform",
-      "22 Mar 2010: last communication",
-      "25 May 2011: NASA ends recovery efforts after 1,300+ commands",
+      "1 May 2009 (Sol 1892): Stuck at 'Troy' west of Home Plate",
+      "28 Nov 2009: Right-rear wheel motor failed",
+      "22 March 2010 (Sol 2210): Final documented transmission to Earth",
+      "25 May 2011: NASA concludes recovery efforts after sending 1,300+ commands",
     ],
-    photo: nasaImg("PIA12203", "medium", "Spirit's view from 'Troy', where it became embedded in soft soil."),
+    photo: nasaImg("PIA12203", "medium", "Spirit's view from 'Troy', where the rover became permanently stuck in soft sand."),
     hotspots: [
-      { x: 50, y: 78, label: "Soft sand", text: "A thin crust hid loose, sulfate-rich sand underneath." },
-      { x: 78, y: 22, label: "Low winter Sun", text: "The Sun sat low in the northern sky — and my panels faced the wrong way." },
+      { x: 50, y: 80, label: "Sulfate Sand Trap", text: "Soft, slippery iron sulfates with no shear strength beneath the thin crust." },
+      { x: 80, y: 24, label: "Winter Sun", text: "Low on the northern horizon while Spirit was tilted south." },
     ],
   },
   {
     id: "legacy",
+    number: "11",
     title: "My Legacy",
-    date: "Today",
+    date: "Today & Forever",
     narration: [
-      "I was meant to last 90 sols. I lasted six years, two months and nineteen days, and drove 7.73 kilometres.",
-      "I still sit at Troy, beside Home Plate, dusty and silent. But the rovers that came after me — Curiosity and Perseverance — carry forward what I learned.",
+      "I was designed to explore for 90 days and drive 600 metres. Instead, I lived for six years, two months, and nineteen days, driving 7,730 metres across an alien world.",
+      "I still sit at Troy beside Home Plate in the Columbia Hills. My solar panels are covered in Martian dust, and the wind whispers over my camera mast.",
+      "I proved that water once bubbled on Mars. The lessons learned from my struggles — from wheels to dust to winter — were engineered into Curiosity and Perseverance. I was abandoned, but I will never be forgotten.",
     ],
-    scienceTitle: "What Spirit gave science",
+    scienceTitle: "Enduring Contributions to Planetary Science",
     science:
-      "Spirit showed that Gusev's volcanic plains had been touched by water — through altered rocks, sulfur-rich soils and silica from hot springs or steam vents. It also proved that rovers could outlive their plans many times over.",
+      "Spirit proved that robotic field geologists can conduct complex, multi-year science campaigns on other planets. Its discoveries rewrote textbooks on Martian climate history, confirming that Mars transitioned from an early hydrothermal, wet environment into the dry, frozen desert of today.",
     facts: [
-      "Operated more than 25 times its planned lifetime",
-      "Distance driven: 7.73 km (4.8 miles)",
-      "Final location: 'Troy', west of Home Plate, Columbia Hills",
+      "Operational duration: 2,210 sols (6 years, 2 months, 19 days) — 25x planned lifetime",
+      "Total distance driven: 7.73 kilometres (4.8 miles)",
+      "Raw images returned: 124,000+ scientific images",
+      "Final resting coordinates: 14.5684° S, 175.4726° E (Columbia Hills, Mars)",
     ],
-    photo: nasaImg("PIA05547", "small", "Earth as seen from Mars by Spirit, March 2004 — 'you are here'.", "NASA/JPL/Cornell/Texas A&M"),
+    photo: nasaImg("PIA05547", "small", "Earth seen as an evening star from Mars by Spirit — 'Pale Blue Dot'."),
     hotspots: [
-      { x: 48, y: 70, label: "Troy", text: "My final resting place, next to the plateau Home Plate." },
-      { x: 80, y: 20, label: "Earth", text: "A small bright dot in the Martian sky — home." },
+      { x: 48, y: 72, label: "Troy Rest Site", text: "Spirit's permanent resting monument in the Columbia Hills of Mars." },
+      { x: 80, y: 22, label: "Earth in the Sky", text: "The home world where Spirit was dreamed, designed, and remembered." },
     ],
   },
 ];
@@ -334,22 +415,26 @@ export const SPIRIT_STORY: StoryStage[] = [
 export const STORY_DISCLAIMER =
   "First-person narration is a creative storytelling device based on NASA mission records. These are not real words or thoughts from the rover.";
 
-/* Interactive timeline — each milestone maps to a story stage. */
+/* Interactive timeline — each milestone maps to an exact story stage. */
 export interface Milestone {
   date: string;
   phase: "Launch" | "Arrival" | "Landing" | "Exploration" | "Discovery" | "Conclusion" | "Legacy";
   label: string;
   stage: SceneKey;
+  stageIndex: number;
 }
 
 export const SPIRIT_TIMELINE: Milestone[] = [
-  { date: "2003-06-10", phase: "Launch", label: "Launch from Cape Canaveral", stage: "launch" },
-  { date: "2004-01-04", phase: "Arrival", label: "Entry, descent & airbag landing", stage: "arrival" },
-  { date: "2004-01-15", phase: "Landing", label: "Rolls off the lander", stage: "first-steps" },
-  { date: "2004-02-06", phase: "Exploration", label: "First rock ground open on Mars", stage: "discoveries" },
-  { date: "2005-09-29", phase: "Exploration", label: "Summit of Husband Hill", stage: "discoveries" },
-  { date: "2007-05-21", phase: "Discovery", label: "Silica-rich soil announced", stage: "discoveries" },
-  { date: "2009-05-01", phase: "Conclusion", label: "Stuck at Troy", stage: "last-days" },
-  { date: "2010-03-22", phase: "Conclusion", label: "Last communication", stage: "last-days" },
-  { date: "2011-05-25", phase: "Legacy", label: "Mission declared complete", stage: "legacy" },
+  { date: "2003-06-10", phase: "Launch", label: "Launch from Cape Canaveral", stage: "launch", stageIndex: 1 },
+  { date: "2004-01-04", phase: "Arrival", label: "Hypersonic atmospheric entry", stage: "arrival", stageIndex: 3 },
+  { date: "2004-01-04", phase: "Arrival", label: "Supersonic parachute & airbag deployment", stage: "descent", stageIndex: 4 },
+  { date: "2004-01-04", phase: "Landing", label: "Airbag landing at Columbia Memorial Station", stage: "landing", stageIndex: 5 },
+  { date: "2004-01-15", phase: "Exploration", label: "Rolls onto Martian soil", stage: "exploration", stageIndex: 6 },
+  { date: "2004-02-06", phase: "Discovery", label: "First rock drilled on Mars (Adirondack)", stage: "discoveries", stageIndex: 7 },
+  { date: "2005-09-29", phase: "Exploration", label: "Summit of Husband Hill conquered", stage: "exploration", stageIndex: 6 },
+  { date: "2006-03-13", phase: "Conclusion", label: "Right-front wheel motor jams", stage: "challenges", stageIndex: 8 },
+  { date: "2007-05-21", phase: "Discovery", label: "Pure silica hydrothermal springs discovered", stage: "discoveries", stageIndex: 7 },
+  { date: "2009-05-01", phase: "Conclusion", label: "Embedded at Troy sand trap", stage: "last-days", stageIndex: 9 },
+  { date: "2010-03-22", phase: "Conclusion", label: "Last documented transmission received", stage: "last-days", stageIndex: 9 },
+  { date: "2011-05-25", phase: "Legacy", label: "NASA declares mission complete", stage: "legacy", stageIndex: 10 },
 ];

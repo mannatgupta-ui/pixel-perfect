@@ -13,6 +13,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "../components/site/SiteHeader";
+import { AstroProvider } from "../components/astro/AstroContext";
+import { AstroCopilot } from "../components/astro/AstroCopilot";
 
 function NotFoundComponent() {
   return (
@@ -126,9 +128,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <SiteHeader />
-      <Outlet />
+      <AstroProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <SiteHeader />
+        <Outlet />
+        <AstroCopilot />
+      </AstroProvider>
     </QueryClientProvider>
   );
 }

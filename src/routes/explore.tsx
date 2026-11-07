@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Info, Telescope, X } from "lucide-react";
-import { lazy, useState } from "react";
+import { lazy, useState, useEffect } from "react";
 
 import { ArtifactList } from "@/components/explore/ArtifactList";
 import { ClientScene } from "@/components/site/ClientScene";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { artifactsForBody } from "@/data/artifacts";
 import { BODIES, BODY_BY_ID, isBodyId, SCALE_NOTE } from "@/data/bodies";
 import type { BodyId } from "@/data/types";
+import { useAstro } from "@/components/astro/AstroContext";
 import { cn } from "@/lib/utils";
 
 const SolarSystemScene = lazy(() => import("@/components/three/SolarSystemScene"));
@@ -39,10 +40,20 @@ export const Route = createFileRoute("/explore")({
 function ExplorePage() {
   const { body } = Route.useSearch();
   const navigate = useNavigate({ from: "/explore" });
+  const { updateContext } = useAstro();
   const [ready, setReady] = useState(false);
   const focus: Focus | null = body ?? null;
   const select = (id: Focus | null) => navigate({ search: id ? { body: id } : {}, replace: true });
   const sceneSelected = focus && focus !== "deep-space" ? focus : null;
+
+  useEffect(() => {
+    updateContext({
+      selectedPlanet: focus ? (focus === "deep-space" ? "Deep Space" : BODY_BY_ID[focus]?.name) : "Solar System",
+      selectedArtifact: null,
+      selectedComponent: null,
+      currentStoryStage: null,
+    });
+  }, [focus]);
 
   return (
     <main className="relative h-[100svh] overflow-hidden bg-background pt-14">

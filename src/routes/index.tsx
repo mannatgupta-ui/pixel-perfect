@@ -176,7 +176,7 @@ function Index() {
                 NASA sent Spirit more than 1,300 commands over the next 14 months. None were answered.
               </p>
               <Button asChild variant="hero" className="mt-8">
-                <Link to="/story/$artifactId" params={{ artifactId: "spirit" }} search={{ stage: 7 }}>
+                <Link to="/story/$artifactId" params={{ artifactId: "spirit" }} search={{ stage: 9 }}>
                   Read its last days <ArrowRight />
                 </Link>
               </Button>

@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as ArtifactArtifactIdRouteImport } from './routes/artifact.$artifactId'
 import { Route as PlanetPlanetIdRouteImport } from './routes/planet.$planetId'
+import { Route as StoryArtifactIdRouteImport } from './routes/story.$artifactId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,40 +25,74 @@ const ExploreRoute = ExploreRouteImport.update({
   path: '/explore',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArtifactArtifactIdRoute = ArtifactArtifactIdRouteImport.update({
+  id: '/artifact/$artifactId',
+  path: '/artifact/$artifactId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlanetPlanetIdRoute = PlanetPlanetIdRouteImport.update({
   id: '/planet/$planetId',
   path: '/planet/$planetId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoryArtifactIdRoute = StoryArtifactIdRouteImport.update({
+  id: '/story/$artifactId',
+  path: '/story/$artifactId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/explore': typeof ExploreRoute
+  '/artifact/$artifactId': typeof ArtifactArtifactIdRoute
   '/planet/$planetId': typeof PlanetPlanetIdRoute
+  '/story/$artifactId': typeof StoryArtifactIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/explore': typeof ExploreRoute
+  '/artifact/$artifactId': typeof ArtifactArtifactIdRoute
   '/planet/$planetId': typeof PlanetPlanetIdRoute
+  '/story/$artifactId': typeof StoryArtifactIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/explore': typeof ExploreRoute
+  '/artifact/$artifactId': typeof ArtifactArtifactIdRoute
   '/planet/$planetId': typeof PlanetPlanetIdRoute
+  '/story/$artifactId': typeof StoryArtifactIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/explore' | '/planet/$planetId'
+  fullPaths:
+    | '/'
+    | '/explore'
+    | '/artifact/$artifactId'
+    | '/planet/$planetId'
+    | '/story/$artifactId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/explore' | '/planet/$planetId'
-  id: '__root__' | '/' | '/explore' | '/planet/$planetId'
+  to:
+    | '/'
+    | '/explore'
+    | '/artifact/$artifactId'
+    | '/planet/$planetId'
+    | '/story/$artifactId'
+  id:
+    | '__root__'
+    | '/'
+    | '/explore'
+    | '/artifact/$artifactId'
+    | '/planet/$planetId'
+    | '/story/$artifactId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ExploreRoute: typeof ExploreRoute
+  ArtifactArtifactIdRoute: typeof ArtifactArtifactIdRoute
   PlanetPlanetIdRoute: typeof PlanetPlanetIdRoute
+  StoryArtifactIdRoute: typeof StoryArtifactIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,11 +111,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExploreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/artifact/$artifactId': {
+      id: '/artifact/$artifactId'
+      path: '/artifact/$artifactId'
+      fullPath: '/artifact/$artifactId'
+      preLoaderRoute: typeof ArtifactArtifactIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/planet/$planetId': {
       id: '/planet/$planetId'
       path: '/planet/$planetId'
       fullPath: '/planet/$planetId'
       preLoaderRoute: typeof PlanetPlanetIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/story/$artifactId': {
+      id: '/story/$artifactId'
+      path: '/story/$artifactId'
+      fullPath: '/story/$artifactId'
+      preLoaderRoute: typeof StoryArtifactIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -88,7 +138,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ExploreRoute: ExploreRoute,
+  ArtifactArtifactIdRoute: ArtifactArtifactIdRoute,
   PlanetPlanetIdRoute: PlanetPlanetIdRoute,
+  StoryArtifactIdRoute: StoryArtifactIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

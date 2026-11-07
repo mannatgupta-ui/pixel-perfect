@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Info, X } from "lucide-react";
-import { lazy, useMemo, useState } from "react";
+import { lazy, useMemo, useState, useEffect } from "react";
 
 import { ClientScene } from "@/components/site/ClientScene";
 import { StatusBadge } from "@/components/site/StatusBadge";
@@ -10,6 +10,7 @@ import { BODY_BY_ID } from "@/data/bodies";
 import type { GlobeSite } from "@/components/three/PlanetGlobe";
 import { formatCoords, formatDate } from "@/lib/geo";
 import { TEXTURE_CREDIT } from "@/lib/textures";
+import { useAstro } from "@/components/astro/AstroContext";
 import { cn } from "@/lib/utils";
 
 const PlanetGlobe = lazy(() => import("@/components/three/PlanetGlobe"));
@@ -41,6 +42,7 @@ function PlanetPage() {
   const { planetId } = Route.useLoaderData();
   const { site } = Route.useSearch();
   const navigate = useNavigate({ from: "/planet/$planetId" });
+  const { updateContext } = useAstro();
   const [ready, setReady] = useState(false);
   const body = BODY_BY_ID[planetId];
   const items = artifactsForBody(planetId);
@@ -76,6 +78,17 @@ function PlanetPage() {
   const selectedSite = sites.find((s) => site && s.artifactIds.includes(site)) ?? null;
   const selected = site ? getArtifact(site) : undefined;
   const select = (id: string | null) => navigate({ search: id ? { site: id } : {}, replace: true });
+
+  useEffect(() => {
+    updateContext({
+      selectedPlanet: body.name,
+      selectedArtifact: selected?.name ?? null,
+      selectedMission: selected?.mission ?? null,
+      selectedComponent: null,
+      currentStoryStage: null,
+      coordinates: selected?.coords ? { lat: selected.coords.lat, lon: selected.coords.lon } : null,
+    });
+  }, [body, selected]);
 
   return (
     <main className="relative h-[100svh] overflow-hidden bg-background pt-14">

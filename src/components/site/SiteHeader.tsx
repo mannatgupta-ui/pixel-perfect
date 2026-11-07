@@ -3,14 +3,6 @@ import { Orbit } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-const NAV = [
-  { to: "/explore", label: "Solar System" },
-  { to: "/planet/$planetId", params: { planetId: "mars" }, label: "Mars" },
-  { to: "/planet/$planetId", params: { planetId: "moon" }, label: "Moon" },
-  { to: "/artifact/$artifactId", params: { artifactId: "spirit" }, label: "Spirit" },
-  { to: "/story/$artifactId", params: { artifactId: "spirit" }, label: "Story" },
-] as const;
-
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
@@ -25,17 +17,45 @@ export function SiteHeader() {
           </span>
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
-          {NAV.map((n) => (
-            <Link
-              key={n.label}
-              to={n.to}
-              params={"params" in n ? n.params : undefined}
-              className="rounded-full px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              activeProps={{ className: "bg-muted text-foreground" }}
-            >
-              {n.label}
-            </Link>
-          ))}
+          <Link
+            to="/explore"
+            className="rounded-full px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            activeProps={{ className: "bg-muted text-foreground" }}
+          >
+            Solar System
+          </Link>
+          <Link
+            to="/planet/$planetId"
+            params={{ planetId: "mars" }}
+            className="rounded-full px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            activeProps={{ className: "bg-muted text-foreground" }}
+          >
+            Mars
+          </Link>
+          <Link
+            to="/planet/$planetId"
+            params={{ planetId: "moon" }}
+            className="rounded-full px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            activeProps={{ className: "bg-muted text-foreground" }}
+          >
+            Moon
+          </Link>
+          <Link
+            to="/artifact/$artifactId"
+            params={{ artifactId: "spirit" }}
+            className="rounded-full px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            activeProps={{ className: "bg-muted text-foreground" }}
+          >
+            Spirit
+          </Link>
+          <Link
+            to="/story/$artifactId"
+            params={{ artifactId: "spirit" }}
+            className="rounded-full px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            activeProps={{ className: "bg-muted text-foreground" }}
+          >
+            Story
+          </Link>
         </nav>
         <button
           type="button"
@@ -47,17 +67,45 @@ export function SiteHeader() {
         </button>
       </div>
       <nav className={cn("border-t border-border/60 px-4 pb-3 md:hidden", open ? "block" : "hidden")}>
-        {NAV.map((n) => (
-          <Link
-            key={n.label}
-            to={n.to}
-            params={"params" in n ? n.params : undefined}
-            onClick={() => setOpen(false)}
-            className="block rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            {n.label}
-          </Link>
-        ))}
+        <Link
+          to="/explore"
+          onClick={() => setOpen(false)}
+          className="block rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          Solar System
+        </Link>
+        <Link
+          to="/planet/$planetId"
+          params={{ planetId: "mars" }}
+          onClick={() => setOpen(false)}
+          className="block rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          Mars
+        </Link>
+        <Link
+          to="/planet/$planetId"
+          params={{ planetId: "moon" }}
+          onClick={() => setOpen(false)}
+          className="block rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          Moon
+        </Link>
+        <Link
+          to="/artifact/$artifactId"
+          params={{ artifactId: "spirit" }}
+          onClick={() => setOpen(false)}
+          className="block rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          Spirit
+        </Link>
+        <Link
+          to="/story/$artifactId"
+          params={{ artifactId: "spirit" }}
+          onClick={() => setOpen(false)}
+          className="block rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          Story
+        </Link>
       </nav>
     </header>
   );
