@@ -268,3 +268,4 @@ export function KurzgesagtBird({ context, onClick, isOpen }: Props) {
     </div>
   );
 }
+

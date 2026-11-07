@@ -846,3 +846,4 @@ function VoyagerScene({ stageId, speed }: { stageId: string; speed: number }) {
     </motion.div>
   );
 }
+

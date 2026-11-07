@@ -36,6 +36,70 @@ export interface Photo {
   credit: string;
 }
 
+export interface MissionScientist {
+  name: string;
+  role: string;
+  institution: string;
+  contribution: string;
+  quote?: string;
+  photoUrl?: string;
+}
+
+export interface ArchivalPhoto {
+  id: string;
+  url: string;
+  title: string;
+  caption: string;
+  credit: string;
+  dateOrSol?: string;
+  instrument?: string;
+  significance?: string;
+}
+
+export interface MissionInstrument {
+  name: string;
+  acronym: string;
+  purpose: string;
+  leadInstitution: string;
+  description: string;
+  keyDiscovery: string;
+}
+
+export interface TechnicalSpecs {
+  massLaunchKg?: string | number;
+  massLandedKg?: string | number;
+  dimensions?: string;
+  powerSystem?: string;
+  powerOutput?: string;
+  flightComputer?: string;
+  memory?: string;
+  mobilityOrPropulsion?: string;
+  topSpeed?: string;
+  totalDistance?: string;
+  communicationLinks?: string;
+  plannedDuration?: string;
+  actualDuration?: string;
+}
+
+export interface ScientificBreakthrough {
+  title: string;
+  dateOrSol?: string;
+  summary: string;
+  significance: string;
+}
+
+export interface MissionDossier {
+  artifactId: string;
+  missionOverview: string;
+  scientists: MissionScientist[];
+  photos: ArchivalPhoto[];
+  instruments: MissionInstrument[];
+  specs: TechnicalSpecs;
+  breakthroughs: ScientificBreakthrough[];
+  historicalQuotes: { quote: string; author: string; context: string }[];
+  officialArchives: { name: string; url: string; description: string }[];
+}
+
 export interface Source {
   label: string;
   url: string;
