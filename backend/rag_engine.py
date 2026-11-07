@@ -1,3 +1,4 @@
+
 """
 NASA Mission RAG (Retrieval-Augmented Generation) Engine.
 Grounded in authentic NASA mission archives, NSSDCA, and JPL telemetry logs.
@@ -6,6 +7,12 @@ Grounded in authentic NASA mission archives, NSSDCA, and JPL telemetry logs.
 from typing import List, Dict, Any, Optional
 import os
 import re
+
+from dotenv import load_dotenv
+from google import genai
+
+# Always load the .env file located inside the backend folder
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
 class KnowledgeDocument:
     def __init__(self, doc_id: str, title: str, category: str, content: str, source: str, metadata: Dict[str, Any]):
@@ -202,25 +209,29 @@ class RAGEngine:
         results = [doc for _, doc in scored_docs[:top_k]]
         return results if results else self.docs[:top_k]
 
+   
+    
     def answer_query(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        Retrieves knowledge and formats an authentic response.
-        If LLM API is available in environment (GEMINI_API_KEY), queries the model;
-        otherwise synthesizes a grounded response directly from verified archives.
+        Retrieves NASA archive knowledge and generates a grounded Gemini response.
+        Falls back to local archive synthesis if Gemini is unavailable.
         """
         retrieved_docs = self.search(query, context, top_k=3)
-        sources = list(set(d.source for d in retrieved_docs))
+        sources = list(dict.fromkeys(d.source for d in retrieved_docs))
 
-        # Check for Gemini API key
         api_key = os.getenv("GEMINI_API_KEY")
+
         if api_key:
             try:
-                import google.generativeai as genai
-                genai.configure(api_key=api_key)
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                client = genai.Client(api_key=api_key)
 
-                context_str = "\n\n".join([f"[{d.title}]: {d.content}" for d in retrieved_docs])
-                prompt = f"""You are ASTRO, an intelligent NASA Space Exploration Copilot for the 'Abandoned but Not Forgotten' museum.
+                context_str = "\n\n".join(
+                    [f"[{d.title}]: {d.content}" for d in retrieved_docs]
+                )
+
+                prompt = f"""You are ASTRO, an intelligent NASA Space Exploration Copilot
+for the 'Abandoned but Not Forgotten' museum.
+
 Context Knowledge from NASA Archives:
 {context_str}
 
@@ -228,21 +239,34 @@ Visitor Context: {context}
 Visitor Question: {query}
 
 Instructions:
-1. Answer accurately using only verified facts from the context.
-2. Maintain a knowledgeable, inspiring, Kurzgesagt-style scientific storytelling tone.
-3. If referring to a component or mission, explain what happened and why it matters.
-4. State sources clearly."""
-                resp = model.generate_content(prompt)
-                return {
-                    "answer": resp.text,
-                    "sources": sources,
-                    "model": "gemini-1.5-flash (Live NASA RAG)"
-                }
-            except Exception as e:
-                # Graceful fallback to grounded archive retrieval
-                pass
+1. Answer accurately using the provided context.
+2. Do not invent facts or unsupported mission details.
+3. If the context does not contain enough information, clearly say so.
+4. Maintain a knowledgeable, inspiring scientific storytelling tone.
+5. Explain relevant spacecraft components and their significance.
+6. Keep the response engaging and easy to understand.
+7. Do not invent sources. Use only the provided archive sources.
 
-        # Grounded Archive Synthesis
+Answer the visitor's question:"""
+
+                response = client.models.generate_content(
+                    model="gemini-3.8-flash",
+                    contents=prompt
+                )
+
+                if response.text:
+                    return {
+                        "answer": response.text,
+                        "sources": sources,
+                        "model": "gemini-3.8-flash (Live NASA RAG)"
+                    }
+
+                print("Gemini returned an empty response.")
+
+            except Exception as e:
+                print(f"Gemini API error: {e}")
+
+        # Grounded Archive Synthesis fallback
         primary = retrieved_docs[0]
         secondary = retrieved_docs[1:] if len(retrieved_docs) > 1 else []
 
@@ -253,17 +277,24 @@ Instructions:
         if secondary:
             answer_parts.append("\n**Related Mission Context:**")
             for sec in secondary:
-                answer_parts.append(f"- **{sec.title}**: {sec.content[:160]}...")
+                answer_parts.append(
+                    f"- **{sec.title}**: {sec.content[:160]}..."
+                )
 
         if context and any(context.values()):
-            ctx_items = [f"{k}: {v}" for k, v in context.items() if v]
-            answer_parts.append(f"\n*(Grounded in current exploration context: {', '.join(ctx_items)})*")
+            ctx_items = [
+                f"{k}: {v}" for k, v in context.items() if v
+            ]
+            answer_parts.append(
+                f"\n*(Grounded in current exploration context: {', '.join(ctx_items)})*"
+            )
 
         return {
             "answer": "\n".join(answer_parts),
             "sources": sources,
             "model": "NASA Mission Archive Knowledge Engine (Grounded RAG)"
         }
+
 
 rag_engine = RAGEngine()
 
