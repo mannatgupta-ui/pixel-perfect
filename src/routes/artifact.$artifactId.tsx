@@ -596,23 +596,64 @@ function ArtifactDetailPage() {
                         : "bg-background/60 text-muted-foreground hover:bg-muted hover:text-foreground",
                     )}
                   >
-                    All Imagery ({dossier.photos.length})
+                    All Photos ({dossier.photos.length})
                   </button>
-                  {Array.from(new Set(dossier.photos.map((p) => p.instrument).filter(Boolean))).map((inst) => (
+                  {dossier.photos.some((p) => p.category === "launch") && (
                     <button
-                      key={inst}
                       type="button"
-                      onClick={() => setPhotoFilter(inst!)}
+                      onClick={() => setPhotoFilter("launch")}
                       className={cn(
-                        "rounded-xl px-3 py-1 font-mono text-xs transition-colors",
-                        photoFilter === inst
+                        "rounded-xl px-3 py-1 font-mono text-xs transition-colors flex items-center gap-1",
+                        photoFilter === "launch"
+                          ? "bg-mars-gradient text-primary-foreground font-semibold shadow-glow"
+                          : "bg-background/60 text-muted-foreground hover:bg-muted hover:text-foreground",
+                      )}
+                    >
+                      🚀 Rocket Liftoff ({dossier.photos.filter((p) => p.category === "launch").length})
+                    </button>
+                  )}
+                  {dossier.photos.some((p) => p.category === "scientists") && (
+                    <button
+                      type="button"
+                      onClick={() => setPhotoFilter("scientists")}
+                      className={cn(
+                        "rounded-xl px-3 py-1 font-mono text-xs transition-colors flex items-center gap-1",
+                        photoFilter === "scientists"
                           ? "bg-primary text-primary-foreground font-semibold shadow-glow"
                           : "bg-background/60 text-muted-foreground hover:bg-muted hover:text-foreground",
                       )}
                     >
-                      {inst}
+                      👨‍🔬 Scientists & Mission Control ({dossier.photos.filter((p) => p.category === "scientists").length})
                     </button>
-                  ))}
+                  )}
+                  {dossier.photos.some((p) => p.category === "cleanroom") && (
+                    <button
+                      type="button"
+                      onClick={() => setPhotoFilter("cleanroom")}
+                      className={cn(
+                        "rounded-xl px-3 py-1 font-mono text-xs transition-colors flex items-center gap-1",
+                        photoFilter === "cleanroom"
+                          ? "bg-teal text-background font-semibold shadow-glow"
+                          : "bg-background/60 text-muted-foreground hover:bg-muted hover:text-foreground",
+                      )}
+                    >
+                      🛠️ Clean Room Assembly ({dossier.photos.filter((p) => p.category === "cleanroom").length})
+                    </button>
+                  )}
+                  {dossier.photos.some((p) => p.category === "surface" || !p.category) && (
+                    <button
+                      type="button"
+                      onClick={() => setPhotoFilter("surface")}
+                      className={cn(
+                        "rounded-xl px-3 py-1 font-mono text-xs transition-colors flex items-center gap-1",
+                        photoFilter === "surface"
+                          ? "bg-gold text-background font-semibold shadow-glow"
+                          : "bg-background/60 text-muted-foreground hover:bg-muted hover:text-foreground",
+                      )}
+                    >
+                      🪐 Surface & Space ({dossier.photos.filter((p) => p.category === "surface" || !p.category).length})
+                    </button>
+                  )}
                 </div>
               ) : null}
             </div>
@@ -621,7 +662,14 @@ function ArtifactDetailPage() {
             {dossier?.photos && dossier.photos.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {dossier.photos
-                  .filter((p) => photoFilter === "all" || p.instrument === photoFilter)
+                  .filter((p) => {
+                    if (photoFilter === "all") return true;
+                    if (photoFilter === "launch") return p.category === "launch";
+                    if (photoFilter === "scientists") return p.category === "scientists";
+                    if (photoFilter === "cleanroom") return p.category === "cleanroom";
+                    if (photoFilter === "surface") return p.category === "surface" || !p.category;
+                    return p.instrument === photoFilter;
+                  })
                   .map((photo) => (
                     <motion.div
                       key={photo.id}
@@ -644,7 +692,22 @@ function ArtifactDetailPage() {
                           <span className="rounded-lg bg-panel/85 px-2 py-0.5 font-mono text-[10px] text-teal backdrop-blur border border-border/60">
                             {photo.id}
                           </span>
-                          {photo.dateOrSol && (
+                          {photo.category === "launch" && (
+                            <span className="rounded-lg bg-mars-gradient px-2 py-0.5 font-mono text-[10px] text-primary-foreground font-semibold shadow-glow">
+                              🚀 Rocket Launch
+                            </span>
+                          )}
+                          {photo.category === "scientists" && (
+                            <span className="rounded-lg bg-primary/20 px-2 py-0.5 font-mono text-[10px] text-primary-glow font-semibold border border-primary/40 backdrop-blur">
+                              👨‍🔬 Scientist / Control
+                            </span>
+                          )}
+                          {photo.category === "cleanroom" && (
+                            <span className="rounded-lg bg-teal/20 px-2 py-0.5 font-mono text-[10px] text-teal font-semibold border border-teal/40 backdrop-blur">
+                              🛠️ Clean Room
+                            </span>
+                          )}
+                          {(photo.category === "surface" || !photo.category) && photo.dateOrSol && (
                             <span className="rounded-lg bg-panel/85 px-2 py-0.5 font-mono text-[10px] text-muted-foreground backdrop-blur border border-border/60">
                               {photo.dateOrSol}
                             </span>
@@ -745,14 +808,25 @@ function ArtifactDetailPage() {
                           {scientist.institution}
                         </p>
                       </div>
-                      <div className="grid size-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary/20 to-teal/20 border border-primary/30 font-display font-bold text-lg text-primary-glow">
-                        {scientist.name
-                          .split(" ")
-                          .filter((w) => !w.startsWith("Dr.") && !w.startsWith("Prof."))
-                          .slice(0, 2)
-                          .map((n) => n[0])
-                          .join("")}
-                      </div>
+                      {scientist.photoUrl ? (
+                        <div className="relative size-16 shrink-0 overflow-hidden rounded-2xl border-2 border-primary/40 shadow-glow bg-space">
+                          <img
+                            src={scientist.photoUrl}
+                            alt={scientist.name}
+                            className="h-full w-full object-cover object-top transition-transform hover:scale-110"
+                            loading="lazy"
+                          />
+                        </div>
+                      ) : (
+                        <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary/20 to-teal/20 border border-primary/30 font-display font-bold text-lg text-primary-glow">
+                          {scientist.name
+                            .split(" ")
+                            .filter((w) => !w.startsWith("Dr.") && !w.startsWith("Prof."))
+                            .slice(0, 2)
+                            .map((n) => n[0])
+                            .join("")}
+                        </div>
+                      )}
                     </div>
 
                     {scientist.quote && (
@@ -1253,10 +1327,25 @@ function ArtifactDetailPage() {
               {/* Photo Metadata & Scientific Significance */}
               <div className="p-6 sm:p-8 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="rounded-lg bg-teal/20 px-2.5 py-1 font-mono text-xs font-semibold text-teal border border-teal/30">
                       ID: {selectedPhoto.id}
                     </span>
+                    {selectedPhoto.category === "launch" && (
+                      <span className="rounded-lg bg-mars-gradient px-2.5 py-1 font-mono text-xs text-primary-foreground font-semibold shadow-glow">
+                        🚀 Actual Rocket Launch
+                      </span>
+                    )}
+                    {selectedPhoto.category === "scientists" && (
+                      <span className="rounded-lg bg-primary/20 px-2.5 py-1 font-mono text-xs text-primary-glow font-semibold border border-primary/30">
+                        👨‍🔬 Scientist / Mission Control
+                      </span>
+                    )}
+                    {selectedPhoto.category === "cleanroom" && (
+                      <span className="rounded-lg bg-teal/20 px-2.5 py-1 font-mono text-xs text-teal font-semibold border border-teal/30">
+                        🛠️ Clean Room Assembly
+                      </span>
+                    )}
                     {selectedPhoto.instrument && (
                       <span className="rounded-lg bg-primary/20 px-2.5 py-1 font-mono text-xs font-semibold text-primary-glow border border-primary/30">
                         Camera: {selectedPhoto.instrument}

@@ -54,6 +54,7 @@ export interface ArchivalPhoto {
   dateOrSol?: string;
   instrument?: string;
   significance?: string;
+  category?: "launch" | "scientists" | "cleanroom" | "surface";
 }
 
 export interface MissionInstrument {

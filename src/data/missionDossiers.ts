@@ -14,6 +14,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         name: "Dr. Steven W. Squyres",
         role: "Principal Investigator (PI) — 'Father of MER'",
         institution: "Cornell University",
+        photoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Steve_squyres.jpg?width=500",
         contribution:
           "Conceived and championed the Athena science payload and the Mars Exploration Rover concept starting in 1987. Guided science operations through every sol across both rovers.",
         quote:
@@ -51,6 +52,39 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
     ],
     photos: [
       {
+        id: "SPIRIT-LAUNCH-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Lancement_Spirit_fusee_Delta_IIs_10062003.jpg?width=900",
+        title: "Actual Delta II Rocket Launch of Spirit Rover",
+        caption: "A Boeing Delta II 7925 rocket roars into the Florida sky from Space Launch Complex 17A at Cape Canaveral Air Force Station on 10 June 2003, beginning Spirit's 487-million-kilometre journey to Mars.",
+        credit: "NASA / KSC (Photo ID: KSC-03PD-1808)",
+        dateOrSol: "10 June 2003",
+        instrument: "Delta II 7925 Launch Vehicle",
+        significance: "Flawless translunar and trans-Mars injection burn that propelled Spirit on its cruise trajectory.",
+        category: "launch",
+      },
+      {
+        id: "SPIRIT-CLEANROOM-01",
+        url: "https://images-assets.nasa.gov/image/PIA04413/PIA04413~medium.jpg",
+        title: "Spirit Mobility Testing in JPL Cleanroom",
+        caption: "Engineers in bunny suits test Spirit's six-wheel rocker-bogie mobility chassis and solar array folding deployment inside the Spacecraft Assembly Facility (SAF) cleanroom at NASA Jet Propulsion Laboratory.",
+        credit: "NASA / JPL-Caltech",
+        dateOrSol: "March 2003",
+        instrument: "Cleanroom Flight Qualification",
+        significance: "Final flight readiness testing before encapsulation inside the aeroshell heat shield.",
+        category: "cleanroom",
+      },
+      {
+        id: "SPIRIT-SCIENTISTS-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Steve_squyres.jpg?width=900",
+        title: "Dr. Steve Squyres — Principal Investigator ('Father of MER')",
+        caption: "Dr. Steven W. Squyres, Professor of Astronomy at Cornell University and Principal Investigator for NASA's twin Mars Exploration Rovers Spirit and Opportunity.",
+        credit: "NASA / Cornell University",
+        dateOrSol: "2003",
+        instrument: "Athena Science Directorate",
+        significance: "Conceived the MER Athena mission in 1987 and served as chief scientific director across both rovers for over 15 years.",
+        category: "scientists",
+      },
+      {
         id: "PIA04995",
         url: "https://images-assets.nasa.gov/image/PIA04995/PIA04995~medium.jpg",
         title: "First Color View from Gusev Crater",
@@ -59,6 +93,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         dateOrSol: "Sol 3 (January 2004)",
         instrument: "Pancam (Panoramic Camera)",
         significance: "First high-resolution color image returned by the Athena science payload, showing flat basaltic plains and circular impact craters.",
+        category: "surface",
       },
       {
         id: "PIA07997",
@@ -69,6 +104,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         dateOrSol: "Sol 489 (May 2005)",
         instrument: "Pancam (440nm, 690nm, 750nm filters)",
         significance: "Demonstrated the Rayleigh-like forward scattering of light by iron-oxide suspended atmospheric dust aerosols on Mars.",
+        category: "surface",
       },
       {
         id: "PIA09405",
@@ -79,6 +115,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         dateOrSol: "Sol 1150 (March 2007)",
         instrument: "Mini-TES & APXS",
         significance: "The most important discovery of Spirit's mission: conclusive evidence of ancient volcanic fumaroles or hot spring hydrothermal systems suitable for microbial life.",
+        category: "surface",
       },
       {
         id: "PIA07942",
@@ -89,6 +126,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         dateOrSol: "Sol 582 to 600 (August 2005)",
         instrument: "Pancam (Full resolution mosaic)",
         significance: "First time an extraterrestrial explorer climbed to the summit of an alien mountain chain.",
+        category: "surface",
       },
       {
         id: "PIA03276",
@@ -99,6 +137,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         dateOrSol: "Sol 486 (March 2005)",
         instrument: "Navcam (Navigation Camera)",
         significance: "Direct proof of dynamic convective atmospheric vorticity that intermittently cleared dust off Spirit's solar arrays.",
+        category: "surface",
       },
     ],
     instruments: [
@@ -239,6 +278,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         name: "Dr. Steven W. Squyres",
         role: "Principal Investigator (PI)",
         institution: "Cornell University",
+        photoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Steve_squyres.jpg?width=500",
         contribution:
           "Led scientific strategy and analyzed the first layered sedimentary rocks ever discovered on Mars inside Eagle Crater.",
         quote: "When we saw that layered outcrop at Eagle Crater, it was the first time in human history that anyone had seen sedimentary bedrock on Mars.",
@@ -268,6 +308,17 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
     ],
     photos: [
       {
+        id: "OPP-LAUNCH-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Delta_299_with_MER_Opportunity_launches_(KSC-03PD-2090).jpg?width=900",
+        title: "Actual Delta II Rocket Night Launch of Opportunity",
+        caption: "Delta II rocket 299 illuminates the night sky as it launches NASA's Opportunity rover from Cape Canaveral Launch Complex 17B on 7 July 2003.",
+        credit: "NASA / KSC (Photo ID: KSC-03PD-2090)",
+        dateOrSol: "7 July 2003",
+        instrument: "Delta II 7925H Launch Vehicle",
+        significance: "Departed Earth just 27 days after twin Spirit, setting course for Meridiani Planum.",
+        category: "launch",
+      },
+      {
         id: "PIA05214",
         url: "https://images-assets.nasa.gov/image/PIA05214/PIA05214~medium.jpg",
         title: "The Outcrop at Eagle Crater ('Opportunity Ledge')",
@@ -276,6 +327,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         dateOrSol: "Sol 2 (January 2004)",
         instrument: "Pancam",
         significance: "First documented sedimentary rock outcrop on another planet, confirming layered water-deposited strata.",
+        category: "surface",
       },
       {
         id: "PIA05585",
@@ -433,6 +485,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         name: "Margaret Hamilton",
         role: "Director of Software Engineering — Apollo Project",
         institution: "MIT Instrumentation Laboratory",
+        photoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Margaret_Hamilton_-_restoration.jpg?width=500",
         contribution:
           "Pioneered the concept of software engineering and architected the Apollo Guidance Computer's priority-based asynchronous executive operating system. Her software successfully detected CPU overload, dropped low-priority radar tasks, and allowed Armstrong to land safely despite the 1202 alarms.",
         quote:
@@ -442,6 +495,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         name: "Gene Kranz",
         role: "Lead Flight Director (White Team)",
         institution: "NASA Mission Control (Houston)",
+        photoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Eugene_F._Kranz_at_his_console_at_the_NASA_Mission_Control_Center.jpg?width=500",
         contribution:
           "Commanded the lunar landing shift during the descent of Eagle. Famously made the GO calls through communication dropouts and program alarms.",
         quote: "Tough and competent. From this day forward, Flight Control will be known by two words: tough and competent.",
@@ -450,6 +504,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         name: "Dr. Wernher von Braun",
         role: "Director & Chief Rocket Architect",
         institution: "NASA Marshall Space Flight Center",
+        photoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Wernher_von_Braun_(6901046).jpg?width=500",
         contribution:
           "Led the engineering of the 111-metre-tall Saturn V rocket, whose five F-1 engines produced 7.5 million pounds of thrust to send Apollo 11 to the Moon.",
       },
@@ -470,6 +525,50 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
     ],
     photos: [
       {
+        id: "APOLLO11-LAUNCH-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Apollo_11_Launch_-_GPN-2000-000630.jpg?width=900",
+        title: "Actual Saturn V Rocket Liftoff from Pad 39A",
+        caption: "The colossal 363-foot-tall Saturn V SA-506 rocket lifts off from Pad 39A at Kennedy Space Center generating 7.5 million pounds of thrust, sending Apollo 11 to the Moon on July 16, 1969.",
+        credit: "NASA / KSC (NASA ID: 69PC-0442)",
+        dateOrSol: "16 July 1969",
+        instrument: "Saturn V Launch Vehicle",
+        significance: "Most powerful rocket successfully launched in human history, carrying humanity's first lunar landing crew.",
+        category: "launch",
+      },
+      {
+        id: "APOLLO11-HAMILTON-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Margaret_Hamilton_-_restoration.jpg?width=900",
+        title: "Margaret Hamilton Beside Apollo Guidance Flight Software",
+        caption: "Margaret Hamilton, Director of Software Engineering at MIT Instrumentation Laboratory, stands next to the handwritten Apollo Guidance Computer (AGC) flight code she and her team authored.",
+        credit: "MIT / NASA (1969)",
+        dateOrSol: "1969",
+        instrument: "Apollo Guidance Computer (AGC)",
+        significance: "Coined the term 'Software Engineering' and wrote the asynchronous priority-interrupt code that saved Apollo 11 during the 1202/1201 CPU alarm overload.",
+        category: "scientists",
+      },
+      {
+        id: "APOLLO11-KRANZ-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Eugene_F._Kranz_at_his_console_at_the_NASA_Mission_Control_Center.jpg?width=900",
+        title: "Gene Kranz at Flight Director Console in Houston Mission Control",
+        caption: "Eugene F. 'Gene' Kranz in his iconic white vest at his console in the Mission Operations Control Room (MOCR) in Houston, directing lunar surface descent operations.",
+        credit: "NASA (Photo ID: S69-38858)",
+        dateOrSol: "20 July 1969",
+        instrument: "Flight Directorate (White Team)",
+        significance: "Led the flight control team through the critical descent burn, landing with only 25 seconds of fuel remaining.",
+        category: "scientists",
+      },
+      {
+        id: "APOLLO11-VONBRAUN-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Wernher_von_Braun_(6901046).jpg?width=900",
+        title: "Dr. Wernher von Braun with Saturn V F-1 Engines",
+        caption: "Dr. Wernher von Braun, director of NASA Marshall Space Flight Center, standing beside the massive F-1 rocket engines of the Saturn V first stage.",
+        credit: "NASA / MSFC (Photo ID: 6901046)",
+        dateOrSol: "1969",
+        instrument: "Marshall Space Flight Center",
+        significance: "Chief architect of the Saturn launch vehicle that propelled the Apollo program to the Moon.",
+        category: "scientists",
+      },
+      {
         id: "AS11-40-5874",
         url: "https://images-assets.nasa.gov/image/as11-40-5874/as11-40-5874~medium.jpg",
         title: "Buzz Aldrin on the Moon beside LM Eagle",
@@ -478,6 +577,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         dateOrSol: "21 July 1969",
         instrument: "Hasselblad 500EL with 60mm Zeiss Biogon lens",
         significance: "One of the most famous photographs in human history, showing the Apollo 11 astronaut suit and reflection of Armstrong in the gold visor.",
+        category: "surface",
       },
       {
         id: "AS11-40-5878",
@@ -622,6 +722,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         name: "S. Somanath",
         role: "Chairman, Indian Space Research Organisation (ISRO)",
         institution: "ISRO Headquarters, Bengaluru",
+        photoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/S._Somanath.jpg?width=500",
         contribution:
           "Architected ISRO's failure-based design philosophy after Chandrayaan-2, ensuring that Vikram could survive multiple sensor or thruster failures and land safely under worst-case parameters.",
         quote:
@@ -631,6 +732,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         name: "Dr. P. Veeramuthuvel",
         role: "Project Director — Chandrayaan-3",
         institution: "U R Rao Satellite Centre (URSC), Bengaluru",
+        photoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Veera_Muthuvel_during_his_speech_after_Chandrayaan_3's_successful_soft_landing_on_the_moon.png?width=500",
         contribution:
           "Led overall spacecraft configuration, lander touchdown dynamics redesign, expanded solar arrays, and high-velocity horizontal braking test campaigns.",
         quote: "India has reached the untouched South Pole of the Moon. Every Indian heart beats with pride today.",
@@ -659,6 +761,28 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
     ],
     photos: [
       {
+        id: "CH3-LAUNCH-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/LVM3_M4,_Chandrayaan-3_-_Launch_vehicle_lifting_off_from_the_Second_Launch_Pad_(SLP)_of_SDSC-SHAR,_Sriharikota_(edit).jpg?width=900",
+        title: "Actual LVM3-M4 Rocket Launch of Chandrayaan-3",
+        caption: "ISRO's LVM3-M4 rocket roaring off the Second Launch Pad at Satish Dhawan Space Centre, Sriharikota on 14 July 2023, carrying Vikram lander and Pragyan rover toward the Moon.",
+        credit: "ISRO / SDSC-SHAR",
+        dateOrSol: "14 July 2023",
+        instrument: "LVM3-M4 Heavy Lift Rocket",
+        significance: "Flawless translunar insertion launch that delivered India to the lunar South Pole.",
+        category: "launch",
+      },
+      {
+        id: "CH3-SCIENTISTS-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Veera_Muthuvel_during_his_speech_after_Chandrayaan_3's_successful_soft_landing_on_the_moon.png?width=900",
+        title: "Dr. P. Veeramuthuvel Addressing Mission Control after Touchdown",
+        caption: "Project Director Dr. P. Veeramuthuvel delivers his historic address at the ISRO Telemetry, Tracking and Command Network (ISTRAC) in Bengaluru immediately following the successful soft touchdown at Shiv Shakti Point.",
+        credit: "ISRO / ISTRAC",
+        dateOrSol: "23 August 2023",
+        instrument: "Mission Operations Complex (MOX)",
+        significance: "Moment India became the first country to land near the lunar South Pole and the fourth nation to land on the Moon.",
+        category: "scientists",
+      },
+      {
         id: "CH3-PRAGYAN-DESCENT",
         url: "https://images-assets.nasa.gov/image/PIA22222/PIA22222~medium.jpg",
         title: "Pragyan Rover Rolling onto the Lunar South Pole",
@@ -667,6 +791,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         dateOrSol: "25 August 2023",
         instrument: "Lander Imager Camera",
         significance: "First visual confirmation of Indian wheeled mobility on the surface of the Moon.",
+        category: "surface",
       },
       {
         id: "CH3-VIKRAM-STANDS",
@@ -832,6 +957,17 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
     ],
     photos: [
       {
+        id: "HUYGENS-LAUNCH-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Titan_IV_with_Cassini-Huygens_launches_with_Liberty_Star_vessel_in_foreground.jpg?width=900",
+        title: "Actual Titan IVB Rocket Night Launch of Cassini-Huygens",
+        caption: "Titan IVB-Centaur rocket lifts off into the night sky from Cape Canaveral on October 15, 1997, carrying the joint NASA/ESA Cassini orbiter and Huygens Titan lander.",
+        credit: "NASA / KSC",
+        dateOrSol: "15 October 1997",
+        instrument: "Titan IVB-Centaur Launch Vehicle",
+        significance: "Departed on a 7-year voyage to Saturn, enabling the farthest soft landing in human history on Titan.",
+        category: "launch",
+      },
+      {
         id: "HUYGENS-SURFACE",
         url: "https://images-assets.nasa.gov/image/PIA07231/PIA07231~medium.jpg",
         title: "The First Direct View from the Surface of Titan",
@@ -840,6 +976,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         dateOrSol: "14 January 2005",
         instrument: "Descent Imager/Spectral Radiometer (DISR)",
         significance: "Humanity's farthest landing photograph in history (1.4 billion km). Ice behaves like hard granite at -180°C, rounded by flowing liquid methane.",
+        category: "surface",
       },
       {
         id: "HUYGENS-RIVERS",
@@ -850,6 +987,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         dateOrSol: "14 January 2005",
         instrument: "DISR Medium Resolution Imager",
         significance: "First definitive visual proof of active hydrological runoff systems on another world operating with liquid hydrocarbons.",
+        category: "surface",
       },
     ],
     instruments: [
@@ -958,6 +1096,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         name: "Dr. K. Radhakrishnan",
         role: "Chairman, ISRO & Secretary, Department of Space",
         institution: "Indian Space Research Organisation (ISRO)",
+        photoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/K_Radhakrishnan_2013_2.JPG?width=500",
         contribution:
           "Championed the Mars Orbiter Mission under extreme time constraints to catch the 2013 launch window, orchestrating mission reviews and interplanetary trajectory execution.",
         quote:
@@ -1003,6 +1142,17 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
     ],
     photos: [
       {
+        id: "MOM-LAUNCH-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Mars_Orbitor_Mission_Launch.jpg?width=900",
+        title: "Actual PSLV-C25 Rocket Liftoff of Mangalyaan to Mars",
+        caption: "Polar Satellite Launch Vehicle (PSLV-C25) lifts off from the First Launch Pad at Satish Dhawan Space Centre, Sriharikota on 5 November 2013, beginning India's maiden interplanetary expedition.",
+        credit: "ISRO / SDSC-SHAR",
+        dateOrSol: "5 November 2013",
+        instrument: "PSLV-XL Launch Vehicle",
+        significance: "Began the historic mission that successfully achieved Mars orbit on its maiden attempt.",
+        category: "launch",
+      },
+      {
         id: "ISRO-MOM-01",
         url: "https://images-assets.nasa.gov/image/PIA18920/PIA18920~medium.jpg",
         title: "Full Martian Globe Showing Valles Marineris",
@@ -1013,6 +1163,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         instrument: "Mars Colour Camera (MCC)",
         significance:
           "One of the highest-resolution full-disc global images of Mars ever recorded in natural color.",
+        category: "surface",
       },
       {
         id: "ISRO-MOM-02",
@@ -1289,6 +1440,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         name: "Dr. Edward C. Stone",
         role: "Voyager Project Scientist (1972 - 2022)",
         institution: "California Institute of Technology / NASA JPL",
+        photoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Stone_Voyager.jpg?width=500",
         contribution:
           "Served as chief scientific director of Voyager 1 and 2 for 50 continuous years from before launch until his retirement in 2022, guiding discovery across 4 planetary systems and into interstellar space.",
         quote:
@@ -1328,6 +1480,28 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
     ],
     photos: [
       {
+        id: "VOYAGER1-LAUNCH-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Titan_3E_with_Voyager_1.jpg?width=900",
+        title: "Actual Titan IIIE-Centaur Rocket Launch of Voyager 1",
+        caption: "A Titan IIIE-Centaur rocket lifts off from Launch Complex 41 at Cape Canaveral on September 5, 1977, sending Voyager 1 on its grand tour of the outer planets and into interstellar space.",
+        credit: "NASA / KSC",
+        dateOrSol: "5 September 1977",
+        instrument: "Titan IIIE-Centaur Launch Vehicle",
+        significance: "Began humanity's longest-running and farthest-travelling space exploration mission.",
+        category: "launch",
+      },
+      {
+        id: "VOYAGER1-STONE-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Stone_Voyager.jpg?width=900",
+        title: "Dr. Edward C. Stone with Voyager Spacecraft Model",
+        caption: "Dr. Edward C. Stone, Voyager Project Scientist for 50 continuous years (1972 to 2022) and former Director of NASA JPL, poses beside a scale model of the Voyager spacecraft.",
+        credit: "NASA / JPL-Caltech",
+        dateOrSol: "JPL Archives",
+        instrument: "Voyager Science Steering Group",
+        significance: "Guided discovery across Jupiter, Saturn, Uranus, Neptune, and humanity's entry into interstellar space.",
+        category: "scientists",
+      },
+      {
         id: "PIA00452",
         url: "https://images-assets.nasa.gov/image/PIA00452/PIA00452~medium.jpg",
         title: "The Pale Blue Dot",
@@ -1338,6 +1512,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         instrument: "Imaging Science Subsystem (Narrow Angle Camera)",
         significance:
           "The most philosophically profound astronomical image in human history, illustrating the fragility and loneliness of our homeworld.",
+        category: "surface",
       },
       {
         id: "PIA00014",
@@ -1496,6 +1671,17 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
     ],
     photos: [
       {
+        id: "CURIOSITY-LAUNCH-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Mars_Science_Laboratory_(Curosity)_launches_aboard_an_Atlas_V.jpg?width=900",
+        title: "Actual Atlas V Rocket Launch of Curiosity Rover",
+        caption: "An Atlas V 541 rocket lifts off from Space Launch Complex 41 at Cape Canaveral on November 26, 2011, carrying the Mars Science Laboratory Curiosity rover.",
+        credit: "NASA / KSC (Photo ID: KSC-2011-8314)",
+        dateOrSol: "26 November 2011",
+        instrument: "Atlas V 541 Launch Vehicle",
+        significance: "Began the mission that proved ancient Mars had freshwater lakes capable of supporting microbial life.",
+        category: "launch",
+      },
+      {
         id: "PIA16239",
         url: "https://images-assets.nasa.gov/image/PIA16239/PIA16239~medium.jpg",
         title: "Self-Portrait at John Klein Drill Site (Yellowknife Bay)",
@@ -1506,6 +1692,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         instrument: "MAHLI (Mars Hand Lens Imager)",
         significance:
           "First self-portrait of Curiosity on Mars, captured at the very site where ancient Martian habitability was proven.",
+        category: "surface",
       },
       {
         id: "PIA16098",
@@ -1657,6 +1844,17 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
     ],
     photos: [
       {
+        id: "PERSEVERANCE-LAUNCH-01",
+        url: "https://commons.wikimedia.org/wiki/Special:FilePath/Mars_2020_Perseverance_Launch_(NHQ202007300014).jpg?width=900",
+        title: "Actual Atlas V Rocket Liftoff with Perseverance & Ingenuity",
+        caption: "An Atlas V 541 rocket launches the Mars 2020 mission with Perseverance rover and Ingenuity helicopter from Space Launch Complex 41 at Cape Canaveral on July 30, 2020.",
+        credit: "NASA / Joel Kowsky (Photo ID: NHQ202007300014)",
+        dateOrSol: "30 July 2020",
+        instrument: "Atlas V 541 Launch Vehicle",
+        significance: "Sent the first Martian sample-caching rover and the first extraterrestrial helicopter to Jezero Crater.",
+        category: "launch",
+      },
+      {
         id: "PIA24428",
         url: "https://images-assets.nasa.gov/image/PIA24428/PIA24428~medium.jpg",
         title: "Perseverance Suspended Beneath the Sky Crane",
@@ -1667,6 +1865,7 @@ export const MISSION_DOSSIERS: Record<string, MissionDossier> = {
         instrument: "EDL Lander Descent Camera",
         significance:
           "The first time a spacecraft landing on another planet was photographed from above during the final touchdown sequence.",
+        category: "surface",
       },
       {
         id: "PIA24542",
