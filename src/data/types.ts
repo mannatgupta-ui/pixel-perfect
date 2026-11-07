@@ -41,10 +41,13 @@ export interface Source {
   url: string;
 }
 
+export type SpaceAgency = "NASA" | "ISRO" | "ESA";
+
 export interface Artifact {
   id: string;
   name: string;
   mission: string;
+  agency?: SpaceAgency;
   /** null = deep-space category (not tied to a planet). */
   bodyId: BodyId | null;
   kind: ArtifactKind;

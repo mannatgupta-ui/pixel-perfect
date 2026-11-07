@@ -112,7 +112,8 @@ export type SceneKey =
   | "discoveries"
   | "challenges"
   | "last-days"
-  | "legacy";
+  | "legacy"
+  | (string & {});
 
 export interface Hotspot {
   x: number;
@@ -122,7 +123,7 @@ export interface Hotspot {
 }
 
 export interface StoryStage {
-  id: SceneKey;
+  id: string;
   number: string;
   title: string;
   date: string;

@@ -88,11 +88,14 @@ function GenericHardware({
 }) {
   const [hovered, setHovered] = useState<string | null>(null);
 
-  const isDescentStage = artifact.kind === "descent-stage";
-  const isProbe = artifact.kind === "deep-space-probe";
-  const isLander = artifact.kind === "lander";
+  const isChandrayaan = artifact.id === "chandrayaan-3";
+  const isHuygens = artifact.id === "huygens";
+  const isPhilae = artifact.id === "philae";
+  const isDescentStage = artifact.kind === "descent-stage" && !isChandrayaan;
+  const isProbe = artifact.kind === "deep-space-probe" && !isHuygens && !isPhilae;
+  const isLander = artifact.kind === "lander" && !isChandrayaan && !isHuygens && !isPhilae;
   const isRover = artifact.kind === "rover";
-  const isOrbiter = artifact.kind === "orbiter" || artifact.kind === "atmospheric-probe";
+  const isOrbiter = (artifact.kind === "orbiter" || artifact.kind === "atmospheric-probe") && !isHuygens;
 
   const active = hovered ?? selectedPart;
 
@@ -114,6 +117,188 @@ function GenericHardware({
 
   return (
     <group position={[0, -0.2, 0]}>
+      {/* CHANDRAYAAN-3 (Vikram Lander & Pragyan Rover) */}
+      {isChandrayaan && (
+        <group>
+          {/* Vikram Lander Main Body */}
+          <mesh {...partProps("Vikram Lander Chassis & Avionics")}>
+            <boxGeometry args={[1.3, 0.85, 1.3]} />
+            <meshStandardMaterial
+              color="#d97706"
+              metalness={0.8}
+              roughness={0.25}
+              emissive={active === "Vikram Lander Chassis & Avionics" ? SCENE.mars : "#000000"}
+              emissiveIntensity={active === "Vikram Lander Chassis & Avionics" ? 0.6 : 0}
+            />
+          </mesh>
+          {/* Indian Tricolour Stripe Accent on Vikram */}
+          <group position={[0, 0.44, 0.66]}>
+            <mesh position={[0, 0.04, 0]}>
+              <boxGeometry args={[0.5, 0.03, 0.02]} />
+              <meshBasicMaterial color="#f97316" />
+            </mesh>
+            <mesh position={[0, 0, 0]}>
+              <boxGeometry args={[0.5, 0.03, 0.02]} />
+              <meshBasicMaterial color="#ffffff" />
+            </mesh>
+            <mesh position={[0, -0.04, 0]}>
+              <boxGeometry args={[0.5, 0.03, 0.02]} />
+              <meshBasicMaterial color="#15803d" />
+            </mesh>
+          </group>
+          {/* Side Solar Panels */}
+          {[-0.68, 0.68].map((x) => (
+            <mesh key={x} position={[x, 0, 0]} {...partProps("Lander Solar Power Arrays")}>
+              <boxGeometry args={[0.04, 0.75, 1.15]} />
+              <meshStandardMaterial color="#1e3a8a" metalness={0.7} roughness={0.25} />
+            </mesh>
+          ))}
+          {/* Four 800N Throttleable Engines */}
+          {[-0.35, 0.35].map((x) =>
+            [-0.35, 0.35].map((z) => (
+              <mesh key={`${x}-${z}`} position={[x, -0.6, z]} {...partProps("Throttleable Liquid Engines (800N)")}>
+                <coneGeometry args={[0.14, 0.35, 16, 1, true]} />
+                <meshStandardMaterial color="#2d3748" metalness={0.8} roughness={0.3} side={THREE.DoubleSide} />
+              </mesh>
+            ))
+          )}
+          {/* Four Cantilevered Landing Legs and Wide Footpads */}
+          {[0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2].map((angle, i) => (
+            <group key={i} rotation={[0, angle, 0]} {...partProps("Landing Legs & Shock Absorbers")}>
+              <mesh position={[0.95, -0.45, 0]} rotation={[0, 0, -0.6]}>
+                <cylinderGeometry args={[0.035, 0.035, 1.4, 8]} />
+                <meshStandardMaterial color="#94a3b8" metalness={0.8} />
+              </mesh>
+              <mesh position={[1.4, -0.9, 0]}>
+                <cylinderGeometry args={[0.22, 0.25, 0.05, 16]} />
+                <meshStandardMaterial color="#64748b" metalness={0.7} />
+              </mesh>
+            </group>
+          ))}
+          {/* Pragyan Rover Deployment Ramp */}
+          <mesh position={[0, -0.35, 1.1]} rotation={[0.45, 0, 0]} {...partProps("Pragyan Rollout Ramp")}>
+            <boxGeometry args={[0.45, 0.03, 1.0]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.6} />
+          </mesh>
+          {/* Pragyan Rover (6-wheeled lunar explorer) */}
+          <group position={[0, -0.75, 1.7]} {...partProps("Pragyan Rover (26 kg)")}>
+            <mesh position={[0, 0.08, 0]}>
+              <boxGeometry args={[0.34, 0.12, 0.42]} />
+              <meshStandardMaterial color="#e2e8f0" metalness={0.5} roughness={0.3} />
+            </mesh>
+            {/* Pragyan Solar Panel tilted up */}
+            <mesh position={[0, 0.18, -0.05]} rotation={[-0.35, 0, 0]}>
+              <boxGeometry args={[0.32, 0.02, 0.38]} />
+              <meshStandardMaterial color="#1e3a8a" metalness={0.7} />
+            </mesh>
+            {/* 6 tiny rover wheels */}
+            {[-0.2, 0.2].map((wx) =>
+              [-0.15, 0, 0.15].map((wz) => (
+                <mesh key={`${wx}-${wz}`} position={[wx, 0.02, wz]} rotation={[0, 0, Math.PI / 2]}>
+                  <cylinderGeometry args={[0.05, 0.05, 0.04, 12]} />
+                  <meshStandardMaterial color="#475569" metalness={0.8} />
+                </mesh>
+              ))
+            )}
+          </group>
+          {/* ChaSTE Thermal Probe & ILSA */}
+          <mesh position={[0.5, -0.15, 0.5]} {...partProps("ChaSTE Surface Thermal Probe")}>
+            <cylinderGeometry args={[0.02, 0.02, 0.4, 6]} />
+            <meshStandardMaterial color="#e11d48" />
+          </mesh>
+        </group>
+      )}
+
+      {/* HUYGENS TITAN PROBE (ESA) */}
+      {isHuygens && (
+        <group>
+          {/* Golden Beryllium Heat Shield (Aeroshell) */}
+          <mesh position={[0, -0.2, 0]} rotation={[Math.PI, 0, 0]} {...partProps("Golden Front Heat Shield (Aeroshell)")}>
+            <coneGeometry args={[1.35, 0.65, 32, 1, true]} />
+            <meshStandardMaterial
+              color="#eab308"
+              metalness={0.85}
+              roughness={0.2}
+              side={THREE.DoubleSide}
+              emissive={active === "Golden Front Heat Shield (Aeroshell)" ? SCENE.mars : "#000000"}
+              emissiveIntensity={active === "Golden Front Heat Shield (Aeroshell)" ? 0.6 : 0}
+            />
+          </mesh>
+          {/* Top Aluminum Instrument Cover */}
+          <mesh position={[0, 0.25, 0]} {...partProps("Instrument Top Cover & Electronics")}>
+            <cylinderGeometry args={[0.68, 0.88, 0.45, 32]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.7} roughness={0.3} />
+          </mesh>
+          {/* Parachute Release Bridle */}
+          <mesh position={[0, 0.55, 0]} {...partProps("Descent Parachute Bridle")}>
+            <torusGeometry args={[0.2, 0.03, 12, 24]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.8} />
+          </mesh>
+          {/* DISR Optical Window Ports */}
+          <mesh position={[0.5, 0.25, 0.5]} rotation={[0, 0.8, 0]} {...partProps("DISR Camera Optical Windows")}>
+            <cylinderGeometry args={[0.08, 0.08, 0.12, 16]} />
+            <meshStandardMaterial color="#38bdf8" metalness={0.9} roughness={0.1} />
+          </mesh>
+          {/* Surface Penetrometer Probe */}
+          <mesh position={[0, -0.65, 0]} {...partProps("Surface Penetrometer Sensor")}>
+            <coneGeometry args={[0.04, 0.35, 12]} />
+            <meshStandardMaterial color="#f43f5e" metalness={0.9} />
+          </mesh>
+        </group>
+      )}
+
+      {/* PHILAE COMET LANDER (ESA) */}
+      {isPhilae && (
+        <group>
+          {/* Carbon Fiber Main Chassis */}
+          <mesh {...partProps("Carbon-Fiber Science Chassis")}>
+            <boxGeometry args={[1.0, 0.95, 1.0]} />
+            <meshStandardMaterial
+              color="#334155"
+              metalness={0.4}
+              roughness={0.5}
+              emissive={active === "Carbon-Fiber Science Chassis" ? SCENE.teal : "#000000"}
+              emissiveIntensity={active === "Carbon-Fiber Science Chassis" ? 0.6 : 0}
+            />
+          </mesh>
+          {/* Overhead Cold Gas Thruster Nozzle */}
+          <mesh position={[0, 0.55, 0]} {...partProps("Cold-Gas Hold-Down Thruster")}>
+            <coneGeometry args={[0.12, 0.2, 16]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.8} />
+          </mesh>
+          {/* Solar Panel Surfaces */}
+          {[-0.51, 0.51].map((x) => (
+            <mesh key={x} position={[x, 0, 0]} {...partProps("Solar Cell Generator Walls")}>
+              <boxGeometry args={[0.02, 0.85, 0.9]} />
+              <meshStandardMaterial color="#1e3a8a" metalness={0.7} roughness={0.2} />
+            </mesh>
+          ))}
+          {/* Tripod Landing Gear with Ice Screws */}
+          {[0, (2 * Math.PI) / 3, (4 * Math.PI) / 3].map((angle, i) => (
+            <group key={i} rotation={[0, angle, 0]} {...partProps("Tripod Landing Legs & Ice Screws")}>
+              <mesh position={[0.85, -0.5, 0]} rotation={[0, 0, -0.55]}>
+                <cylinderGeometry args={[0.03, 0.03, 1.3, 8]} />
+                <meshStandardMaterial color="#cbd5e1" metalness={0.8} />
+              </mesh>
+              <mesh position={[1.25, -0.9, 0]}>
+                <cylinderGeometry args={[0.18, 0.2, 0.05, 16]} />
+                <meshStandardMaterial color="#64748b" metalness={0.7} />
+              </mesh>
+              {/* Ice screw drill */}
+              <mesh position={[1.25, -0.98, 0]}>
+                <coneGeometry args={[0.04, 0.12, 8]} />
+                <meshStandardMaterial color="#e2e8f0" metalness={0.9} />
+              </mesh>
+            </group>
+          ))}
+          {/* CONSERT Antenna Boom & MUPUS Penetrator */}
+          <mesh position={[0.4, 0.65, 0.4]} rotation={[0.4, 0, 0.4]} {...partProps("CONSERT Radar Antenna")}>
+            <cylinderGeometry args={[0.015, 0.015, 0.9, 6]} />
+            <meshStandardMaterial color="#eab308" metalness={0.9} />
+          </mesh>
+        </group>
+      )}
+
       {/* APOLLO DESCENT STAGE */}
       {isDescentStage && (
         <group>

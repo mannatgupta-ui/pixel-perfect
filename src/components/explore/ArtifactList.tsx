@@ -4,6 +4,7 @@ import { KIND_LABEL } from "@/data/artifacts";
 import type { Artifact } from "@/data/types";
 import { formatDate } from "@/lib/geo";
 import { StatusBadge } from "@/components/site/StatusBadge";
+import { cn } from "@/lib/utils";
 
 export function ArtifactList({ items }: { items: Artifact[] }) {
   return (
@@ -18,6 +19,18 @@ export function ArtifactList({ items }: { items: Artifact[] }) {
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="truncate font-medium">{a.name}</span>
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider",
+                    a.agency === "ISRO"
+                      ? "bg-amber-500/15 text-amber-400 border border-amber-500/30"
+                      : a.agency === "ESA"
+                      ? "bg-teal/15 text-teal border border-teal/30"
+                      : "bg-blue-500/15 text-blue-400 border border-blue-500/30",
+                  )}
+                >
+                  {a.agency ?? "NASA"}
+                </span>
                 {a.hasStory && (
                   <span className="rounded-full bg-primary/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-primary-glow">
                     Story
