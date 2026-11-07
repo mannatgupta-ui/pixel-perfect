@@ -155,7 +155,7 @@ export const MANGALYAAN_EXPERIENCE_CONFIG: MissionExperienceConfig = {
       ],
       scientificContext:
         "ISRO adapted the proven I-1K bus with autonomous contingency algorithms capable of handling communication blackouts up to 21 minutes one-way.",
-      cameraMode: "chase",
+      cameraMode: "free",
       cameraPosition: [3.2, 1.4, 3.2],
       cameraTarget: [0, 0, 0],
       environmentType: "cleanroom",
@@ -199,7 +199,7 @@ export const MANGALYAAN_EXPERIENCE_CONFIG: MissionExperienceConfig = {
       ],
       scientificContext:
         "The Polar Satellite Launch Vehicle in its XL configuration delivered Mangalyaan into an elliptical parking orbit of 248 km × 23,550 km with an inclination of 19.2°.",
-      cameraMode: "chase",
+      cameraMode: "free",
       cameraPosition: [0, 2.2, 4.2],
       cameraTarget: [0, 0.6, -1.0],
       environmentType: "launch",
@@ -243,9 +243,9 @@ export const MANGALYAAN_EXPERIENCE_CONFIG: MissionExperienceConfig = {
       ],
       scientificContext:
         "The Oberth effect states that rocket engines generate more usable kinetic energy when fired at high speeds (at periapsis), allowing Mangalyaan to maximize delta-V with minimal fuel.",
-      cameraMode: "first_person",
-      cameraPosition: [0.55, -0.2, 1.2],
-      cameraTarget: [0, 0, 8.0],
+      cameraMode: "free",
+      cameraPosition: [2.5, 1.2, 3.0],
+      cameraTarget: [0, 0, 0],
       environmentType: "earth_orbit",
       telemetry: {
         met: "MET 18d 06:12:00",
@@ -287,7 +287,7 @@ export const MANGALYAAN_EXPERIENCE_CONFIG: MissionExperienceConfig = {
       ],
       scientificContext:
         "Mangalyaan followed a minimum-energy Hohmann transfer ellipse around the Sun, executing three planned Trajectory Correction Maneuvers (TCMs) using small 22N attitude thrusters.",
-      cameraMode: "chase",
+      cameraMode: "free",
       cameraPosition: [2.5, 1.8, 3.5],
       cameraTarget: [0, 0, 0],
       environmentType: "cruise",
@@ -331,9 +331,9 @@ export const MANGALYAAN_EXPERIENCE_CONFIG: MissionExperienceConfig = {
       ],
       scientificContext:
         "On 22 September, ISRO test-fired the 440N Liquid Apogee Motor for 3.96 seconds after 300 days of slumber. The test was flawless, confirming propulsion readiness for insertion.",
-      cameraMode: "first_person",
-      cameraPosition: [0.55, -0.2, 1.2],
-      cameraTarget: [0, 0, 12.0],
+      cameraMode: "free",
+      cameraPosition: [2.2, 1.4, 2.8],
+      cameraTarget: [0, 0, 0],
       environmentType: "approach",
       telemetry: {
         met: "MET 321d 08:30:00",
@@ -375,7 +375,7 @@ export const MANGALYAAN_EXPERIENCE_CONFIG: MissionExperienceConfig = {
       ],
       scientificContext:
         "Mars Orbit Insertion (MOI) required 1,098.7 m/s delta-V reduction. Over 60% of previous international Mars missions had failed at this stage; ISRO became the first agency in history to succeed on attempt one.",
-      cameraMode: "chase",
+      cameraMode: "free",
       cameraPosition: [1.8, 1.2, 2.8],
       cameraTarget: [0, 0, 0],
       environmentType: "insertion",
@@ -463,7 +463,7 @@ export const MANGALYAAN_EXPERIENCE_CONFIG: MissionExperienceConfig = {
       ],
       scientificContext:
         "Battery depletion occurred when orbital geometry produced eclipses exceeding the designed 100-minute maximum limit. Mangalyaan remains in a stable elliptical orbit with an orbital lifetime estimated at thousands of years.",
-      cameraMode: "chase",
+      cameraMode: "free",
       cameraPosition: [2.8, 1.4, 2.8],
       cameraTarget: [0, 0, 0],
       environmentType: "eclipse",

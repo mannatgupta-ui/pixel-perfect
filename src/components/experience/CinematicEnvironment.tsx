@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
-import { Stars, Html } from "@react-three/drei";
+import { Stars } from "@react-three/drei";
 import * as THREE from "three";
 import { PlanetarySurfaceEnvironment } from "@/components/three/PlanetarySurfaceEnvironment";
 import type { Artifact } from "@/data/types";
@@ -155,37 +155,20 @@ function EnclosedCleanroomLaboratory({ agency, spacecraftName }: { agency: strin
             <planeGeometry args={[10.8, 2.7]} />
             <meshBasicMaterial color="#38bdf8" />
           </mesh>
-          <Html position={[0, 0, 0.05]} center transform distanceFactor={10}>
-            <div className="w-[840px] p-4 text-center font-mono select-none bg-black/90 rounded-2xl border border-cyan-500/50 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-cyan-500/30 pb-2">
-                <span className="flex items-center gap-2 text-cyan-400 font-bold text-sm tracking-widest">
-                  <span className="size-2.5 rounded-full bg-cyan-400 animate-ping" />
-                  {facilityName}
-                </span>
-                <span className="rounded bg-cyan-500/20 px-2 py-0.5 text-xs text-cyan-300 font-semibold border border-cyan-500/40">
-                  ISO CLASS 100,000 / AIRLOCK INTERLOCKED
-                </span>
-              </div>
-              <div className="mt-2.5 flex items-center justify-around text-xs text-white/80">
-                <div>
-                  <span className="text-white/40 block text-[10px]">CURRENT INTEGRATION</span>
-                  <span className="font-bold text-amber-400">{spacecraftName.toUpperCase()} · FLIGHT QUALIFICATION</span>
-                </div>
-                <div>
-                  <span className="text-white/40 block text-[10px]">AIR PURITY / HEPA</span>
-                  <span className="font-bold text-emerald-400">99.997% @ 0.3 µm</span>
-                </div>
-                <div>
-                  <span className="text-white/40 block text-[10px]">ENVIRONMENT</span>
-                  <span className="font-bold text-teal">20.2°C · 42% RH</span>
-                </div>
-                <div>
-                  <span className="text-white/40 block text-[10px]">AGENCY FACILITY</span>
-                  <span className="font-bold text-purple-400">{agencyLogo} AEROSPACE CLEANROOM</span>
-                </div>
-              </div>
-            </div>
-          </Html>
+          {/* Luminous Facility Status Displays */}
+          <group position={[0, 0, 0.02]}>
+            {[-3.6, -1.2, 1.2, 3.6].map((px, idx) => (
+              <mesh key={`panel-${idx}`} position={[px, 0, 0]}>
+                <planeGeometry args={[2.2, 1.8]} />
+                <meshBasicMaterial color={idx % 2 === 0 ? "#0284c7" : "#047857"} transparent opacity={0.3} />
+              </mesh>
+            ))}
+            {/* Header Accent Strip */}
+            <mesh position={[0, 0.95, 0.01]}>
+              <planeGeometry args={[10.2, 0.15]} />
+              <meshBasicMaterial color="#38bdf8" />
+            </mesh>
+          </group>
         </group>
 
         {/* Stainless Steel HEPA Air Filter Bank along bottom of North Wall */}
@@ -414,80 +397,112 @@ function EnclosedMissionControlRoom({ agency, spacecraftName }: { agency: string
             <meshBasicMaterial color="#0c172e" />
           </mesh>
 
-          {/* Ascending Rocket Booster inside the Screen Video Feed */}
-          <group position={[0, 0.1, 0.1]}>
+          {/* Top Agency Status Ribbon */}
+          <group position={[0, 1.6, 0.02]}>
+            <mesh>
+              <planeGeometry args={[11.6, 0.35]} />
+              <meshBasicMaterial color="#1e293b" />
+            </mesh>
+            <mesh position={[-5.2, 0, 0.01]}>
+              <circleGeometry args={[0.07, 16]} />
+              <meshBasicMaterial color="#ef4444" />
+            </mesh>
+            <mesh position={[0, 0, 0.01]}>
+              <planeGeometry args={[7.2, 0.12]} />
+              <meshBasicMaterial color="#f59e0b" />
+            </mesh>
+          </group>
+
+          {/* Left Panel: Ascent Trajectory Arc & Staging Telemetry (X = -3.6) */}
+          <group position={[-3.6, -0.1, 0.02]}>
+            <mesh>
+              <planeGeometry args={[3.8, 2.6]} />
+              <meshBasicMaterial color="#031528" />
+            </mesh>
+            {/* Parabolic Trajectory Points */}
+            {Array.from({ length: 9 }).map((_, i) => (
+              <mesh key={`pt-${i}`} position={[-1.5 + i * 0.38, -0.9 + Math.pow(i * 0.14, 1.45), 0.01]}>
+                <sphereGeometry args={[0.045, 8, 8]} />
+                <meshBasicMaterial color="#38bdf8" />
+              </mesh>
+            ))}
+            {/* Flight Metrics Bars */}
+            {[-0.6, -0.2, 0.2, 0.6].map((y, idx) => (
+              <mesh key={`bar-${idx}`} position={[0, y, 0.01]}>
+                <planeGeometry args={[3.2, 0.1]} />
+                <meshBasicMaterial color={idx === 3 ? "#10b981" : idx === 2 ? "#38bdf8" : "#0284c7"} />
+              </mesh>
+            ))}
+          </group>
+
+          {/* Center Panel: Global DSN Radar Tracking Array (X = 0) */}
+          <group position={[0, -0.1, 0.02]}>
+            <mesh>
+              <planeGeometry args={[3.0, 2.6]} />
+              <meshBasicMaterial color="#041a2f" />
+            </mesh>
+            {/* Concentric Radar Rings */}
+            {[0.35, 0.7, 1.05].map((r, idx) => (
+              <mesh key={`radar-${idx}`} position={[0, 0, 0.01]}>
+                <ringGeometry args={[r, r + 0.015, 32]} />
+                <meshBasicMaterial color="#0284c7" />
+              </mesh>
+            ))}
+            {/* Center Lock Reticle */}
+            <mesh position={[0, 0, 0.015]}>
+              <sphereGeometry args={[0.06, 12, 12]} />
+              <meshBasicMaterial color="#10b981" />
+            </mesh>
+            <mesh position={[0, -0.95, 0.01]}>
+              <planeGeometry args={[2.5, 0.2]} />
+              <meshBasicMaterial color="#10b981" />
+            </mesh>
+          </group>
+
+          {/* Right Panel: Ascending Rocket Booster (Offset to X = 3.6 to NEVER overlap the Spacecraft) */}
+          <group position={[3.6, 0.1, 0.05]}>
+            <mesh position={[0, 0, -0.01]}>
+              <planeGeometry args={[3.8, 2.8]} />
+              <meshBasicMaterial color="#09182a" />
+            </mesh>
             {/* Rocket Hull */}
-            <mesh position={[0, 0.4, 0]}>
-              <cylinderGeometry args={[0.2, 0.2, 1.8, 16]} />
+            <mesh position={[0, 0.35, 0.05]}>
+              <cylinderGeometry args={[0.18, 0.18, 1.6, 16]} />
               <meshStandardMaterial color="#f8fafc" metalness={0.6} roughness={0.3} />
             </mesh>
             {/* Payload Fairing Cone */}
-            <mesh position={[0, 1.5, 0]}>
-              <coneGeometry args={[0.2, 0.6, 16]} />
+            <mesh position={[0, 1.35, 0.05]}>
+              <coneGeometry args={[0.18, 0.55, 16]} />
               <meshStandardMaterial color="#e2e8f0" />
             </mesh>
             {/* Solid Rocket Booster Exhaust Flame */}
-            <mesh ref={rocketFlameRef} position={[0, -0.85, 0]} rotation={[Math.PI, 0, 0]}>
-              <coneGeometry args={[0.32, 1.3, 16, 1, true]} />
+            <mesh ref={rocketFlameRef} position={[0, -0.85, 0.05]} rotation={[Math.PI, 0, 0]}>
+              <coneGeometry args={[0.3, 1.3, 16, 1, true]} />
               <meshBasicMaterial color="#f97316" transparent opacity={0.9} side={THREE.DoubleSide} />
             </mesh>
-            {/* Engine Light on Screen */}
-            <pointLight position={[0, -0.8, 0.2]} intensity={3.5} distance={7} color="#f97316" />
+            {/* Engine Light */}
+            <pointLight position={[0, -0.7, 0.2]} intensity={3.5} distance={6} color="#f97316" />
 
             {/* Launch Smoke Clouds below rocket */}
-            {[-0.5, 0, 0.5].map((sx, idx) => (
-              <mesh key={`cloud-${idx}`} position={[sx, -1.6, 0.05]}>
-                <sphereGeometry args={[0.4, 12, 12]} />
+            {[-0.4, 0, 0.4].map((sx, idx) => (
+              <mesh key={`cloud-${idx}`} position={[sx, -1.5, 0.05]}>
+                <sphereGeometry args={[0.35, 12, 12]} />
                 <meshBasicMaterial color="#cbd5e1" transparent opacity={0.5} />
               </mesh>
             ))}
           </group>
 
-          {/* Real-time HTML Telemetry Overlay on the Screen */}
-          <Html position={[0, 0, 0.15]} center transform distanceFactor={8.5}>
-            <div className="w-[820px] h-[340px] p-4 text-center font-mono select-none bg-gradient-to-b from-black/85 via-black/70 to-black/90 rounded-xl border border-orange-500/50 shadow-2xl flex flex-col justify-between">
-              <div className="flex items-center justify-between border-b border-orange-500/40 pb-2">
-                <span className="flex items-center gap-2 text-amber-400 font-bold text-xs tracking-widest">
-                  <span className="size-2.5 rounded-full bg-red-500 animate-ping" />
-                  {hqTitle}
-                </span>
-                <span className="rounded-full bg-emerald-500/25 px-2.5 py-0.5 text-[11px] text-emerald-300 font-bold border border-emerald-500/50">
-                  ALL FLIGHT STATIONS GO FOR LAUNCH · VEHICLE EN ROUTE
-                </span>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3 text-left my-2">
-                <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-xs">
-                  <div className="text-[10px] text-white/50 font-bold">MISSION CLOCK</div>
-                  <div className="text-2xl font-display font-bold text-emerald-400">T+ 00:03:14</div>
-                  <div className="text-[10px] text-amber-400">STATUS: BOOSTER STAGING NOMINAL</div>
-                </div>
-
-                <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-xs">
-                  <div className="text-[10px] text-white/50 font-bold">FLIGHT DYNAMICS</div>
-                  <div className="flex justify-between text-[11px]">
-                    <span className="text-white/60">Altitude:</span>
-                    <span className="font-bold text-cyan-400">184.2 km</span>
-                  </div>
-                  <div className="flex justify-between text-[11px]">
-                    <span className="text-white/60">Velocity:</span>
-                    <span className="font-bold text-white">7,420 m/s (Mach 21)</span>
-                  </div>
-                </div>
-
-                <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-xs">
-                  <div className="text-[10px] text-white/50 font-bold">TRACKING NETWORK</div>
-                  <div className="text-emerald-400 font-semibold text-[11px]">DSN Station Locked</div>
-                  <div className="text-[10px] text-white/70">Carrier: S-Band Active</div>
-                  <div className="text-[10px] text-sky-400">Bitrate: 2.048 Mbps</div>
-                </div>
-              </div>
-
-              <div className="rounded-lg bg-orange-500/20 border border-orange-500/40 p-1.5 text-center text-xs text-orange-300 font-bold tracking-widest uppercase">
-                🚀 {spacecraftName.toUpperCase()} · LIFTOFF NOMINAL · FLIGHT COMPUTERS AUTONOMOUS
-              </div>
-            </div>
-          </Html>
+          {/* Bottom Telemetry Ticker Ribbon */}
+          <group position={[0, -1.6, 0.02]}>
+            <mesh>
+              <planeGeometry args={[11.6, 0.32]} />
+              <meshBasicMaterial color="#0f172a" />
+            </mesh>
+            <mesh position={[0, 0, 0.01]}>
+              <planeGeometry args={[11.4, 0.24]} />
+              <meshBasicMaterial color="#ea580c" transparent opacity={0.35} />
+            </mesh>
+          </group>
         </group>
       </group>
 
@@ -566,14 +581,16 @@ function EnclosedMissionControlRoom({ agency, spacecraftName }: { agency: string
             </mesh>
             <mesh position={[0, 0, 0.06]}>
               <planeGeometry args={[3.0, 1.0]} />
-              <meshBasicMaterial color="#0f766e" transparent opacity={0.3} />
+              <meshBasicMaterial color="#064e3b" />
             </mesh>
-            <Html position={[0, 0, 0.1]} center distanceFactor={8}>
-              <div className="font-mono text-center text-xs select-none">
-                <div className="text-[9px] text-teal-300 font-bold">{idx === 0 ? "SRIHARIKOTA (IST)" : "GOLDSTONE (PST)"}</div>
-                <div className="text-base font-bold text-emerald-400">{idx === 0 ? "14:38:14" : "01:08:14"}</div>
-              </div>
-            </Html>
+            <mesh position={[0, 0.22, 0.07]}>
+              <planeGeometry args={[2.4, 0.16]} />
+              <meshBasicMaterial color="#34d399" />
+            </mesh>
+            <mesh position={[0, -0.18, 0.07]}>
+              <planeGeometry args={[2.0, 0.32]} />
+              <meshBasicMaterial color="#10b981" />
+            </mesh>
           </group>
         ))}
       </group>
@@ -593,14 +610,16 @@ function EnclosedMissionControlRoom({ agency, spacecraftName }: { agency: string
             </mesh>
             <mesh position={[0, 0, 0.06]}>
               <planeGeometry args={[3.0, 1.0]} />
-              <meshBasicMaterial color="#0f766e" transparent opacity={0.3} />
+              <meshBasicMaterial color="#064e3b" />
             </mesh>
-            <Html position={[0, 0, 0.1]} center distanceFactor={8}>
-              <div className="font-mono text-center text-xs select-none">
-                <div className="text-[9px] text-teal-300 font-bold">{idx === 0 ? "MADRID (CET)" : "CANBERRA (AEST)"}</div>
-                <div className="text-base font-bold text-emerald-400">{idx === 0 ? "10:08:14" : "20:08:14"}</div>
-              </div>
-            </Html>
+            <mesh position={[0, 0.22, 0.07]}>
+              <planeGeometry args={[2.4, 0.16]} />
+              <meshBasicMaterial color="#34d399" />
+            </mesh>
+            <mesh position={[0, -0.18, 0.07]}>
+              <planeGeometry args={[2.0, 0.32]} />
+              <meshBasicMaterial color="#10b981" />
+            </mesh>
           </group>
         ))}
       </group>
@@ -996,14 +1015,11 @@ function CleanroomScientist({
         </group>
       )}
 
-      {/* Floating Role Name Tag */}
-      {label && (
-        <Html position={[0, 1.8, 0]} center distanceFactor={10}>
-          <div className="pointer-events-none whitespace-nowrap rounded-full bg-cyan-950/80 px-2 py-0.5 font-mono text-[9px] font-bold text-cyan-300 border border-cyan-500/40 shadow-sm">
-            {label}
-          </div>
-        </Html>
-      )}
+      {/* Physical Cleanroom ID Badge on chest */}
+      <mesh position={[0.1, 0.95, 0.14]}>
+        <boxGeometry args={[0.08, 0.05, 0.01]} />
+        <meshBasicMaterial color="#38bdf8" />
+      </mesh>
     </group>
   );
 }
@@ -1081,14 +1097,15 @@ function MissionFlightController({
         </mesh>
       ))}
 
-      {/* Floating Role Badge above chair */}
-      {label && (
-        <Html position={[0, 1.35, 0]} center distanceFactor={10}>
-          <div className="pointer-events-none whitespace-nowrap rounded-md bg-slate-900/90 px-2 py-0.5 font-mono text-[9px] font-bold text-amber-400 border border-amber-500/40 shadow-lg">
-            {label}
-          </div>
-        </Html>
-      )}
+      {/* 3D Physical Role Placard on back of chair */}
+      <mesh position={[0, 1.25, -0.22]}>
+        <boxGeometry args={[0.85, 0.14, 0.02]} />
+        <meshStandardMaterial color="#020617" roughness={0.3} />
+      </mesh>
+      <mesh position={[0, 1.25, -0.208]}>
+        <planeGeometry args={[0.8, 0.1]} />
+        <meshBasicMaterial color="#f59e0b" />
+      </mesh>
     </group>
   );
 }

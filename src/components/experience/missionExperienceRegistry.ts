@@ -130,7 +130,7 @@ export function getMissionExperienceConfig(artifactId: string): MissionExperienc
     const chNum = idx + 1;
 
     let envType: MissionChapter["environmentType"] = "cleanroom";
-    let camMode: CameraMode = "chase";
+    let camMode: CameraMode = "free";
     let camPos: [number, number, number] = [3, 2, 3.5];
     let camTarget: [number, number, number] = [0, 0, 0];
 
@@ -140,36 +140,36 @@ export function getMissionExperienceConfig(artifactId: string): MissionExperienc
 
     if (idx === 0 || titleLower.includes("born") || titleLower.includes("assembly") || titleLower.includes("inception") || titleLower.includes("dream")) {
       envType = "cleanroom";
-      camMode = "chase";
+      camMode = "free";
       camPos = [3.2, 1.4, 3.2];
     } else if (idx === 1 || titleLower.includes("launch") || titleLower.includes("liftoff") || titleLower.includes("roar")) {
       envType = "launch";
-      camMode = "chase";
+      camMode = "free";
       camPos = [0, 2.2, 4.2];
       camTarget = [0, 0.6, -1.0];
     } else if (idx === stageCount - 1 || titleLower.includes("silent") || titleLower.includes("legacy") || titleLower.includes("monument") || titleLower.includes("eternal")) {
       envType = artifact.kind === "rover" || artifact.kind === "lander" ? "surface" : "eclipse";
-      camMode = "chase";
+      camMode = "free";
       camPos = [2.5, 1.5, 2.5];
     } else if (titleLower.includes("entry") || titleLower.includes("descent") || titleLower.includes("terror") || titleLower.includes("parachute") || titleLower.includes("skycrane")) {
       envType = "descent";
-      camMode = "chase";
+      camMode = "free";
       camPos = [1.8, 1.2, 3.0];
     } else if (titleLower.includes("landing") || titleLower.includes("touchdown") || titleLower.includes("bounce")) {
       envType = "landing";
-      camMode = "first_person";
-      camPos = [0, 0.4, 1.2];
+      camMode = "free";
+      camPos = [0, 0.8, 2.2];
     } else if (titleLower.includes("surface") || titleLower.includes("explore") || titleLower.includes("roving") || titleLower.includes("first")) {
       envType = "surface";
-      camMode = "first_person";
-      camPos = [0, 0.5, 1.0];
+      camMode = "free";
+      camPos = [0, 0.8, 2.0];
     } else if (titleLower.includes("orbit") || titleLower.includes("insertion")) {
       envType = "insertion";
-      camMode = "chase";
+      camMode = "free";
       camPos = [2.0, 1.2, 3.0];
     } else {
       envType = "cruise";
-      camMode = idx % 2 === 0 ? "first_person" : "chase";
+      camMode = "free";
       camPos = [2.5, 1.8, 3.5];
     }
 

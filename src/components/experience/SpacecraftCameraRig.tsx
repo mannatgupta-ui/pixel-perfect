@@ -53,6 +53,8 @@ export function SpacecraftCameraRig({
       enabled={cameraMode === "free"}
       enablePan={cameraMode === "free"}
       enableZoom={cameraMode !== "first_person"}
+      enableDamping
+      dampingFactor={0.06}
       minDistance={1.2}
       maxDistance={25}
       makeDefault

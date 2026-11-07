@@ -23,7 +23,7 @@ export function MissionExperience({
   artifactId = "mangalyaan",
   onClose,
   initialChapterIndex = 0,
-  initialCameraMode = "chase",
+  initialCameraMode = "free",
 }: MissionExperienceProps) {
   const config = getMissionExperienceConfig(artifactId);
   const artifact = getArtifact(config.artifactId);
@@ -97,8 +97,8 @@ export function MissionExperience({
     setSelectedComponent(null);
     soundEngine.playTelemetryChirp();
 
-    // Respect default camera for the selected stage
-    setCameraMode(chapters[clamped]?.cameraMode ?? "chase");
+    // Respect default camera for the selected stage (defaults to Free Orbit)
+    setCameraMode(chapters[clamped]?.cameraMode ?? "free");
   };
 
   const handleSelectComponent = (comp: SpacecraftComponentInfo) => {
