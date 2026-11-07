@@ -61,23 +61,29 @@ export function Mangalyaan3DModel({
 
   const isSel = (id: string) => selectedComponentId === id;
 
-  // Gold Kapton MLI thermal blanket material parameters
+  // Gold Kapton MLI thermal blanket material parameters - high contrast radiant gold
   const mliGoldProps = {
-    color: isEclipse ? "#543e18" : "#eab308",
-    metalness: 0.88,
-    roughness: 0.28,
+    color: "#f59e0b",
+    emissive: isSel("central-bus") ? "#f59e0b" : "#78350f",
+    emissiveIntensity: isSel("central-bus") ? 0.8 : 0.22,
+    metalness: 0.85,
+    roughness: 0.22,
   };
 
   const carbonProps = {
-    color: "#1c1f26",
-    metalness: 0.3,
-    roughness: 0.7,
+    color: "#334155",
+    emissive: "#1e293b",
+    emissiveIntensity: 0.25,
+    metalness: 0.45,
+    roughness: 0.45,
   };
 
   const titaniumProps = {
-    color: "#a1a1aa",
-    metalness: 0.8,
-    roughness: 0.25,
+    color: "#e2e8f0",
+    emissive: "#334155",
+    emissiveIntensity: 0.2,
+    metalness: 0.85,
+    roughness: 0.2,
   };
 
   return (
@@ -89,11 +95,7 @@ export function Mangalyaan3DModel({
         {/* Main 1.5m Core Cuboid Bus wrapped in Kapton MLI */}
         <mesh position={[0, 0, 0]}>
           <boxGeometry args={[1.5, 1.5, 1.5]} />
-          <meshStandardMaterial
-            {...mliGoldProps}
-            emissive={isSel("central-bus") ? "#f59e0b" : "#000000"}
-            emissiveIntensity={isSel("central-bus") ? 0.6 : 0}
-          />
+          <meshStandardMaterial {...mliGoldProps} />
         </mesh>
 
         {/* Optical Solar Reflector (OSR) Radiator Plates on Side Faces */}
@@ -145,7 +147,7 @@ export function Mangalyaan3DModel({
 
         {isSel("central-bus") && (
           <Html position={[0, 0, 0.9]} center>
-            <div className="pointer-events-none rounded-md bg-amber-500/95 px-2.5 py-1 font-mono text-[11px] font-bold text-black shadow-lg">
+            <div className="pointer-events-none whitespace-nowrap rounded-md bg-amber-400 px-3 py-1 font-mono text-xs font-bold text-black shadow-xl border border-amber-200">
               I-1K Bus & Gold MLI Blanket
             </div>
           </Html>
@@ -171,19 +173,19 @@ export function Mangalyaan3DModel({
         <mesh position={[0, -0.4, 0]} rotation={[Math.PI, 0, 0]}>
           <coneGeometry args={[0.38, 0.65, 32, 1, true]} />
           <meshStandardMaterial
-            color="#27272a"
-            metalness={0.8}
-            roughness={0.3}
+            color="#3f3f46"
+            metalness={0.85}
+            roughness={0.25}
             side={THREE.DoubleSide}
-            emissive={isSel("lam-engine") ? "#f97316" : isEngineFiring ? "#ff5500" : "#000000"}
-            emissiveIntensity={isSel("lam-engine") ? 0.6 : isEngineFiring ? 0.9 : 0}
+            emissive={isSel("lam-engine") ? "#f97316" : isEngineFiring ? "#ff5500" : "#18181b"}
+            emissiveIntensity={isSel("lam-engine") ? 0.8 : isEngineFiring ? 1.0 : 0.2}
           />
         </mesh>
 
         {/* Hypergolic Combustion Chamber Throat Glow */}
         <mesh position={[0, -0.15, 0]}>
           <cylinderGeometry args={[0.12, 0.14, 0.15, 24]} />
-          <meshBasicMaterial color={isEngineFiring ? "#ffedd5" : "#e4e4e7"} />
+          <meshBasicMaterial color={isEngineFiring ? "#ffedd5" : "#f4f4f5"} />
         </mesh>
 
         {/* Reactive Hypergolic Exhaust Plume (Orange-Blue Thrust Cone) */}
@@ -205,7 +207,7 @@ export function Mangalyaan3DModel({
 
         {isSel("lam-engine") && (
           <Html position={[0, -0.6, 0.5]} center>
-            <div className="pointer-events-none rounded-md bg-orange-500/95 px-2.5 py-1 font-mono text-[11px] font-bold text-black shadow-lg">
+            <div className="pointer-events-none whitespace-nowrap rounded-md bg-orange-500 px-3 py-1 font-mono text-xs font-bold text-white shadow-xl border border-orange-300">
               440N Liquid Apogee Motor (LAM)
             </div>
           </Html>
@@ -235,27 +237,29 @@ export function Mangalyaan3DModel({
             <mesh>
               <boxGeometry args={[0.9, 1.4, 0.03]} />
               <meshStandardMaterial
-                color="#0f172a"
+                color="#1e293b"
                 roughness={0.4}
                 metalness={0.6}
-                emissive={isSel("solar-arrays") ? "#38bdf8" : "#000000"}
-                emissiveIntensity={isSel("solar-arrays") ? 0.5 : 0}
+                emissive={isSel("solar-arrays") ? "#38bdf8" : "#0f172a"}
+                emissiveIntensity={isSel("solar-arrays") ? 0.6 : 0.15}
               />
             </mesh>
             {/* Deep Indigo/Blue Gallium Arsenide Photovoltaic Cells */}
             <mesh position={[0, 0, 0.018]}>
               <planeGeometry args={[0.84, 1.34]} />
               <meshStandardMaterial
-                color={isEclipse ? "#030712" : "#1e3a8a"}
-                metalness={0.8}
-                roughness={0.2}
+                color="#2563eb"
+                emissive={isSel("solar-arrays") ? "#38bdf8" : "#1d4ed8"}
+                emissiveIntensity={isSel("solar-arrays") ? 0.7 : 0.22}
+                metalness={0.75}
+                roughness={0.18}
               />
             </mesh>
             {/* Gold Panel-to-Panel Hinges */}
             {[-0.5, 0.5].map((y) => (
               <mesh key={`hinge-${y}`} position={[0.45, y, 0]}>
                 <boxGeometry args={[0.06, 0.08, 0.05]} />
-                <meshStandardMaterial color="#d97706" metalness={0.9} />
+                <meshStandardMaterial color="#f59e0b" emissive="#b45309" emissiveIntensity={0.25} metalness={0.9} />
               </mesh>
             ))}
           </group>
@@ -263,7 +267,7 @@ export function Mangalyaan3DModel({
 
         {isSel("solar-arrays") && (
           <Html position={[-1.85, 0.8, 0]} center>
-            <div className="pointer-events-none rounded-md bg-sky-500/95 px-2.5 py-1 font-mono text-[11px] font-bold text-black shadow-lg">
+            <div className="pointer-events-none whitespace-nowrap rounded-md bg-sky-400 px-3 py-1 font-mono text-xs font-bold text-slate-950 shadow-xl border border-sky-200">
               840W Gallium-Arsenide Solar Wing
             </div>
           </Html>
@@ -291,12 +295,12 @@ export function Mangalyaan3DModel({
           <mesh>
             <sphereGeometry args={[1.1, 32, 16, 0, Math.PI * 2, 0, Math.PI / 3.2]} />
             <meshStandardMaterial
-              color="#f8fafc"
+              color="#ffffff"
               roughness={0.25}
-              metalness={0.3}
+              metalness={0.25}
               side={THREE.DoubleSide}
-              emissive={isSel("hga-antenna") ? "#38bdf8" : "#000000"}
-              emissiveIntensity={isSel("hga-antenna") ? 0.6 : 0}
+              emissive={isSel("hga-antenna") ? "#38bdf8" : "#334155"}
+              emissiveIntensity={isSel("hga-antenna") ? 0.7 : 0.2}
             />
           </mesh>
           {/* Gold Antenna Back-Struts */}
@@ -304,20 +308,20 @@ export function Mangalyaan3DModel({
             <group key={`strut-${i}`} rotation={[0, 0, angle]}>
               <mesh position={[0.45, 0, -0.15]} rotation={[0, 0.4, 0]}>
                 <cylinderGeometry args={[0.015, 0.015, 0.7, 8]} />
-                <meshStandardMaterial color="#d97706" metalness={0.8} />
+                <meshStandardMaterial color="#f59e0b" emissive="#78350f" emissiveIntensity={0.2} metalness={0.85} />
               </mesh>
             </group>
           ))}
           {/* Sub-Reflector Feed Horn Assembly */}
           <mesh position={[0, 0, 0.65]}>
             <coneGeometry args={[0.12, 0.22, 16]} />
-            <meshStandardMaterial color="#18181b" metalness={0.8} />
+            <meshStandardMaterial color="#d97706" emissive="#78350f" emissiveIntensity={0.3} metalness={0.8} />
           </mesh>
         </group>
 
         {isSel("hga-antenna") && (
           <Html position={[0, 1.2, 0.3]} center>
-            <div className="pointer-events-none rounded-md bg-teal/95 px-2.5 py-1 font-mono text-[11px] font-bold text-black shadow-lg">
+            <div className="pointer-events-none whitespace-nowrap rounded-md bg-cyan-400 px-3 py-1 font-mono text-xs font-bold text-slate-950 shadow-xl border border-cyan-200">
               2.2m High-Gain X-Band Dish (HGA)
             </div>
           </Html>
@@ -353,7 +357,7 @@ export function Mangalyaan3DModel({
 
         {isSel("rcs-thrusters") && (
           <Html position={[0.75, -0.65, 0.75]} center>
-            <div className="pointer-events-none rounded-md bg-amber-500/95 px-2.5 py-1 font-mono text-[11px] font-bold text-black shadow-lg">
+            <div className="pointer-events-none whitespace-nowrap rounded-md bg-amber-400 px-3 py-1 font-mono text-xs font-bold text-black shadow-xl border border-amber-200">
               Eight 22N RCS Thrusters
             </div>
           </Html>
@@ -375,11 +379,11 @@ export function Mangalyaan3DModel({
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.08, 0.1, 0.18, 24]} />
           <meshStandardMaterial
-            color="#09090b"
+            color="#18181b"
             metalness={0.9}
             roughness={0.15}
-            emissive={isSel("mcc-camera") ? "#ef4444" : "#000000"}
-            emissiveIntensity={isSel("mcc-camera") ? 0.6 : 0}
+            emissive={isSel("mcc-camera") ? "#ef4444" : "#27272a"}
+            emissiveIntensity={isSel("mcc-camera") ? 0.8 : 0.2}
           />
         </mesh>
         {/* Front Lens Glass Element with Anti-Reflective Coating */}
@@ -395,7 +399,7 @@ export function Mangalyaan3DModel({
         </mesh>
         {isSel("mcc-camera") && (
           <Html position={[0, 0.2, 0.1]} center>
-            <div className="pointer-events-none rounded-md bg-red-500/95 px-2.5 py-1 font-mono text-[11px] font-bold text-white shadow-lg">
+            <div className="pointer-events-none whitespace-nowrap rounded-md bg-rose-500 px-3 py-1 font-mono text-xs font-bold text-white shadow-xl border border-rose-300">
               Mars Colour Camera (MCC)
             </div>
           </Html>
@@ -415,13 +419,13 @@ export function Mangalyaan3DModel({
             color="#e4e4e7"
             metalness={0.7}
             roughness={0.3}
-            emissive={isSel("lap-photometer") ? "#a855f7" : "#000000"}
-            emissiveIntensity={isSel("lap-photometer") ? 0.6 : 0}
+            emissive={isSel("lap-photometer") ? "#a855f7" : "#4c1d95"}
+            emissiveIntensity={isSel("lap-photometer") ? 0.8 : 0.25}
           />
         </mesh>
         {isSel("lap-photometer") && (
           <Html position={[0, 0.18, 0.1]} center>
-            <div className="pointer-events-none rounded-md bg-purple-500/95 px-2.5 py-1 font-mono text-[11px] font-bold text-white shadow-lg">
+            <div className="pointer-events-none whitespace-nowrap rounded-md bg-purple-500 px-3 py-1 font-mono text-xs font-bold text-white shadow-xl border border-purple-300">
               Lyman Alpha Photometer (LAP)
             </div>
           </Html>
@@ -440,18 +444,18 @@ export function Mangalyaan3DModel({
           <meshStandardMaterial
             color="#27272a"
             metalness={0.8}
-            emissive={isSel("msm-sensor") ? "#10b981" : "#000000"}
-            emissiveIntensity={isSel("msm-sensor") ? 0.6 : 0}
+            emissive={isSel("msm-sensor") ? "#10b981" : "#064e3b"}
+            emissiveIntensity={isSel("msm-sensor") ? 0.8 : 0.25}
           />
         </mesh>
         {/* Gold optical filter aperture */}
         <mesh position={[0, 0, 0.065]}>
           <circleGeometry args={[0.04, 16]} />
-          <meshStandardMaterial color="#eab308" metalness={0.95} />
+          <meshStandardMaterial color="#f59e0b" emissive="#b45309" emissiveIntensity={0.3} metalness={0.95} />
         </mesh>
         {isSel("msm-sensor") && (
           <Html position={[0, 0.18, 0.1]} center>
-            <div className="pointer-events-none rounded-md bg-emerald-500/95 px-2.5 py-1 font-mono text-[11px] font-bold text-black shadow-lg">
+            <div className="pointer-events-none whitespace-nowrap rounded-md bg-emerald-500 px-3 py-1 font-mono text-xs font-bold text-black shadow-xl border border-emerald-300">
               Methane Sensor for Mars (MSM)
             </div>
           </Html>
@@ -470,13 +474,13 @@ export function Mangalyaan3DModel({
           <meshStandardMaterial
             color="#3f3f46"
             metalness={0.6}
-            emissive={isSel("tis-spectrometer") ? "#f97316" : "#000000"}
-            emissiveIntensity={isSel("tis-spectrometer") ? 0.6 : 0}
+            emissive={isSel("tis-spectrometer") ? "#f97316" : "#7c2d12"}
+            emissiveIntensity={isSel("tis-spectrometer") ? 0.8 : 0.25}
           />
         </mesh>
         {isSel("tis-spectrometer") && (
           <Html position={[0, 0.18, 0.1]} center>
-            <div className="pointer-events-none rounded-md bg-amber-500/95 px-2.5 py-1 font-mono text-[11px] font-bold text-black shadow-lg">
+            <div className="pointer-events-none whitespace-nowrap rounded-md bg-amber-500 px-3 py-1 font-mono text-xs font-bold text-black shadow-xl border border-amber-300">
               Thermal IR Spectrometer (TIS)
             </div>
           </Html>
@@ -495,13 +499,13 @@ export function Mangalyaan3DModel({
           <meshStandardMaterial
             color="#d4d4d8"
             metalness={0.8}
-            emissive={isSel("menca-analyzer") ? "#38bdf8" : "#000000"}
-            emissiveIntensity={isSel("menca-analyzer") ? 0.6 : 0}
+            emissive={isSel("menca-analyzer") ? "#38bdf8" : "#0369a1"}
+            emissiveIntensity={isSel("menca-analyzer") ? 0.8 : 0.25}
           />
         </mesh>
         {isSel("menca-analyzer") && (
           <Html position={[0, 0.18, 0.1]} center>
-            <div className="pointer-events-none rounded-md bg-sky-500/95 px-2.5 py-1 font-mono text-[11px] font-bold text-black shadow-lg">
+            <div className="pointer-events-none whitespace-nowrap rounded-md bg-sky-400 px-3 py-1 font-mono text-xs font-bold text-slate-950 shadow-xl border border-sky-200">
               MENCA Mass Spectrometer
             </div>
           </Html>

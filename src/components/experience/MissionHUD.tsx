@@ -361,11 +361,11 @@ export function MissionHUD({
                 {selectedComponent.description}
               </p>
 
-              <div className="mt-3 space-y-1 rounded-xl bg-white/5 p-2.5 font-mono text-[11px] text-white/70">
+              <div className="mt-3 space-y-1.5 rounded-xl bg-white/10 p-3 font-mono text-xs text-slate-200 border border-white/10">
                 {selectedComponent.specs.map((spec, i) => (
                   <div key={i} className="flex items-start gap-1.5">
-                    <span className="text-amber-400 font-bold">›</span>
-                    <span>{spec}</span>
+                    <span className="text-amber-400 font-bold text-sm leading-none">›</span>
+                    <span className="leading-snug">{spec}</span>
                   </div>
                 ))}
               </div>
@@ -378,7 +378,7 @@ export function MissionHUD({
                     `Explain the role and significance of the ${selectedComponent.name} on Mangalyaan. What makes this engineering design unique?`,
                   );
                 }}
-                className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary/20 hover:bg-primary/30 py-2 font-mono text-xs font-semibold text-primary-glow border border-primary/30 transition-all"
+                className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 py-2.5 font-mono text-xs font-bold text-amber-300 border border-amber-500/40 transition-all shadow-md"
               >
                 <Bot className="size-3.5" /> Ask ASTRO About This Subsystem
               </button>

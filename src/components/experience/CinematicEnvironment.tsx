@@ -658,10 +658,12 @@ function EarthOrbitEnvironment() {
 
   return (
     <group>
-      <color attach="background" args={["#010206"]} />
+      <color attach="background" args={["#02040c"]} />
       <Stars radius={100} depth={50} count={4500} factor={4} fade speed={0.4} />
-      <ambientLight intensity={0.15} color="#ffffff" />
-      <directionalLight position={[10, 5, 8]} intensity={3.0} color="#fffbeb" />
+      <ambientLight intensity={0.8} color="#e0f2fe" />
+      <directionalLight position={[10, 6, 8]} intensity={3.5} color="#ffffff" />
+      <directionalLight position={[0, -6, -2]} intensity={2.2} color="#38bdf8" />
+      <directionalLight position={[-8, 6, -4]} intensity={1.6} color="#93c5fd" />
 
       {/* 3D Realistic Earth Globe Below */}
       <group position={[0, -11, -6]}>
@@ -671,7 +673,7 @@ function EarthOrbitEnvironment() {
         </mesh>
         <mesh scale={[1.03, 1.03, 1.03]}>
           <sphereGeometry args={[8.5, 48, 48]} />
-          <meshBasicMaterial color="#38bdf8" transparent opacity={0.25} side={THREE.BackSide} />
+          <meshBasicMaterial color="#38bdf8" transparent opacity={0.35} side={THREE.BackSide} />
         </mesh>
       </group>
 
@@ -680,7 +682,7 @@ function EarthOrbitEnvironment() {
         {[3.5, 5.0, 7.2, 9.5].map((rad, i) => (
           <mesh key={`orbit-${i}`} rotation={[Math.PI / 2, 0, 0]}>
             <ringGeometry args={[rad, rad + 0.03, 64]} />
-            <meshBasicMaterial color={i === 3 ? "#f97316" : "#38bdf8"} transparent opacity={0.35 + i * 0.15} side={THREE.DoubleSide} />
+            <meshBasicMaterial color={i === 3 ? "#f97316" : "#38bdf8"} transparent opacity={0.45 + i * 0.15} side={THREE.DoubleSide} />
           </mesh>
         ))}
       </group>
@@ -707,10 +709,12 @@ function InterplanetarySpaceEnvironment({ targetBody }: { targetBody: string }) 
 
   return (
     <group>
-      <color attach="background" args={["#000003"]} />
+      <color attach="background" args={["#02040c"]} />
       <Stars radius={110} depth={55} count={5000} factor={4.5} fade speed={0.2} />
-      <ambientLight intensity={0.12} color="#ffffff" />
-      <directionalLight position={[12, 6, 10]} intensity={3.2} color="#fffcf2" />
+      <ambientLight intensity={0.75} color="#e2e8f0" />
+      <directionalLight position={[12, 6, 10]} intensity={3.5} color="#fffcf2" />
+      <directionalLight position={[-10, -4, -8]} intensity={1.8} color="#60a5fa" />
+      <directionalLight position={[-6, 8, -4]} intensity={1.5} color="#fde047" />
 
       {/* Distant Pinpoint Brilliant Sun */}
       <group position={[35, 18, 30]}>
@@ -718,7 +722,7 @@ function InterplanetarySpaceEnvironment({ targetBody }: { targetBody: string }) 
           <sphereGeometry args={[1.8, 32, 32]} />
           <meshBasicMaterial color="#fef08a" />
         </mesh>
-        <pointLight intensity={6} distance={60} color="#fffbeb" />
+        <pointLight intensity={8} distance={70} color="#fffbeb" />
       </group>
 
       {/* Distant Earth and Target Planet in Cosmic Space */}
@@ -748,21 +752,23 @@ function PlanetaryApproachSpaceEnvironment({ targetBody }: { targetBody: string 
 
   return (
     <group>
-      <color attach="background" args={["#010207"]} />
+      <color attach="background" args={["#02040c"]} />
       <Stars radius={90} depth={40} count={4000} factor={3.5} fade speed={0.3} />
-      <ambientLight intensity={0.2} color="#fed7aa" />
-      <directionalLight position={[10, 4, 8]} intensity={2.8} color="#ffedd5" />
+      <ambientLight intensity={0.8} color="#fef3c7" />
+      <directionalLight position={[10, 5, 8]} intensity={3.5} color="#ffffff" />
+      <directionalLight position={[0, -4, -8]} intensity={2.4} color={targetBody === "mars" ? "#ea580c" : targetBody === "moon" ? "#cbd5e1" : "#eab308"} />
+      <directionalLight position={[-6, 8, -4]} intensity={1.5} color="#93c5fd" />
 
       {/* Planet Growing in Space Ahead */}
       <group position={[0, -2, -14]}>
         <mesh rotation={[0.4, 0, 0]}>
           <sphereGeometry args={[7.0, 64, 64]} />
-          <meshStandardMaterial map={planetTex} roughness={0.8} />
+          <meshStandardMaterial map={planetTex} roughness={0.7} metalness={0.1} />
         </mesh>
         {targetBody === "mars" && (
           <mesh scale={[1.025, 1.025, 1.025]}>
             <sphereGeometry args={[7.0, 48, 48]} />
-            <meshBasicMaterial color="#fb923c" transparent opacity={0.2} side={THREE.BackSide} />
+            <meshBasicMaterial color="#fb923c" transparent opacity={0.3} side={THREE.BackSide} />
           </mesh>
         )}
       </group>
@@ -776,20 +782,35 @@ function OrbitInsertionSpaceEnvironment({ targetBody }: { targetBody: string }) 
 
   return (
     <group>
-      <color attach="background" args={["#000002"]} />
-      <Stars radius={80} depth={35} count={3500} factor={3.5} fade speed={0.15} />
-      <ambientLight intensity={0.05} color="#1e1b4b" />
-      <directionalLight position={[-15, 2, -15]} intensity={0.4} color="#7c2d12" />
+      <color attach="background" args={["#030712"]} />
+      <Stars radius={80} depth={35} count={4000} factor={4.0} fade speed={0.2} />
+      {/* High-visibility ambient fill so spacecraft is vibrant & never black */}
+      <ambientLight intensity={0.85} color="#fed7aa" />
+      {/* Primary Key light */}
+      <directionalLight position={[10, 6, 8]} intensity={3.6} color="#ffffff" />
+      {/* Red Planet Surface Albedo Bounce */}
+      <directionalLight position={[-8, -4, -6]} intensity={2.6} color="#ea580c" />
+      {/* Silhouette Separation Rim Light */}
+      <directionalLight position={[-6, 8, -4]} intensity={1.8} color="#93c5fd" />
 
-      {/* Dark Limb of the Planet */}
-      <group position={[0, -10.5, 0]}>
-        <mesh rotation={[0.3, 0, 0]}>
+      {/* Curving Mars Horizon Below */}
+      <group position={[0, -10.5, -2]}>
+        <mesh rotation={[0.3, 0.2, 0]}>
           <sphereGeometry args={[10.5, 64, 64]} />
-          <meshStandardMaterial map={planetTex} roughness={0.9} color="#381b16" />
+          <meshStandardMaterial map={planetTex} roughness={0.7} metalness={0.1} />
         </mesh>
-        <mesh position={[4, 8, -4]}>
-          <ringGeometry args={[10.5, 10.7, 48]} />
-          <meshBasicMaterial color="#ea580c" transparent opacity={0.15} side={THREE.DoubleSide} />
+        {/* Mars Atmospheric Glowing Horizon Ring */}
+        <mesh position={[0, 0, 0]} rotation={[0.3, 0.2, 0]}>
+          <ringGeometry args={[10.52, 10.85, 64]} />
+          <meshBasicMaterial color="#f97316" transparent opacity={0.4} side={THREE.DoubleSide} />
+        </mesh>
+      </group>
+
+      {/* Orbital Trajectory Ribbon in Mars Orbit */}
+      <group position={[0, 0, 0]} rotation={[0.4, 0.2, 0]}>
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[4.2, 4.25, 64]} />
+          <meshBasicMaterial color="#f97316" transparent opacity={0.65} side={THREE.DoubleSide} />
         </mesh>
       </group>
     </group>
@@ -802,16 +823,18 @@ function ScienceOrbitSpaceEnvironment({ targetBody }: { targetBody: string }) {
 
   return (
     <group>
-      <color attach="background" args={["#010208"]} />
+      <color attach="background" args={["#02040c"]} />
       <Stars radius={95} depth={45} count={4000} factor={4} fade speed={0.3} />
-      <ambientLight intensity={0.25} color="#fed7aa" />
-      <directionalLight position={[12, 6, 8]} intensity={3.2} color="#fffbeb" />
+      <ambientLight intensity={0.8} color="#fed7aa" />
+      <directionalLight position={[12, 6, 8]} intensity={3.5} color="#ffffff" />
+      <directionalLight position={[0, -5, -6]} intensity={2.4} color={targetBody === "mars" ? "#ea580c" : targetBody === "moon" ? "#cbd5e1" : "#eab308"} />
+      <directionalLight position={[-8, 6, -4]} intensity={1.6} color="#93c5fd" />
 
       {/* Planet in Full Orbit View */}
       <group position={[0, -6, -10]}>
         <mesh rotation={[0.4, 0, 0.2]}>
           <sphereGeometry args={[5.2, 64, 64]} />
-          <meshStandardMaterial map={planetTex} roughness={0.8} />
+          <meshStandardMaterial map={planetTex} roughness={0.7} metalness={0.1} />
         </mesh>
       </group>
     </group>
@@ -824,14 +847,17 @@ function SilentSpaceEnvironment({ targetBody }: { targetBody: string }) {
 
   return (
     <group>
-      <color attach="background" args={["#000000"]} />
-      <Stars radius={95} depth={45} count={4200} factor={3.0} fade speed={0.1} />
-      <ambientLight intensity={0.03} color="#ffffff" />
+      <color attach="background" args={["#02040a"]} />
+      <Stars radius={95} depth={45} count={4500} factor={4.0} fade speed={0.1} />
+      <ambientLight intensity={0.75} color="#cbd5e1" />
+      <directionalLight position={[10, 6, 8]} intensity={3.4} color="#ffffff" />
+      <directionalLight position={[-8, -4, -6]} intensity={2.0} color="#f97316" />
+      <directionalLight position={[-6, 8, -4]} intensity={1.5} color="#38bdf8" />
 
-      <group position={[0, -4, -8]}>
-        <mesh rotation={[0.4, 0, 0]}>
+      <group position={[0, -5, -8]}>
+        <mesh rotation={[0.4, 0.1, 0]}>
           <sphereGeometry args={[6.2, 64, 64]} />
-          <meshStandardMaterial map={planetTex} roughness={0.95} color="#0c0705" />
+          <meshStandardMaterial map={planetTex} roughness={0.8} />
         </mesh>
       </group>
     </group>
@@ -847,8 +873,9 @@ function AtmosphericDescentEnvironment({ targetBody, artifact }: { targetBody: s
   return (
     <group>
       <color attach="background" args={[skyColor]} />
-      <ambientLight intensity={0.4} color="#fed7aa" />
-      <directionalLight position={[0, 6, 4]} intensity={2.0} color="#ffedd5" />
+      <ambientLight intensity={0.8} color="#fed7aa" />
+      <directionalLight position={[0, 6, 4]} intensity={3.5} color="#ffedd5" />
+      <directionalLight position={[0, -4, 0]} intensity={2.2} color="#ea580c" />
 
       {/* Fiery Shockwave Plasma Compression Glow */}
       <mesh position={[0, -1.2, 0]} rotation={[Math.PI / 2, 0, 0]}>
@@ -898,8 +925,8 @@ function LandingFallbackEnvironment({ targetBody }: { targetBody: string }) {
     <group>
       <color attach="background" args={[isMoon ? "#000000" : "#92400e"]} />
       {isMoon && <Stars radius={80} depth={30} count={3500} />}
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[5, 7, 5]} intensity={2.6} color="#fffbeb" />
+      <ambientLight intensity={0.75} color="#fed7aa" />
+      <directionalLight position={[5, 7, 5]} intensity={3.5} color="#fffbeb" />
 
       <mesh position={[0, -0.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[36, 36]} />
@@ -916,8 +943,8 @@ function SurfaceFallbackEnvironment({ targetBody }: { targetBody: string }) {
     <group>
       <color attach="background" args={[isMoon ? "#000000" : "#b45309"]} />
       {isMoon && <Stars radius={80} depth={30} count={3500} />}
-      <ambientLight intensity={isMoon ? 0.2 : 0.6} />
-      <directionalLight position={[6, 8, 4]} intensity={isMoon ? 3.4 : 2.2} color="#fffcf0" />
+      <ambientLight intensity={0.75} color="#fed7aa" />
+      <directionalLight position={[6, 8, 4]} intensity={3.6} color="#fffcf0" />
 
       <mesh position={[0, -0.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[40, 40]} />
