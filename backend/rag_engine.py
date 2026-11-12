@@ -250,7 +250,7 @@ Instructions:
 Answer the visitor's question:"""
 
                 response = client.models.generate_content(
-                    model="gemini-3.8-flash",
+                    model="gemini-1.5-flash",
                     contents=prompt
                 )
 
@@ -258,7 +258,7 @@ Answer the visitor's question:"""
                     return {
                         "answer": response.text,
                         "sources": sources,
-                        "model": "gemini-3.8-flash (Live NASA RAG)"
+                        "model": "gemini-1.5-flash (Live NASA RAG)"
                     }
 
                 print("Gemini returned an empty response.")
