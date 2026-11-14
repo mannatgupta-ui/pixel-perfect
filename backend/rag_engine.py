@@ -223,7 +223,14 @@ class RAGEngine:
 
         if api_key:
             try:
-                client = genai.Client(api_key=api_key)
+                from google.genai import types
+
+                client = genai.Client(
+                api_key=api_key,
+                http_options=types.HttpOptions(
+                timeout=120000
+                )
+)
 
                 context_str = "\n\n".join(
                     [f"[{d.title}]: {d.content}" for d in retrieved_docs]
@@ -248,23 +255,36 @@ Instructions:
 7. Do not invent sources. Use only the provided archive sources.
 
 Answer the visitor's question:"""
-
+                print("sending request to gemini...", flush=True)
                 response = client.models.generate_content(
-                    model="gemini-1.5-flash",
-                    contents=prompt
+                    model="gemini-3.5-flash-lite",
+                    contents=prompt,
+                    config={"http_options": {"timeout": 30000}}
                 )
-
+                print("gemini response recieved", flush=True)
                 if response.text:
                     return {
                         "answer": response.text,
                         "sources": sources,
-                        "model": "gemini-1.5-flash (Live NASA RAG)"
+                        "model": "gemini-3.5-flash-lite (Live NASA RAG)"
                     }
 
                 print("Gemini returned an empty response.")
 
             except Exception as e:
-                print(f"Gemini API error: {e}")
+                    print("GEMINI FAILED:", repr(e), flush=True)
+
+                    return {
+                    "answer": f"Gemini API failed: {type(e).__name__}: {str(e)}",
+                    "sources": sources,
+                    "model": "Gemini Error Diagnostic"
+                    }
+
+            return {
+            "answer": "GEMINI_API_KEY is missing. Check your backend .env file.",
+            "sources": sources,
+            "model": "Configuration Error"
+            }
 
         # Grounded Archive Synthesis fallback
         primary = retrieved_docs[0]
