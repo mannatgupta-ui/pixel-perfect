@@ -9,13 +9,22 @@ import os
 import re
 
 from dotenv import load_dotenv
-from google import genai
+from openai import OpenAI
 
 # Always load the .env file located inside the backend folder
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
+
 class KnowledgeDocument:
-    def __init__(self, doc_id: str, title: str, category: str, content: str, source: str, metadata: Dict[str, Any]):
+    def __init__(
+        self,
+        doc_id: str,
+        title: str,
+        category: str,
+        content: str,
+        source: str,
+        metadata: Dict[str, Any]
+    ):
         self.doc_id = doc_id
         self.title = title
         self.category = category
@@ -23,20 +32,23 @@ class KnowledgeDocument:
         self.source = source
         self.metadata = metadata
 
+
 # Comprehensive verified NASA Mission Knowledge Archive
 NASA_DOCUMENTS = [
+
     # ── SPIRIT ROVER ──
     KnowledgeDocument(
         doc_id="mer-a-overview",
         title="Spirit Rover (MER-A) Mission Overview",
         category="rover",
-        content="""Spirit (MER-A) was NASA's first Mars Exploration Rover. Launched June 10, 2003 on a Delta II rocket, 
-it landed at Gusev Crater (14.5692° S, 175.4729° E) on January 4, 2004 UTC using an innovative 28-bounce airbag landing system. 
-Spirit was designed for a 90-sol primary mission but operated for 2,210 sols (6 years, 2 months, 19 days), driving 7.73 km. 
+        content="""Spirit (MER-A) was NASA's first Mars Exploration Rover. Launched June 10, 2003 on a Delta II rocket,
+it landed at Gusev Crater (14.5692° S, 175.4729° E) on January 4, 2004 UTC using an innovative 28-bounce airbag landing system.
+Spirit was designed for a 90-sol primary mission but operated for 2,210 sols (6 years, 2 months, 19 days), driving 7.73 km.
 Spirit's mission proved that ancient Mars possessed active hydrothermal systems and liquid water.""",
         source="NASA Science — MER Spirit Archive (science.nasa.gov/mission/mer-spirit)",
         metadata={"body": "mars", "mission": "MER-A", "status": "silent", "dates": "2003-2010"}
     ),
+
     KnowledgeDocument(
         doc_id="spirit-hardware-parts",
         title="Spirit Rover Engineering Systems & Science Instruments",
@@ -53,25 +65,27 @@ Spirit's mission proved that ancient Mars possessed active hydrothermal systems 
         source="NASA JPL MER Engineering Design Specifications",
         metadata={"rover": "Spirit", "components": ["wheels", "mast", "arm", "solar", "rat", "hga", "lga", "body"]}
     ),
+
     KnowledgeDocument(
         doc_id="spirit-silica-discovery",
         title="Discovery of Pure Silica Hydrothermal Deposits",
         category="discovery",
-        content="""In May 2007 near Home Plate in the Columbia Hills, Spirit's jammed right-front wheel was dragged backwards, 
-gouge-trenching the soil. It churned up bright white soil composed of 90% pure amorphous silica (SiO2). 
-On Earth, this concentration only forms in hot boiling springs or fumarolic steam vents. 
+        content="""In May 2007 near Home Plate in the Columbia Hills, Spirit's jammed right-front wheel was dragged backwards,
+gouge-trenching the soil. It churned up bright white soil composed of 90% pure amorphous silica (SiO2).
+On Earth, this concentration only forms in hot boiling springs or fumarolic steam vents.
 This proved that ancient Gusev had both liquid water and intense geothermal volcanic heat simultaneously, forming a habitable zone for ancient microbes.""",
         source="Science Journal (Squyres et al., 'Detection of Silica-Rich Deposits on Mars by the Spirit Rover')",
         metadata={"body": "mars", "sol": "1150", "year": "2007"}
     ),
+
     KnowledgeDocument(
         doc_id="spirit-last-signal",
         title="The Final Signal and Conclusion of Spirit Rover",
         category="conclusion",
-        content="""On May 1, 2009 (Sol 1892), Spirit broke through a crust into loose sulfate-rich sand at 'Troy' west of Home Plate. 
-Engineers commanded hundreds of maneuvers, but in November 2009 the right-rear wheel failed as well. 
-Spirit was converted to a stationary science station. With its solar panels stuck at a 9° southern tilt, it could not face the low winter Sun in the north. 
-Power dropped below heating thresholds. Spirit sent its last communication on March 22, 2010 (Sol 2210). 
+        content="""On May 1, 2009 (Sol 1892), Spirit broke through a crust into loose sulfate-rich sand at 'Troy' west of Home Plate.
+Engineers commanded hundreds of maneuvers, but in November 2009 the right-rear wheel failed as well.
+Spirit was converted to a stationary science station. With its solar panels stuck at a 9° southern tilt, it could not face the low winter Sun in the north.
+Power dropped below heating thresholds. Spirit sent its last communication on March 22, 2010 (Sol 2210).
 NASA transmitted more than 1,300 recovery commands before officially completing the mission on May 25, 2011.""",
         source="NASA JPL Official Mission Status Archive",
         metadata={"last_signal": "2010-03-22", "site": "Troy, Gusev Crater", "status": "silent"}
@@ -82,8 +96,8 @@ NASA transmitted more than 1,300 recovery commands before officially completing 
         doc_id="opportunity-overview",
         title="Opportunity Rover (MER-B) Mission",
         category="rover",
-        content="""Opportunity landed at Meridiani Planum on January 25, 2004 UTC, bouncing into Eagle Crater. 
-It discovered hematite spheres ('blueberries') formed in ancient standing groundwater. 
+        content="""Opportunity landed at Meridiani Planum on January 25, 2004 UTC, bouncing into Eagle Crater.
+It discovered hematite spheres ('blueberries') formed in ancient standing groundwater.
 Opportunity operated for nearly 15 years, driving a record 45.16 km until a global dust storm cut off solar power in June 2018 at Perseverance Valley in Endeavour Crater.""",
         source="NASA Science — MER Opportunity Archive",
         metadata={"body": "mars", "distance": "45.16 km", "status": "silent"}
@@ -94,12 +108,13 @@ Opportunity operated for nearly 15 years, driving a record 45.16 km until a glob
         doc_id="apollo-11-hardware",
         title="Apollo 11 Lunar Module Descent Stage and Surface Experiments",
         category="lunar",
-        content="""On July 20, 1969, Apollo 11 landed the Lunar Module 'Eagle' at the Sea of Tranquility (0.674° N, 23.473° E). 
-While the ascent stage returned Neil Armstrong and Buzz Aldrin to orbit, the gold-insulated descent stage, landing radar, 
+        content="""On July 20, 1969, Apollo 11 landed the Lunar Module 'Eagle' at the Sea of Tranquility (0.674° N, 23.473° E).
+While the ascent stage returned Neil Armstrong and Buzz Aldrin to orbit, the gold-insulated descent stage, landing radar,
 EASEP seismometer, and Lunar Laser Ranging Retroreflector (LRRR) remain on the Moon. Observatories on Earth still bounce laser pulses off the reflector today.""",
         source="NASA Apollo Surface Journal & Lunar Reconnaissance Orbiter Data",
         metadata={"body": "moon", "mission": "Apollo 11", "date": "1969-07-20"}
     ),
+
     KnowledgeDocument(
         doc_id="apollo-lunar-rovers",
         title="Apollo Lunar Roving Vehicles (LRV 1, 2, 3)",
@@ -118,8 +133,8 @@ Each rover featured four 1/4-horsepower DC electric motors inside woven steel wi
         doc_id="voyager-probes",
         title="Voyager 1 & 2 Interstellar Probes",
         category="deep-space",
-        content="""Launched in 1977, Voyager 1 and Voyager 2 are humanity's most distant explorers. 
-Voyager 1 entered interstellar space on August 25, 2012; Voyager 2 crossed into interstellar space on November 5, 2018. 
+        content="""Launched in 1977, Voyager 1 and Voyager 2 are humanity's most distant explorers.
+Voyager 1 entered interstellar space on August 25, 2012; Voyager 2 crossed into interstellar space on November 5, 2018.
 Both probes carry a 12-inch gold-plated copper phonograph record containing sounds, music, and images from Earth.""",
         source="NASA JPL Interstellar Mission Archive",
         metadata={"body": "deep-space", "voyager1": "interstellar", "voyager2": "interstellar"}
@@ -130,19 +145,20 @@ Both probes carry a 12-inch gold-plated copper phonograph record containing soun
         doc_id="mangalyaan-overview",
         title="Mars Orbiter Mission (Mangalyaan) Overview & Frugal Engineering",
         category="orbiter",
-        content="""India's Mars Orbiter Mission (MOM), unofficially dubbed Mangalyaan, was India's first interplanetary expedition 
-and one of the greatest feats of frugal aerospace engineering in human history. Built in a record 15 months for ₹450 crore 
-(~$74 million USD), it launched on 5 November 2013 on a PSLV-XL rocket and entered Mars orbit on 24 September 2014 on its very 
-first attempt — making India the first Asian nation to reach Mars and the first in the world to succeed on a maiden trial. 
+        content="""India's Mars Orbiter Mission (MOM), unofficially dubbed Mangalyaan, was India's first interplanetary expedition
+and one of the greatest feats of frugal aerospace engineering in human history. Built in a record 15 months for ₹450 crore
+(~$74 million USD), it launched on 5 November 2013 on a PSLV-XL rocket and entered Mars orbit on 24 September 2014 on its very
+first attempt — making India the first Asian nation to reach Mars and the first in the world to succeed on a maiden trial.
 Designed for 6 months, Mangalyaan operated for nearly 8 years until April 2022.""",
         source="ISRO Mars Orbiter Mission Official Archive (isro.gov.in/MarsOrbiterMission.html)",
         metadata={"body": "mars", "agency": "ISRO", "launch": "2013-11-05", "arrival": "2014-09-24", "status": "silent"}
     ),
+
     KnowledgeDocument(
         doc_id="mangalyaan-instruments-hardware",
         title="Mangalyaan Spacecraft Engineering, Bus & 5 Scientific Payloads",
         category="hardware",
-        content="""Mangalyaan was built on an adapted I-1K satellite bus with a total launch mass of 1,337 kg. 
+        content="""Mangalyaan was built on an adapted I-1K satellite bus with a total launch mass of 1,337 kg.
 Key subsystems:
 1. 440N Liquid Apogee Motor (LAM): Bipropellant engine (MMH + MON-3) that completed the 1,388s Mars Orbit Insertion burn.
 2. Solar Wing: Three panels (7.56 m² total) generating 840 W at Mars, backed by a 36 Ah lithium-ion battery.
@@ -155,30 +171,41 @@ Key subsystems:
         source="ISRO Satellite Centre (ISAC) Engineering Specifications",
         metadata={"spacecraft": "Mangalyaan", "subsystems": ["LAM", "HGA", "MCC", "LAP", "MSM", "TIS", "MENCA"]}
     ),
+
     KnowledgeDocument(
         doc_id="mangalyaan-moi-slingshot",
         title="Oberth Slingshot Trajectory and 24-Minute Mars Orbit Insertion Burn",
         category="trajectory",
-        content="""Because the PSLV rocket lacked the power to push Mangalyaan directly onto a trans-Mars trajectory, 
-ISRO utilized the Oberth effect. Over 25 days, six progressive engine firings at Earth perigee raised the spacecraft's apogee 
-from 23,000 km to nearly 193,000 km before Trans-Mars Injection on 1 December 2013. 
-On 24 September 2014, after 298 days of deep space cruise, the main 440N engine was reignited behind the dark side of Mars 
+        content="""Because the PSLV rocket lacked the power to push Mangalyaan directly onto a trans-Mars trajectory,
+ISRO utilized the Oberth effect. Over 25 days, six progressive engine firings at Earth perigee raised the spacecraft's apogee
+from 23,000 km to nearly 193,000 km before Trans-Mars Injection on 1 December 2013.
+On 24 September 2014, after 298 days of deep space cruise, the main 440N engine was reignited behind the dark side of Mars
 during total radio blackout, firing for 1,388 seconds to decelerate the probe by 1,098 m/s into a 421 km × 76,993 km elliptical orbit.""",
         source="ISRO Mission Operations Complex (MOX) Flight Telemetry",
         metadata={"body": "mars", "moi_date": "2014-09-24", "delta_v": "1098 m/s", "burn_duration": "1388s"}
     ),
 ]
 
+
 class RAGEngine:
+
     def __init__(self):
         self.docs = NASA_DOCUMENTS
 
-    def search(self, query: str, context: Optional[Dict[str, Any]] = None, top_k: int = 3) -> List[KnowledgeDocument]:
+    def search(
+        self,
+        query: str,
+        context: Optional[Dict[str, Any]] = None,
+        top_k: int = 3
+    ) -> List[KnowledgeDocument]:
+
         tokens = set(re.findall(r"\w+", query.lower()))
+
         if not tokens:
             return self.docs[:top_k]
 
         scored_docs = []
+
         for doc in self.docs:
             score = 0
             doc_text = f"{doc.title} {doc.content}".lower()
@@ -195,42 +222,55 @@ class RAGEngine:
 
             # Context boost
             if context:
-                if context.get("selected_artifact") and context["selected_artifact"].lower() in doc_text:
+                if (
+                    context.get("selected_artifact")
+                    and context["selected_artifact"].lower() in doc_text
+                ):
                     score += 6
-                if context.get("selected_component") and context["selected_component"].lower() in doc_text:
+
+                if (
+                    context.get("selected_component")
+                    and context["selected_component"].lower() in doc_text
+                ):
                     score += 8
-                if context.get("selected_planet") and context["selected_planet"].lower() in doc_text:
+
+                if (
+                    context.get("selected_planet")
+                    and context["selected_planet"].lower() in doc_text
+                ):
                     score += 4
 
             if score > 0:
                 scored_docs.append((score, doc))
 
         scored_docs.sort(key=lambda x: x[0], reverse=True)
+
         results = [doc for _, doc in scored_docs[:top_k]]
+
         return results if results else self.docs[:top_k]
 
-   
-    
-    def answer_query(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def answer_query(
+        self,
+        query: str,
+        context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """
-        Retrieves NASA archive knowledge and generates a grounded Gemini response.
-        Falls back to local archive synthesis if Gemini is unavailable.
+        Retrieves NASA archive knowledge and generates a grounded
+        response using OpenRouter.
+        Falls back to local archive synthesis if OpenRouter is unavailable.
         """
+
         retrieved_docs = self.search(query, context, top_k=3)
         sources = list(dict.fromkeys(d.source for d in retrieved_docs))
 
-        api_key = os.getenv("GEMINI_API_KEY")
+        api_key = os.getenv("OPENROUTER_API_KEY")
 
         if api_key:
             try:
-                from google.genai import types
-
-                client = genai.Client(
-                api_key=api_key,
-                http_options=types.HttpOptions(
-                timeout=120000
+                client = OpenAI(
+                    api_key=api_key,
+                    base_url="https://openrouter.ai/api/v1"
                 )
-)
 
                 context_str = "\n\n".join(
                     [f"[{d.title}]: {d.content}" for d in retrieved_docs]
@@ -255,36 +295,45 @@ Instructions:
 7. Do not invent sources. Use only the provided archive sources.
 
 Answer the visitor's question:"""
-                print("sending request to gemini...", flush=True)
-                response = client.models.generate_content(
-                    model="gemini-3.5-flash-lite",
-                    contents=prompt,
-                    config={"http_options": {"timeout": 30000}}
+
+                print("Sending request to OpenRouter...", flush=True)
+
+                response = client.chat.completions.create(
+                    model="openrouter/free",
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": prompt
+                        }
+                    ],
+                    timeout=60
                 )
-                print("gemini response recieved", flush=True)
-                if response.text:
+
+                print("OpenRouter response received!", flush=True)
+
+                if (
+                    response.choices
+                    and response.choices[0].message.content
+                ):
                     return {
-                        "answer": response.text,
+                        "answer": response.choices[0].message.content,
                         "sources": sources,
-                        "model": "gemini-3.5-flash-lite (Live NASA RAG)"
+                        "model": f"{response.model} (OpenRouter NASA RAG)"
                     }
 
-                print("Gemini returned an empty response.")
+                print(
+                    "OpenRouter returned an empty response.",
+                    flush=True
+                )
 
             except Exception as e:
-                    print("GEMINI FAILED:", repr(e), flush=True)
+                print("OPENROUTER FAILED:", repr(e), flush=True)
 
-                    return {
-                    "answer": f"Gemini API failed: {type(e).__name__}: {str(e)}",
-                    "sources": sources,
-                    "model": "Gemini Error Diagnostic"
-                    }
-
-            return {
-            "answer": "GEMINI_API_KEY is missing. Check your backend .env file.",
-            "sources": sources,
-            "model": "Configuration Error"
-            }
+        else:
+            print(
+                "OPENROUTER_API_KEY is missing. Using archive fallback.",
+                flush=True
+            )
 
         # Grounded Archive Synthesis fallback
         primary = retrieved_docs[0]
@@ -296,6 +345,7 @@ Answer the visitor's question:"""
 
         if secondary:
             answer_parts.append("\n**Related Mission Context:**")
+
             for sec in secondary:
                 answer_parts.append(
                     f"- **{sec.title}**: {sec.content[:160]}..."
@@ -303,8 +353,11 @@ Answer the visitor's question:"""
 
         if context and any(context.values()):
             ctx_items = [
-                f"{k}: {v}" for k, v in context.items() if v
+                f"{k}: {v}"
+                for k, v in context.items()
+                if v
             ]
+
             answer_parts.append(
                 f"\n*(Grounded in current exploration context: {', '.join(ctx_items)})*"
             )
@@ -317,4 +370,3 @@ Answer the visitor's question:"""
 
 
 rag_engine = RAGEngine()
-
