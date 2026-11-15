@@ -18,6 +18,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { KurzgesagtBird } from "./KurzgesagtBird";
 
+const API_BASE_URL = (
+  (import.meta.env["VITE_API_BASE_URL"] as string | undefined) || "http://localhost:8000"
+).replace(/\/$/, "");
+
 interface ChatMessage {
   id: string;
   sender: "user" | "astro";
@@ -53,7 +57,7 @@ export function AstroCopilot() {
 
   // Check Python backend health once
   useEffect(() => {
-    fetch("http://localhost:8000/api/health")
+    fetch(`${API_BASE_URL}/api/health`)
       .then((res) => {
         if (res.ok) setBackendAvailable(true);
         else setBackendAvailable(false);
@@ -106,7 +110,7 @@ export function AstroCopilot() {
     try {
       // Try local FastAPI backend first
       if (backendAvailable !== false) {
-        const response = await fetch("http://localhost:8000/api/chat", {
+        const response = await fetch(`${API_BASE_URL}/api/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

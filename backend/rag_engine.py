@@ -7,6 +7,14 @@ from typing import List, Dict, Any, Optional
 import os
 import re
 
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+
+# Always load the .env file located inside the backend folder or workspace root
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
+
 class KnowledgeDocument:
     def __init__(self, doc_id: str, title: str, category: str, content: str, source: str, metadata: Dict[str, Any]):
         self.doc_id = doc_id
@@ -204,23 +212,31 @@ class RAGEngine:
 
     def answer_query(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        Retrieves knowledge and formats an authentic response.
-        If LLM API is available in environment (GEMINI_API_KEY), queries the model;
-        otherwise synthesizes a grounded response directly from verified archives.
+        Retrieves NASA archive knowledge and generates a grounded Gemini response.
+        Falls back to local archive synthesis if Gemini is unavailable or not configured.
         """
         retrieved_docs = self.search(query, context, top_k=3)
-        sources = list(set(d.source for d in retrieved_docs))
+        sources = list(dict.fromkeys(d.source for d in retrieved_docs))
 
         # Check for Gemini API key
         api_key = os.getenv("GEMINI_API_KEY")
+
         if api_key:
             try:
-                import google.generativeai as genai
-                genai.configure(api_key=api_key)
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                client = genai.Client(
+                    api_key=api_key,
+                    http_options=types.HttpOptions(
+                        timeout=120000
+                    )
+                )
 
-                context_str = "\n\n".join([f"[{d.title}]: {d.content}" for d in retrieved_docs])
-                prompt = f"""You are ASTRO, an intelligent NASA Space Exploration Copilot for the 'Abandoned but Not Forgotten' museum.
+                context_str = "\n\n".join(
+                    [f"[{d.title}]: {d.content}" for d in retrieved_docs]
+                )
+
+                prompt = f"""You are ASTRO, an intelligent NASA Space Exploration Copilot
+for the 'Abandoned but Not Forgotten' museum.
+
 Context Knowledge from NASA Archives:
 {context_str}
 
@@ -228,21 +244,59 @@ Visitor Context: {context}
 Visitor Question: {query}
 
 Instructions:
-1. Answer accurately using only verified facts from the context.
-2. Maintain a knowledgeable, inspiring, Kurzgesagt-style scientific storytelling tone.
-3. If referring to a component or mission, explain what happened and why it matters.
-4. State sources clearly."""
-                resp = model.generate_content(prompt)
-                return {
-                    "answer": resp.text,
-                    "sources": sources,
-                    "model": "gemini-1.5-flash (Live NASA RAG)"
-                }
-            except Exception as e:
-                # Graceful fallback to grounded archive retrieval
-                pass
+1. Answer accurately using the provided context.
+2. Do not invent facts or unsupported mission details.
+3. If the context does not contain enough information, clearly say so.
+4. Maintain a knowledgeable, inspiring scientific storytelling tone.
+5. Explain relevant spacecraft components and their significance.
+6. Keep the response engaging and easy to understand.
+7. Do not invent sources. Use only the provided archive sources.
 
-        # Grounded Archive Synthesis
+Answer the visitor's question:"""
+
+                candidate_models = []
+                user_model = os.getenv("GEMINI_MODEL")
+                if user_model:
+                    candidate_models.append(user_model)
+                for fallback_m in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
+                    if fallback_m not in candidate_models:
+                        candidate_models.append(fallback_m)
+
+                last_error = None
+                for model_candidate in candidate_models:
+                    try:
+                        print(f"sending request to gemini ({model_candidate})...", flush=True)
+                        response = client.models.generate_content(
+                            model=model_candidate,
+                            contents=prompt,
+                            config={"http_options": {"timeout": 30000}}
+                        )
+                        print("gemini response received", flush=True)
+                        if response and response.text:
+                            return {
+                                "answer": response.text,
+                                "sources": sources,
+                                "model": f"{model_candidate} (Live NASA RAG)"
+                            }
+                    except Exception as err:
+                        last_error = err
+                        print(f"Model {model_candidate} attempt failed: {err}", flush=True)
+                        err_str = str(err).lower()
+                        if "api key not valid" in err_str or "permission" in err_str or "unauthenticated" in err_str:
+                            break
+
+                if last_error:
+                    raise last_error
+
+            except Exception as e:
+                print("GEMINI FAILED:", repr(e), flush=True)
+                return {
+                    "answer": f"Gemini API failed: {type(e).__name__}: {str(e)}",
+                    "sources": sources,
+                    "model": "Gemini Error Diagnostic"
+                }
+
+        # Grounded Archive Synthesis fallback
         primary = retrieved_docs[0]
         secondary = retrieved_docs[1:] if len(retrieved_docs) > 1 else []
 
@@ -253,11 +307,17 @@ Instructions:
         if secondary:
             answer_parts.append("\n**Related Mission Context:**")
             for sec in secondary:
-                answer_parts.append(f"- **{sec.title}**: {sec.content[:160]}...")
+                answer_parts.append(
+                    f"- **{sec.title}**: {sec.content[:160]}..."
+                )
 
         if context and any(context.values()):
-            ctx_items = [f"{k}: {v}" for k, v in context.items() if v]
-            answer_parts.append(f"\n*(Grounded in current exploration context: {', '.join(ctx_items)})*")
+            ctx_items = [
+                f"{k}: {v}" for k, v in context.items() if v
+            ]
+            answer_parts.append(
+                f"\n*(Grounded in current exploration context: {', '.join(ctx_items)})*"
+            )
 
         return {
             "answer": "\n".join(answer_parts),

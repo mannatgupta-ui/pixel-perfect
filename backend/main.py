@@ -8,7 +8,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 import os
+import sys
 
+sys.path.insert(0, os.path.dirname(__file__))
 from rag_engine import rag_engine
 
 app = FastAPI(
