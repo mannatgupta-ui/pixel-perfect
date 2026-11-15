@@ -6,6 +6,7 @@ Grounded in authentic NASA mission archives, NSSDCA, and JPL telemetry logs.
 from typing import List, Dict, Any, Optional
 import os
 import re
+import json
 
 from dotenv import load_dotenv
 from google import genai
@@ -172,36 +173,126 @@ during total radio blackout, firing for 1,388 seconds to decelerate the probe by
 
 class RAGEngine:
     def __init__(self):
-        self.docs = NASA_DOCUMENTS
+        self.docs = []
+        json_path = os.path.join(os.path.dirname(__file__), "nasa_knowledge_base.json")
+        if os.path.exists(json_path):
+            try:
+                with open(json_path, "r", encoding="utf-8") as f:
+                    raw_docs = json.load(f)
+                for d in raw_docs:
+                    self.docs.append(
+                        KnowledgeDocument(
+                            doc_id=d.get("doc_id", ""),
+                            title=d.get("title", ""),
+                            category=d.get("category", "general"),
+                            content=d.get("content", ""),
+                            source=d.get("source", "NASA Mission Archives"),
+                            metadata=d.get("metadata", {})
+                        )
+                    )
+            except Exception as e:
+                print(f"Warning: could not load {json_path}: {e}", flush=True)
 
-    def search(self, query: str, context: Optional[Dict[str, Any]] = None, top_k: int = 3) -> List[KnowledgeDocument]:
-        tokens = set(re.findall(r"\w+", query.lower()))
-        if not tokens:
-            return self.docs[:top_k]
+        if not self.docs:
+            self.docs = list(NASA_DOCUMENTS)
+        else:
+            # Also append any embedded documents not already in the list
+            existing_ids = set(d.doc_id for d in self.docs)
+            for d in NASA_DOCUMENTS:
+                if d.doc_id not in existing_ids:
+                    self.docs.append(d)
+
+    def search(self, query: str, context: Optional[Dict[str, Any]] = None, top_k: int = 4) -> List[KnowledgeDocument]:
+        query_lower = query.lower()
+        tokens = set(re.findall(r"\w+", query_lower))
+
+        # Check if the query is a deictic reference to current location/page
+        deictic_phrases = [
+            "the page", "this page", "current page", "here", "what is this",
+            "what am i looking at", "tell me about this", "explain this",
+            "explain me about the page", "what does this do", "about this mission",
+            "this artifact", "this spacecraft", "this rover", "this lander",
+            "this planet", "this body", "this stage", "this chapter"
+        ]
+        is_page_referral = any(p in query_lower for p in deictic_phrases) or len(tokens) <= 3
+
+        # Extract context keywords
+        artifact_name = str(context.get("selected_artifact") or "").strip().lower() if context else ""
+        mission_name = str(context.get("selected_mission") or "").strip().lower() if context else ""
+        planet_name = str(context.get("selected_planet") or "").strip().lower() if context else ""
+        component_name = str(context.get("selected_component") or "").strip().lower() if context else ""
+        stage_name = str(context.get("current_story_stage") or "").strip().lower() if context else ""
+
+        stop_words = {
+            "the", "a", "an", "is", "are", "was", "were", "in", "on", "at", "to",
+            "for", "of", "with", "about", "me", "you", "it", "this", "that", "page",
+            "what", "tell", "explain", "who", "why", "how", "and", "or", "from"
+        }
+        meaningful_query_tokens = [t for t in tokens if t not in stop_words and len(t) > 2]
 
         scored_docs = []
         for doc in self.docs:
             score = 0
             doc_text = f"{doc.title} {doc.content}".lower()
             doc_tokens = set(re.findall(r"\w+", doc_text))
+            doc_meta = getattr(doc, "metadata", {}) or {}
 
-            # Token overlap
-            overlap = tokens.intersection(doc_tokens)
-            score += len(overlap) * 3
-
-            # Exact title matches
-            for token in tokens:
-                if len(token) > 2 and token in doc.title.lower():
-                    score += 5
-
-            # Context boost
-            if context:
-                if context.get("selected_artifact") and context["selected_artifact"].lower() in doc_text:
-                    score += 6
-                if context.get("selected_component") and context["selected_component"].lower() in doc_text:
-                    score += 8
-                if context.get("selected_planet") and context["selected_planet"].lower() in doc_text:
+            # 1. Meaningful query token overlap
+            for t in meaningful_query_tokens:
+                if t in doc_tokens:
                     score += 4
+                if t in doc.title.lower():
+                    score += 8
+
+            # 2. Contextual alignment
+            # A. Artifact match
+            if artifact_name:
+                doc_art_id = str(doc_meta.get("artifactId", "")).lower()
+                doc_art_name = str(doc_meta.get("name", "")).lower()
+                art_tokens = [t for t in re.findall(r"\w+", artifact_name) if t not in stop_words and len(t) > 2]
+
+                if artifact_name in doc_art_name or (doc_art_id and doc_art_id in artifact_name):
+                    score += 40 if is_page_referral else 16
+                elif art_tokens and any(t in doc_art_name or t in doc.title.lower() for t in art_tokens):
+                    score += 25 if is_page_referral else 12
+                elif art_tokens and any(t in doc_tokens for t in art_tokens):
+                    score += 12 if is_page_referral else 6
+
+            # B. Component match
+            if component_name:
+                comp_tokens = [t for t in re.findall(r"\w+", component_name) if t not in stop_words and len(t) > 2]
+                if component_name in doc_text:
+                    score += 35
+                elif comp_tokens and any(t in doc_tokens for t in comp_tokens):
+                    score += 18
+
+            # C. Story Stage / Chapter match
+            if stage_name:
+                stage_tokens = [t for t in re.findall(r"\w+", stage_name) if t not in stop_words and len(t) > 2]
+                if stage_name in doc_text:
+                    score += 20
+                elif stage_tokens and any(t in doc_tokens for t in stage_tokens):
+                    score += 10
+
+            # D. Planet match
+            if planet_name and planet_name not in ["solar system", "deep space", "home / overview"]:
+                doc_planet = str(doc_meta.get("planet", "")).lower()
+                doc_body_id = str(doc_meta.get("bodyId", "")).lower()
+                planet_tokens = [t for t in re.findall(r"\w+", planet_name) if t not in stop_words and len(t) > 2]
+
+                # If visitor is on a planet page without a specific artifact selected
+                if not artifact_name and is_page_referral:
+                    if planet_name in doc_planet or planet_name in doc_body_id:
+                        score += 35
+                    elif planet_tokens and any(t in doc.title.lower() for t in planet_tokens):
+                        score += 25
+                    elif planet_tokens and any(t in doc_tokens for t in planet_tokens):
+                        score += 10
+                else:
+                    if planet_name in doc_planet or planet_name in doc_body_id:
+                        score += 8
+                    elif planet_tokens and any(t in doc_tokens for t in planet_tokens):
+                        score += 3
 
             if score > 0:
                 scored_docs.append((score, doc))
@@ -215,8 +306,28 @@ class RAGEngine:
         Retrieves NASA archive knowledge and generates a grounded Gemini response.
         Falls back to local archive synthesis if Gemini is unavailable or not configured.
         """
-        retrieved_docs = self.search(query, context, top_k=3)
+        retrieved_docs = self.search(query, context, top_k=4)
         sources = list(dict.fromkeys(d.source for d in retrieved_docs))
+
+        # Extract rich location string from context
+        active_location = []
+        if context:
+            if context.get("selected_artifact"):
+                active_location.append(f"Artifact: {context['selected_artifact']}")
+            if context.get("selected_mission"):
+                active_location.append(f"Mission: {context['selected_mission']}")
+            if context.get("selected_component"):
+                active_location.append(f"Selected Component/Subsystem: {context['selected_component']}")
+            if context.get("selected_planet"):
+                active_location.append(f"Celestial Body: {context['selected_planet']}")
+            if context.get("current_story_stage"):
+                active_location.append(f"Mission Stage: {context['current_story_stage']}")
+            if context.get("page_title"):
+                active_location.append(f"Page Title: {context['page_title']}")
+            if context.get("current_path"):
+                active_location.append(f"URL: {context['current_path']}")
+
+        location_str = " · ".join(active_location) if active_location else "NASA Museum Overview Deck"
 
         # Check for Gemini API key
         api_key = os.getenv("GEMINI_API_KEY")
@@ -234,25 +345,24 @@ class RAGEngine:
                     [f"[{d.title}]: {d.content}" for d in retrieved_docs]
                 )
 
-                prompt = f"""You are ASTRO, an intelligent NASA Space Exploration Copilot
-for the 'Abandoned but Not Forgotten' museum.
+                prompt = f"""You are ASTRO, an intelligent NASA Space Exploration Copilot and scientific guide for the 'Abandoned but Not Forgotten' museum.
 
-Context Knowledge from NASA Archives:
+VISITOR'S CURRENT LOCATION & VIEW:
+{location_str}
+
+RELEVANT ARCHIVE KNOWLEDGE:
 {context_str}
 
-Visitor Context: {context}
-Visitor Question: {query}
+VISITOR QUESTION:
+{query}
 
-Instructions:
-1. Answer accurately using the provided context.
-2. Do not invent facts or unsupported mission details.
-3. If the context does not contain enough information, clearly say so.
-4. Maintain a knowledgeable, inspiring scientific storytelling tone.
-5. Explain relevant spacecraft components and their significance.
-6. Keep the response engaging and easy to understand.
-7. Do not invent sources. Use only the provided archive sources.
-
-Answer the visitor's question:"""
+CRITICAL INSTRUCTIONS:
+1. You are fully contextually aware of where the visitor is right now ({location_str}).
+2. If the visitor asks 'explain me about the page', 'what is this?', 'what am I looking at?', or asks any general question, directly explain the specific artifact, celestial body, mission stage, or hardware shown at their current location ({location_str}). Never claim you do not know about their current location if archive documents are provided.
+3. Adopt ASTRO's warm, knowledgeable, inspiring Kurzgesagt-style scientific storytelling voice.
+4. Ground your answer in the provided NASA archive records. Mention key engineering details, why the mission was launched, scientific discoveries made, and why the hardware was ultimately left behind or concluded.
+5. If the visitor asks about a specific subsystem or instrument, explain its purpose, specifications, and what it achieved.
+6. Emphasize why this piece of humanity's space legacy is unforgettable."""
 
                 candidate_models = []
                 user_model = os.getenv("GEMINI_MODEL")
@@ -308,15 +418,12 @@ Answer the visitor's question:"""
             answer_parts.append("\n**Related Mission Context:**")
             for sec in secondary:
                 answer_parts.append(
-                    f"- **{sec.title}**: {sec.content[:160]}..."
+                    f"- **{sec.title}**: {sec.content[:200]}..."
                 )
 
-        if context and any(context.values()):
-            ctx_items = [
-                f"{k}: {v}" for k, v in context.items() if v
-            ]
+        if location_str:
             answer_parts.append(
-                f"\n*(Grounded in current exploration context: {', '.join(ctx_items)})*"
+                f"\n*(Grounded in current exploration context: {location_str})*"
             )
 
         return {

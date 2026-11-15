@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { useAstro } from "./AstroContext";
 import { generateContextualAnswer } from "@/lib/astroKnowledge";
+import { ARTIFACTS } from "@/data/artifacts";
+import { BODIES } from "@/data/bodies";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { KurzgesagtBird } from "./KurzgesagtBird";
@@ -107,6 +109,51 @@ export function AstroCopilot() {
     let answerText = "";
     let sources: string[] = ["NASA Mission Records"];
 
+    const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
+    const pageTitle = typeof document !== "undefined" ? document.title : "";
+
+    let activeArtifact = context.selectedArtifact;
+    let activePlanet = context.selectedPlanet;
+    let activeMission = context.selectedMission;
+
+    if (!activeArtifact && currentPath.includes("/artifact/")) {
+      const aid = currentPath.split("/artifact/")[1]?.split("/")[0]?.split("?")[0];
+      if (aid) {
+        const found = ARTIFACTS.find((a) => a.id === aid);
+        if (found) {
+          activeArtifact = found.name;
+          activeMission = activeMission || found.mission;
+          activePlanet = activePlanet || found.bodyId;
+        }
+      }
+    } else if (!activeArtifact && currentPath.includes("/experience/")) {
+      const aid = currentPath.split("/experience/")[1]?.split("/")[0]?.split("?")[0];
+      if (aid) {
+        const found = ARTIFACTS.find((a) => a.id === aid);
+        if (found) {
+          activeArtifact = found.name;
+          activeMission = activeMission || found.mission;
+          activePlanet = activePlanet || found.bodyId;
+        }
+      }
+    } else if (!activeArtifact && currentPath.includes("/story/")) {
+      const aid = currentPath.split("/story/")[1]?.split("/")[0]?.split("?")[0];
+      if (aid) {
+        const found = ARTIFACTS.find((a) => a.id === aid);
+        if (found) {
+          activeArtifact = found.name;
+          activeMission = activeMission || found.mission;
+          activePlanet = activePlanet || found.bodyId;
+        }
+      }
+    } else if (!activePlanet && currentPath.includes("/planet/")) {
+      const pid = currentPath.split("/planet/")[1]?.split("/")[0]?.split("?")[0];
+      if (pid) {
+        const b = BODIES.find((item) => item.id === pid);
+        if (b) activePlanet = b.name;
+      }
+    }
+
     try {
       // Try local FastAPI backend first
       if (backendAvailable !== false) {
@@ -116,11 +163,13 @@ export function AstroCopilot() {
           body: JSON.stringify({
             query: q,
             context: {
-              selected_planet: context.selectedPlanet,
-              selected_mission: context.selectedMission,
-              selected_artifact: context.selectedArtifact,
+              selected_planet: activePlanet,
+              selected_mission: activeMission,
+              selected_artifact: activeArtifact,
               selected_component: context.selectedComponent,
               current_story_stage: context.currentStoryStage,
+              current_path: currentPath,
+              page_title: pageTitle,
             },
           }),
         });
@@ -137,7 +186,12 @@ export function AstroCopilot() {
       }
     } catch {
       // Offline fallback: verified knowledge retrieval
-      const result = generateContextualAnswer(q, context);
+      const result = generateContextualAnswer(q, {
+        ...context,
+        selectedArtifact: (activeArtifact ?? context.selectedArtifact) || null,
+        selectedPlanet: (activePlanet ?? context.selectedPlanet) || null,
+        selectedMission: (activeMission ?? context.selectedMission) || null,
+      });
       answerText = result.answer;
       sources = result.sources;
     } finally {

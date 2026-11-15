@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Eye } from "lucide-react";
 import { getStoryForArtifact } from "@/data/multiStories";
 import { getArtifact } from "@/data/artifacts";
 import { MissionStoryPlayer } from "@/components/story/MissionStoryPlayer";
 import { Button } from "@/components/ui/button";
+import { useAstro } from "@/components/astro/AstroContext";
 
 interface StorySearch {
   stage?: number;
@@ -41,6 +43,17 @@ export const Route = createFileRoute("/story/$artifactId")({
 function StoryPage() {
   const { artifact } = Route.useLoaderData();
   const { stage } = Route.useSearch();
+  const { updateContext } = useAstro();
+
+  useEffect(() => {
+    updateContext({
+      selectedArtifact: artifact.name,
+      selectedMission: artifact.mission,
+      selectedPlanet: artifact.bodyId ?? "Deep Space",
+      selectedComponent: null,
+      currentStoryStage: stage !== undefined ? `Stage ${stage + 1}` : "Mission Story",
+    });
+  }, [artifact, stage, updateContext]);
 
   return (
     <main className="relative min-h-[100svh] bg-background pt-[84px] pb-16">

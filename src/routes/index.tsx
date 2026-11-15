@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight, Globe2, Orbit, Radio } from "lucide-react";
@@ -7,6 +8,7 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { ARTIFACTS } from "@/data/artifacts";
 import { STORY_DISCLAIMER } from "@/data/spirit";
+import { useAstro } from "@/components/astro/AstroContext";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -42,6 +44,18 @@ const fadeUp = {
 };
 
 function Index() {
+  const { updateContext } = useAstro();
+
+  useEffect(() => {
+    updateContext({
+      selectedPlanet: "Home / Overview Deck",
+      selectedArtifact: null,
+      selectedMission: null,
+      selectedComponent: null,
+      currentStoryStage: null,
+    });
+  }, [updateContext]);
+
   return (
     <main className="min-h-screen bg-background">
       {/* HERO */}

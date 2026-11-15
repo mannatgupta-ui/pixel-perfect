@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
 import { getArtifact } from "@/data/artifacts";
 import { MissionExperience } from "@/components/experience/MissionExperience";
+import { useAstro } from "@/components/astro/AstroContext";
 
 interface ExperienceSearch {
   chapter?: number;
@@ -40,6 +42,17 @@ function MissionExperiencePage() {
   const { artifact } = Route.useLoaderData();
   const { chapter, camera } = Route.useSearch();
   const navigate = useNavigate();
+  const { updateContext } = useAstro();
+
+  useEffect(() => {
+    updateContext({
+      selectedArtifact: artifact.name,
+      selectedMission: artifact.mission,
+      selectedPlanet: artifact.bodyId ?? "Deep Space",
+      selectedComponent: null,
+      currentStoryStage: chapter !== undefined ? `Chapter ${chapter + 1}` : "Simulation Experience",
+    });
+  }, [artifact, chapter, updateContext]);
 
   const handleClose = () => {
     navigate({
