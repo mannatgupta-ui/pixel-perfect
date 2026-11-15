@@ -258,7 +258,7 @@ Answer the visitor's question:"""
                 user_model = os.getenv("GEMINI_MODEL")
                 if user_model:
                     candidate_models.append(user_model)
-                for fallback_m in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
+                for fallback_m in ["gemini-2.5-flash", "gemini-3.5-flash-lite"]:
                     if fallback_m not in candidate_models:
                         candidate_models.append(fallback_m)
 
