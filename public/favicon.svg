@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Thrust Flame Exhaust -->
+  <path d="M24 40 L16 45 L9 54 L8 57 L11 55 L20 48 L24 52 L26 51 L28 44 Z" fill="url(#flameOuter)"/>
+  <path d="M23 41 L17 46 L12 52 L11 54 L13 53 L20 48 L24 50 L27 45 Z" fill="url(#flameMid)"/>
+  <path d="M23 42 L18 47 L15 51 L17 50 L21 47 L24 49 L26 45 Z" fill="url(#flameCore)"/>
+
+  <!-- Left Fin -->
+  <path d="M24 34 L17 36 L14 43 L15 45 L22 43 L27 40 Z" fill="url(#finGrad)"/>
+
+  <!-- Right Fin -->
+  <path d="M34 24 L36 17 L43 14 L45 15 L43 22 L40 27 Z" fill="url(#finGrad)"/>
+
+  <!-- Nozzle Ring -->
+  <path d="M23 39 L28 44 L26 47 L21 42 Z" fill="#334155"/>
+
+  <!-- Fuselage / Rocket Body -->
+  <path d="M53 11 C49 13 42 17 35 23 C28 30 24 38 24 39 L25 41 L27 42 C28 42 36 38 43 31 C49 24 53 17 55 13 C55 12 54 11 53 11 Z" fill="url(#fuselageGrad)"/>
+
+  <!-- Dorsal Fin Stripe -->
+  <path d="M32 32 L27 37 L26 41 L28 39 L33 34 Z" fill="#e11d48"/>
+
+  <!-- Nose Cone Cap -->
+  <path d="M53 11 C51 12 48 13 46 15 L51 20 C53 18 54 15 55 13 C55 12 54 11 53 11 Z" fill="#e11d48"/>
+
+  <!-- Porthole Window Outer Ring -->
+  <circle cx="41" cy="23" r="5" fill="#334155" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Porthole Glass -->
+  <circle cx="41" cy="23" r="3.6" fill="url(#windowGrad)"/>
+
+  <!-- Glass Specular Highlight -->
+  <circle cx="39.5" cy="21.5" r="1.2" fill="#ffffff" opacity="0.9"/>
+
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="fuselageGrad" x1="24" y1="40" x2="55" y2="11" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#cbd5e1"/>
+      <stop offset="35%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+
+    <linearGradient id="finGrad" x1="15" y1="40" x2="40" y2="15" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="100%" stop-color="#e11d48"/>
+    </linearGradient>
+
+    <linearGradient id="flameOuter" x1="28" y1="44" x2="8" y2="57" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="60%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </linearGradient>
+
+    <linearGradient id="flameMid" x1="27" y1="45" x2="11" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="70%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+
+    <linearGradient id="flameCore" x1="26" y1="45" x2="15" y2="51" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#facc15"/>
+    </linearGradient>
+
+    <linearGradient id="windowGrad" x1="38" y1="20" x2="44" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+  </defs>
+</svg>
