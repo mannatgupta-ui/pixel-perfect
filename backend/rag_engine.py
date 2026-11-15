@@ -10,21 +10,43 @@ import json
 import time
 
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
 
 # Always load the .env file located inside the backend folder or workspace root
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
 
+# Optional cloud LLM SDKs
+try:
+    from google import genai
+    from google.genai import types
+    HAS_GENAI = True
+except ImportError:
+    HAS_GENAI = False
+
+try:
+    from openai import OpenAI
+    HAS_OPENAI = True
+except ImportError:
+    HAS_OPENAI = False
+
+
 class KnowledgeDocument:
-    def __init__(self, doc_id: str, title: str, category: str, content: str, source: str, metadata: Dict[str, Any]):
+    def __init__(
+        self,
+        doc_id: str,
+        title: str,
+        category: str,
+        content: str,
+        source: str,
+        metadata: Dict[str, Any]
+    ):
         self.doc_id = doc_id
         self.title = title
         self.category = category
         self.content = content
         self.source = source
         self.metadata = metadata
+
 
 # Comprehensive verified NASA Mission Knowledge Archive
 NASA_DOCUMENTS = [
@@ -43,16 +65,16 @@ Spirit's mission proved that ancient Mars possessed active hydrothermal systems 
     KnowledgeDocument(
         doc_id="spirit-hardware-parts",
         title="Spirit Rover Engineering Systems & Science Instruments",
-        category="hardware",
-        content="""Spirit carried eight core hardware assemblies:
-1. Warm Electronics Box (chassis): Aerogel insulation and RHU heaters protecting central electronics from -100°C nights.
-2. Solar Arrays: 1.3 m² gallium arsenide cells producing up to 900 Wh/sol, cleaned periodically by dust devils.
-3. Pancam Mast Assembly: 1.5 m tall mast with stereo Panoramic Cameras, Navcams, and periscope for Mini-TES.
-4. Six Wheels & Rocker-Bogie: 6 cleated wheels with independent motors climbing up to 30° slopes. Front-right motor failed in 2006.
-5. Robotic Arm (IDD): 5-joint arm deploying Microscopic Imager, Alpha Particle X-ray Spectrometer (APXS), and Mössbauer Spectrometer.
-6. Rock Abrasion Tool (RAT): Diamond-tipped high-speed grinder that ground into rock Adirondack on Sol 34.
-7. High-Gain Antenna: 28 cm steerable X-band dish communicating with NASA's Deep Space Network.
-8. Low-Gain Antenna: Omnidirectional backup that saved the rover during the Sol 18 flash memory fault.""",
+        category="engineering",
+        content="""Spirit Rover Subsystems & Athena Science Payload:
+1. Rock Abrasion Tool (RAT): Diamonds-impregnated resin cutter spinning at 3000 RPM, created by Honeybee Robotics, grinds 5mm deep into Martian basalt.
+2. Mössbauer Spectrometer (MIMOS II): Developed by Mainz University; uses 57Co radioactive source to detect iron-bearing mineral oxidation states.
+3. Alpha Particle X-Ray Spectrometer (APXS): Developed by Max Planck Institute; irradiates rocks with Curium-244 to measure elemental composition.
+4. Panoramic Camera (Pancam): Mast-mounted high-resolution stereo imaging system with 16 optical filter wheels.
+5. Miniature Thermal Emission Spectrometer (Mini-TES): Infrared spectrometer identifying carbonates, silicates, and thermal inertia.
+6. High Gain Antenna (HGA): Steerable 0.28-meter parabolic dish communicating directly with Deep Space Network (DSN) on X-band.
+7. Low Gain Antenna (LGA): Omnidirectional backup antenna transmitting at 10-40 bps.
+8. Solar Array Wings: Triple-junction gallium arsenide cells producing up to 900 Wh/sol initially, declining to ~140 Wh/sol in dust seasons.""",
         source="NASA JPL MER Engineering Design Specifications",
         metadata={"rover": "Spirit", "components": ["wheels", "mast", "arm", "solar", "rat", "hga", "lga", "body"]}
     ),
@@ -75,60 +97,67 @@ This proved that ancient Gusev had both liquid water and intense geothermal volc
 Engineers commanded hundreds of maneuvers, but in November 2009 the right-rear wheel failed as well. 
 Spirit was converted to a stationary science station. With its solar panels stuck at a 9° southern tilt, it could not face the low winter Sun in the north. 
 Power dropped below heating thresholds. Spirit sent its last communication on March 22, 2010 (Sol 2210). 
-NASA transmitted more than 1,300 recovery commands before officially completing the mission on May 25, 2011.""",
-        source="NASA JPL Official Mission Status Archive",
-        metadata={"last_signal": "2010-03-22", "site": "Troy, Gusev Crater", "status": "silent"}
+On May 25, 2011, after transmitting over 1,200 recovery commands via the Deep Space Network, NASA formally concluded the mission.""",
+        source="NASA JPL MER-A Mission Archive Press Release 2011-156",
+        metadata={"body": "mars", "sol": "2210", "status": "silent", "final_coords": "-14.5684, 175.4785"}
     ),
 
     # ── OPPORTUNITY ROVER ──
     KnowledgeDocument(
-        doc_id="opportunity-overview",
+        doc_id="mer-b-overview",
         title="Opportunity Rover (MER-B) Mission",
         category="rover",
-        content="""Opportunity landed at Meridiani Planum on January 25, 2004 UTC, bouncing into Eagle Crater. 
-It discovered hematite spheres ('blueberries') formed in ancient standing groundwater. 
-Opportunity operated for nearly 15 years, driving a record 45.16 km until a global dust storm cut off solar power in June 2018 at Perseverance Valley in Endeavour Crater.""",
-        source="NASA Science — MER Opportunity Archive",
-        metadata={"body": "mars", "distance": "45.16 km", "status": "silent"}
+        content="""Opportunity (MER-B) was Spirit's twin rover, landing at Meridiani Planum on January 25, 2004 UTC. 
+Opportunity famously scored a 'hole-in-one' by rolling into Eagle Crater. 
+Over an unprecedented 14 years and 138 days (5,352 sols), Opportunity drove 45.16 km — the longest off-world driving record of any wheeled vehicle in human history. 
+Opportunity discovered 'blueberries' (hematite-rich concretions formed in neutral water) and explored endurance craters including Victoria and Endeavour. 
+A catastrophic planet-encircling dust storm in June 2018 severed solar power; the mission was officially concluded on February 13, 2019.""",
+        source="NASA JPL MER Opportunity Official Log (science.nasa.gov)",
+        metadata={"body": "mars", "distance_km": 45.16, "sols": 5352, "status": "silent"}
     ),
 
     # ── APOLLO LUNAR HARDWARE ──
     KnowledgeDocument(
-        doc_id="apollo-11-hardware",
+        doc_id="apollo-11-descent-stage",
         title="Apollo 11 Lunar Module Descent Stage and Surface Experiments",
-        category="lunar",
-        content="""On July 20, 1969, Apollo 11 landed the Lunar Module 'Eagle' at the Sea of Tranquility (0.674° N, 23.473° E). 
-While the ascent stage returned Neil Armstrong and Buzz Aldrin to orbit, the gold-insulated descent stage, landing radar, 
-EASEP seismometer, and Lunar Laser Ranging Retroreflector (LRRR) remain on the Moon. Observatories on Earth still bounce laser pulses off the reflector today.""",
-        source="NASA Apollo Surface Journal & Lunar Reconnaissance Orbiter Data",
-        metadata={"body": "moon", "mission": "Apollo 11", "date": "1969-07-20"}
+        category="apollo",
+        content="""On July 20, 1969, Apollo 11's Lunar Module 'Eagle' touched down at Mare Tranquillitatis (0.67408° N, 23.47297° E). 
+The descent stage, powered by the TRW Descent Propulsion System (DPS) throttling between 1,050 to 9,850 lbf, served as the launch platform for the ascent stage and remains on the Moon today. 
+Surrounding Eagle are the Early Apollo Scientific Experiments Package (EASEP):
+1. Passive Seismic Experiment Package (PSEP): Monitored moonquakes.
+2. Laser Ranging Retroreflector (LRRR): A 100-corner-cube quartz reflector array still actively used by Earth observatories to measure Moon distance to millimetre accuracy.
+Also remaining: television camera, solar wind composition experiment foil, solar battery, Neil Armstrong and Buzz Aldrin's commemorative plaque: 'Here men from the planet Earth first set foot upon the Moon...'""",
+        source="NASA History Division — Apollo 11 Mission Report (SP-214)",
+        metadata={"body": "moon", "site": "Mare Tranquillitatis", "year": "1969", "mass_kg": 2034}
     ),
     KnowledgeDocument(
-        doc_id="apollo-lunar-rovers",
+        doc_id="apollo-lrv",
         title="Apollo Lunar Roving Vehicles (LRV 1, 2, 3)",
-        category="lunar",
-        content="""NASA left three battery-powered Lunar Roving Vehicles on the Moon:
-- Apollo 15 LRV-1 (Hadley-Apennine, July 1971): drove 27.8 km.
-- Apollo 16 LRV-2 (Descartes Highlands, April 1972): drove 26.7 km.
-- Apollo 17 LRV-3 (Taurus-Littrow, Dec 1972): drove 35.9 km.
-Each rover featured four 1/4-horsepower DC electric motors inside woven steel wire mesh wheels with titanium chevrons.""",
-        source="NASA Apollo Program Mission Reports",
+        category="apollo",
+        content="""Boeing and General Motors built three Lunar Roving Vehicles for Apollo 15, 16, and 17. 
+Each LRV massed 210 kg on Earth (35 kg on Moon) with an open tubular aluminium chassis, four independent 0.25-horsepower DC electric motors inside each wheel, 
+and woven zinc-coated steel wire mesh tires with titanium chevrons. 
+LRV-1 (Apollo 15, Hadley-Apennine) drove 27.76 km; LRV-2 (Apollo 16, Descartes Highlands) drove 26.55 km; LRV-3 (Apollo 17, Taurus-Littrow) drove 35.89 km. 
+All three LRVs remain parked on the Moon, left precisely aimed so their color television cameras could broadcast the liftoff of the Lunar Module Ascent Stages into lunar orbit.""",
+        source="NASA SP-287 — What Made Apollo A Success: Lunar Roving Vehicle",
         metadata={"body": "moon", "missions": ["Apollo 15", "Apollo 16", "Apollo 17"]}
     ),
 
-    # ── DEEP SPACE EXPLORERS ──
+    # ── DEEP SPACE & OUTER PLANETS ──
     KnowledgeDocument(
-        doc_id="voyager-probes",
+        doc_id="voyager-interstellar",
         title="Voyager 1 & 2 Interstellar Probes",
-        category="deep-space",
+        category="probe",
         content="""Launched in 1977, Voyager 1 and Voyager 2 are humanity's most distant explorers. 
 Voyager 1 entered interstellar space on August 25, 2012; Voyager 2 crossed into interstellar space on November 5, 2018. 
-Both probes carry a 12-inch gold-plated copper phonograph record containing sounds, music, and images from Earth.""",
+Each carries the Golden Record: a 12-inch gold-plated copper disc containing 115 images, sounds of Earth, 90 minutes of music, and greetings in 55 languages. 
+Powered by Plutonium-238 Radioisotope Thermoelectric Generators (RTGs), both probes continue transmitting scientific data across more than 24 billion kilometres. 
+They will drift through the Milky Way indefinitely, surviving for millions of years as cultural and technological monuments of our civilization.""",
         source="NASA JPL Interstellar Mission Archive",
-        metadata={"body": "deep-space", "voyager1": "interstellar", "voyager2": "interstellar"}
+        metadata={"body": "interstellar", "launch": "1977", "distance_au": ">160 AU"}
     ),
 
-    # ── MANGALYAAN (MARS ORBITER MISSION) — ISRO ──
+    # ── MANGALYAAN (ISRO MARS ORBITER MISSION) ──
     KnowledgeDocument(
         doc_id="mangalyaan-overview",
         title="Mars Orbiter Mission (Mangalyaan) Overview & Frugal Engineering",
@@ -139,31 +168,32 @@ and one of the greatest feats of frugal aerospace engineering in human history. 
 first attempt — making India the first Asian nation to reach Mars and the first in the world to succeed on a maiden trial. 
 Designed for 6 months, Mangalyaan operated for nearly 8 years until April 2022.""",
         source="ISRO Mars Orbiter Mission Official Archive (isro.gov.in/MarsOrbiterMission.html)",
-        metadata={"body": "mars", "agency": "ISRO", "launch": "2013-11-05", "arrival": "2014-09-24", "status": "silent"}
+        metadata={"body": "mars", "agency": "ISRO", "cost_usd": 74000000, "launch": "2013-11-05", "orbit_insertion": "2014-09-24"}
     ),
     KnowledgeDocument(
-        doc_id="mangalyaan-instruments-hardware",
+        doc_id="mangalyaan-engineering",
         title="Mangalyaan Spacecraft Engineering, Bus & 5 Scientific Payloads",
-        category="hardware",
+        category="engineering",
         content="""Mangalyaan was built on an adapted I-1K satellite bus with a total launch mass of 1,337 kg. 
 Key subsystems:
-1. 440N Liquid Apogee Motor (LAM): Bipropellant engine (MMH + MON-3) that completed the 1,388s Mars Orbit Insertion burn.
-2. Solar Wing: Three panels (7.56 m² total) generating 840 W at Mars, backed by a 36 Ah lithium-ion battery.
-3. 2.2m High-Gain Antenna (HGA): Steerable dual-axis parabolic dish for X-band communication across 400M km.
-4. Mars Colour Camera (MCC): 3-color CCD returning >1,000 full-disk color portraits of Mars and Phobos.
-5. Lyman Alpha Photometer (LAP): UV photometer measuring D/H ratio and hydrogen loss from the upper atmosphere.
-6. Methane Sensor for Mars (MSM): Differential absorption Fabry-Pérot interferometer searching for biological/geothermal methane.
-7. Thermal IR Spectrometer (TIS): Microbolometer measuring surface temperatures and mineral emissivity.
-8. MENCA: Quadrupole mass spectrometer analyzing neutral exospheric composition.""",
+1. 440N Liquid Apogee Motor (LAM): Bipropellant engine burning Monomethylhydrazine (MMH) and MON-3 oxidiser.
+2. Solar Array: Single wing of 3 solar panels (1.8m × 1.4m) generating 840W at Mars.
+3. 2.2-meter High Gain Parabolic Reflector Antenna operating on S-band and X-band.
+4. Scientific Payloads (15 kg total):
+   - Mars Colour Camera (MCC): High-resolution tri-colour imager producing over 1,000 global Martian portraits.
+   - Thermal Infrared Imaging Spectrometer (TIS): Measures thermal emissions to map surface mineral composition.
+   - Methane Sensor for Mars (MSM): Fabry-Pérot etalon measuring methane absorption lines at 1.65 µm.
+   - Lyman-Alpha Photometer (LAP): Photometer measuring deuterium-to-hydrogen ratio to quantify atmospheric water loss.
+   - Mars Exospheric Neutral Composition Analyser (MENCA): Quadrupole mass spectrometer measuring exospheric particle density.""",
         source="ISRO Satellite Centre (ISAC) Engineering Specifications",
-        metadata={"spacecraft": "Mangalyaan", "subsystems": ["LAM", "HGA", "MCC", "LAP", "MSM", "TIS", "MENCA"]}
+        metadata={"bus": "I-1K", "mass_kg": 1337, "payload_kg": 15, "instruments": ["MCC", "TIS", "MSM", "LAP", "MENCA"]}
     ),
     KnowledgeDocument(
-        doc_id="mangalyaan-moi-slingshot",
+        doc_id="mangalyaan-trajectory",
         title="Oberth Slingshot Trajectory and 24-Minute Mars Orbit Insertion Burn",
         category="trajectory",
-        content="""Because the PSLV rocket lacked the power to push Mangalyaan directly onto a trans-Mars trajectory, 
-ISRO utilized the Oberth effect. Over 25 days, six progressive engine firings at Earth perigee raised the spacecraft's apogee 
+        content="""Because the PSLV-XL lacked the thrust for direct Trans-Mars Injection, ISRO used an ingenious orbital slingshot manoeuvre: 
+Mangalyaan remained in elliptical Earth parking orbit for 25 days, firing its 440N LAM at perigee 6 successive times to raise its apogee 
 from 23,000 km to nearly 193,000 km before Trans-Mars Injection on 1 December 2013. 
 On 24 September 2014, after 298 days of deep space cruise, the main 440N engine was reignited behind the dark side of Mars 
 during total radio blackout, firing for 1,388 seconds to decelerate the probe by 1,098 m/s into a 421 km × 76,993 km elliptical orbit.""",
@@ -171,6 +201,7 @@ during total radio blackout, firing for 1,388 seconds to decelerate the probe by
         metadata={"body": "mars", "moi_date": "2014-09-24", "delta_v": "1098 m/s", "burn_duration": "1388s"}
     ),
 ]
+
 
 class RAGEngine:
     def __init__(self):
@@ -304,8 +335,9 @@ class RAGEngine:
 
     def answer_query(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        Retrieves NASA archive knowledge and generates a grounded Gemini response.
-        Falls back to local archive synthesis if Gemini is unavailable or not configured.
+        Retrieves NASA archive knowledge and generates a grounded response.
+        Supports both OpenRouter and Google Gemini APIs with automatic transient retries.
+        Falls back to local archive synthesis if external APIs are unavailable.
         """
         retrieved_docs = self.search(query, context, top_k=4)
         sources = list(dict.fromkeys(d.source for d in retrieved_docs))
@@ -329,24 +361,9 @@ class RAGEngine:
                 active_location.append(f"URL: {context['current_path']}")
 
         location_str = " · ".join(active_location) if active_location else "NASA Museum Overview Deck"
+        context_str = "\n\n".join([f"[{d.title}]: {d.content}" for d in retrieved_docs])
 
-        # Check for Gemini API key
-        api_key = os.getenv("GEMINI_API_KEY")
-
-        if api_key:
-            try:
-                client = genai.Client(
-                    api_key=api_key,
-                    http_options=types.HttpOptions(
-                        timeout=120000
-                    )
-                )
-
-                context_str = "\n\n".join(
-                    [f"[{d.title}]: {d.content}" for d in retrieved_docs]
-                )
-
-                prompt = f"""You are ASTRO, an intelligent NASA Space Exploration Copilot and scientific guide for the 'Abandoned but Not Forgotten' museum.
+        prompt = f"""You are ASTRO, an intelligent NASA Space Exploration Copilot and scientific guide for the 'Abandoned but Not Forgotten' museum.
 
 VISITOR'S CURRENT LOCATION & VIEW:
 {location_str}
@@ -365,6 +382,43 @@ CRITICAL INSTRUCTIONS:
 5. If the visitor asks about a specific subsystem or instrument, explain its purpose, specifications, and what it achieved.
 6. Emphasize why this piece of humanity's space legacy is unforgettable."""
 
+        openrouter_key = os.getenv("OPENROUTER_API_KEY")
+        gemini_key = os.getenv("GEMINI_API_KEY")
+        last_error = None
+
+        # 1. Try OpenRouter if configured
+        if openrouter_key and HAS_OPENAI:
+            try:
+                print("Sending request to OpenRouter...", flush=True)
+                client = OpenAI(
+                    api_key=openrouter_key,
+                    base_url="https://openrouter.ai/api/v1"
+                )
+                model_name = os.getenv("OPENROUTER_MODEL", "openrouter/free")
+                response = client.chat.completions.create(
+                    model=model_name,
+                    messages=[{"role": "user", "content": prompt}],
+                    timeout=60
+                )
+                print("OpenRouter response received!", flush=True)
+                if response.choices and response.choices[0].message.content:
+                    return {
+                        "answer": response.choices[0].message.content,
+                        "sources": sources,
+                        "model": f"{response.model or model_name} (OpenRouter NASA RAG)"
+                    }
+            except Exception as e:
+                last_error = e
+                print("OPENROUTER FAILED:", repr(e), flush=True)
+
+        # 2. Try Google Gemini if configured
+        if gemini_key and HAS_GENAI:
+            try:
+                client = genai.Client(
+                    api_key=gemini_key,
+                    http_options=types.HttpOptions(timeout=120000)
+                )
+
                 candidate_models = []
                 user_model = os.getenv("GEMINI_MODEL")
                 if user_model:
@@ -373,7 +427,6 @@ CRITICAL INSTRUCTIONS:
                     if fallback_m not in candidate_models:
                         candidate_models.append(fallback_m)
 
-                last_error = None
                 for model_candidate in candidate_models:
                     for attempt in range(2):
                         try:
@@ -394,7 +447,7 @@ CRITICAL INSTRUCTIONS:
                             last_error = err
                             err_str = str(err).lower()
                             print(f"Model {model_candidate} attempt {attempt + 1} failed: {err}", flush=True)
-                            
+
                             # If invalid API key or permission denied, stop retrying this key
                             if "api key not valid" in err_str or "permission" in err_str or "unauthenticated" in err_str:
                                 return {
@@ -407,7 +460,6 @@ CRITICAL INSTRUCTIONS:
                             if attempt == 0 and ("503" in err_str or "unavailable" in err_str or "429" in err_str or "demand" in err_str):
                                 time.sleep(1.2)
 
-                # If all Gemini models encountered transient errors (e.g. 503 high demand), log and fall back to archives
                 if last_error:
                     print(f"All Gemini models temporarily unavailable ({last_error}). Falling back to verified archives.", flush=True)
 
@@ -415,14 +467,14 @@ CRITICAL INSTRUCTIONS:
                 last_error = e
                 print("GEMINI FAILED:", repr(e), flush=True)
 
-        # Grounded Archive Synthesis fallback
+        # 3. Grounded Archive Synthesis fallback
         primary = retrieved_docs[0]
         secondary = retrieved_docs[1:] if len(retrieved_docs) > 1 else []
 
         answer_parts = []
         if last_error:
             answer_parts.append(
-                "> 🛰️ *Note: Cloud satellite neural link is experiencing temporary high demand (Google 503). Transmitting directly from verified NASA telemetry archives:*\n"
+                "> 🛰️ *Note: Cloud satellite neural link is experiencing temporary high demand (503). Transmitting directly from verified NASA telemetry archives:*\n"
             )
 
         answer_parts.append(f"**{primary.title}**\n\n{primary.content}")
@@ -445,5 +497,5 @@ CRITICAL INSTRUCTIONS:
             "model": "NASA Mission Archive Knowledge Engine (Grounded Telemetry Fallback)" if last_error else "NASA Mission Archive Knowledge Engine (Grounded RAG)"
         }
 
-rag_engine = RAGEngine()
 
+rag_engine = RAGEngine()
