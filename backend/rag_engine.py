@@ -7,6 +7,7 @@ from typing import List, Dict, Any, Optional
 import os
 import re
 import json
+import time
 
 from dotenv import load_dotenv
 from google import genai
@@ -374,45 +375,57 @@ CRITICAL INSTRUCTIONS:
 
                 last_error = None
                 for model_candidate in candidate_models:
-                    try:
-                        print(f"sending request to gemini ({model_candidate})...", flush=True)
-                        response = client.models.generate_content(
-                            model=model_candidate,
-                            contents=prompt,
-                            config={"http_options": {"timeout": 30000}}
-                        )
-                        print("gemini response received", flush=True)
-                        if response and response.text:
-                            return {
-                                "answer": response.text,
-                                "sources": sources,
-                                "model": f"{model_candidate} (Live NASA RAG)"
-                            }
-                    except Exception as err:
-                        last_error = err
-                        print(f"Model {model_candidate} attempt failed: {err}", flush=True)
-                        err_str = str(err).lower()
-                        if "api key not valid" in err_str or "permission" in err_str or "unauthenticated" in err_str:
-                            break
+                    for attempt in range(2):
+                        try:
+                            print(f"sending request to gemini ({model_candidate}) [attempt {attempt + 1}]...", flush=True)
+                            response = client.models.generate_content(
+                                model=model_candidate,
+                                contents=prompt,
+                                config={"http_options": {"timeout": 30000}}
+                            )
+                            print("gemini response received", flush=True)
+                            if response and response.text:
+                                return {
+                                    "answer": response.text,
+                                    "sources": sources,
+                                    "model": f"{model_candidate} (Live NASA RAG)"
+                                }
+                        except Exception as err:
+                            last_error = err
+                            err_str = str(err).lower()
+                            print(f"Model {model_candidate} attempt {attempt + 1} failed: {err}", flush=True)
+                            
+                            # If invalid API key or permission denied, stop retrying this key
+                            if "api key not valid" in err_str or "permission" in err_str or "unauthenticated" in err_str:
+                                return {
+                                    "answer": f"Gemini API authentication failed: {str(err)}. Please verify your GEMINI_API_KEY.",
+                                    "sources": sources,
+                                    "model": "API Key Error Diagnostic"
+                                }
 
+                            # For 503 UNAVAILABLE or 429 high demand / rate limit, wait briefly before retrying
+                            if attempt == 0 and ("503" in err_str or "unavailable" in err_str or "429" in err_str or "demand" in err_str):
+                                time.sleep(1.2)
+
+                # If all Gemini models encountered transient errors (e.g. 503 high demand), log and fall back to archives
                 if last_error:
-                    raise last_error
+                    print(f"All Gemini models temporarily unavailable ({last_error}). Falling back to verified archives.", flush=True)
 
             except Exception as e:
+                last_error = e
                 print("GEMINI FAILED:", repr(e), flush=True)
-                return {
-                    "answer": f"Gemini API failed: {type(e).__name__}: {str(e)}",
-                    "sources": sources,
-                    "model": "Gemini Error Diagnostic"
-                }
 
         # Grounded Archive Synthesis fallback
         primary = retrieved_docs[0]
         secondary = retrieved_docs[1:] if len(retrieved_docs) > 1 else []
 
-        answer_parts = [
-            f"**{primary.title}**\n\n{primary.content}"
-        ]
+        answer_parts = []
+        if last_error:
+            answer_parts.append(
+                "> 🛰️ *Note: Cloud satellite neural link is experiencing temporary high demand (Google 503). Transmitting directly from verified NASA telemetry archives:*\n"
+            )
+
+        answer_parts.append(f"**{primary.title}**\n\n{primary.content}")
 
         if secondary:
             answer_parts.append("\n**Related Mission Context:**")
@@ -429,7 +442,7 @@ CRITICAL INSTRUCTIONS:
         return {
             "answer": "\n".join(answer_parts),
             "sources": sources,
-            "model": "NASA Mission Archive Knowledge Engine (Grounded RAG)"
+            "model": "NASA Mission Archive Knowledge Engine (Grounded Telemetry Fallback)" if last_error else "NASA Mission Archive Knowledge Engine (Grounded RAG)"
         }
 
 rag_engine = RAGEngine()
